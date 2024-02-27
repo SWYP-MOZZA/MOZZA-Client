@@ -9,58 +9,72 @@ dayjs.locale('ko'); // locale을 한국어로 설정
 import styled from 'styled-components';
 
 function DraggableTimeTable() {
-    const [days, setDays] = useState([]);
     const [timeSlots, setTimeSlots] = useState({});
-    const [visibleWeekStart, setVisibleWeekStart] = useState(dayjs("2023-02-26"));
     const [isDragging, setIsDragging] = useState(false);
-  
-    const endDate = dayjs("2023-03-17");
-    const startTime = 9;
-    const endTime = 16;
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pages, setPages] = useState([]);
 
+    const startTime = 9;
+    const endTime = 15;
+    const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
     useEffect(() => {
-      const startDay = visibleWeekStart;
-      const dayList = [];
-      let dayToAdd = dayjs(startDay);
-  
-      // 최대 7일 또는 endDate까지의 날짜 추가
-      for (let i = 0; i < 7 && dayToAdd.isSameOrBefore(endDate); i++) {
-        dayList.push(dayToAdd.format('YYYY-MM-DD'));
-        dayToAdd = dayToAdd.add(1, 'day');
-      }
-  
-      setDays(dayList);
-  
+      // 서버에서 받은 날짜들을 상태로 저장하는 부분은 생략합니다.
+      // 여기서는 예시로 몇 가지 날짜를 직접 정의합니다.
+      const serverDates = ["2023-03-12", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-20", "2023-03-22", "2023-03-23", "2023-03-24", "2023-03-25", "2023-03-26", "2023-03-27", "2023-03-28"];
+      
+      const paginateDates = (dates, pageSize) => {
+        const pages = [];
+        for (let i = 0; i < dates.length; i += pageSize) {
+          pages.push(dates.slice(i, i + pageSize));
+        }
+        return pages;
+      };
+
       const slots = {};
-      dayList.forEach(day => {
-        const slotCount = (endTime - startTime) * 2;
+      serverDates.forEach(day => {
+        const slotCount = (endTime - startTime) * 2; // 30분 간격으로 타임슬롯 계산
         slots[day] = Array.from({ length: slotCount }, (_, i) => {
           const hour = startTime + Math.floor(i / 2);
           const minute = i % 2 === 0 ? '00' : '30';
           return {
             time: `${hour}:${minute}`,
-            isActive: false
+            isActive: false // 초기 상태는 비활성화
           };
         });
       });
-  
-      setTimeSlots(slots);
-    }, [visibleWeekStart]);
-  
-    const handleNextWeek = () => {
-      const newStart = visibleWeekStart.add(7, 'day');
-      if (newStart.isAfter(endDate)) return;
-      setVisibleWeekStart(newStart);
-    };
-  
-    const handlePrevWeek = () => {
-      const newStart = visibleWeekStart.subtract(7, 'day');
-      if (newStart.isBefore(dayjs("2023-02-26"))) return;
-      setVisibleWeekStart(newStart);
-    };
-      
     
+      setTimeSlots(slots);
+      console.log('타임슬롯 : ',slots);
+      setPages(paginateDates(serverDates, pageSize))
+    }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
+  
+    // 페이지 넘김 기능
+    const nextPage = () => {
+      if (currentPage < pages.length - 1) {
+        setCurrentPage(currentPage + 1);
+      }
+    };
+
+    const prevPage = () => {
+      if (currentPage > 0) {
+        setCurrentPage(currentPage - 1);
+      }
+    };
+
+      
+    const resetTimeSlots = () => {
+      // 새 객체를 생성하여 각 타임슬롯의 isActive를 false로 설정
+      const resetSlots = Object.fromEntries(
+        Object.entries(timeSlots).map(([day, slots]) => [
+          day,
+          slots.map(slot => ({ ...slot, isActive: false }))
+        ])
+      );
+    
+      // 업데이트된 객체로 timeSlots 상태를 설정
+      setTimeSlots(resetSlots);
+    };
 
       const handleMouseDown = (e, day, index) => {
         e.preventDefault(); // 드래그 시작 시 기본 동작 방지
@@ -88,28 +102,30 @@ function DraggableTimeTable() {
 
   return (
     <>
-    <button onClick={handlePrevWeek}>이전</button>
-    <button onClick={handleNextWeek}>다음</button>
+    <button onClick={prevPage} disabled={currentPage <= 0}>이전</button>
+    <button onClick={nextPage} disabled={currentPage >= pages.length - 1}>다음</button>
+    <button onClick={resetTimeSlots}>초기화</button>
     <TableContainer>
     <Table>
     <thead>
       <Tr>
-        <Th>시간</Th>
-        {days.map(day => {
+        <Th></Th>
+        {pages[currentPage]?.map(day => { // 현재 페이지에 해당하는 날짜들을 순회
           const date = dayjs(day);
-          const formattedDate = date.format('MM/DD ddd'); // "월-일, 요일" 형식으로 포맷팅
-          return <Th key={day}>{formattedDate}</Th>;
+          const monthDay = date.format('MM/DD'); // "월/일" 형식
+          const dayOfWeek = date.format('ddd'); // "요일" 형식
+          return <Th key={day}>{monthDay}<br />{dayOfWeek}</Th>;
         })}
       </Tr>
     </thead>
-    <tbody>
+    {/* <tbody>
       {Object.values(timeSlots)[0]?.map((slot, index) => (
         <Tr key={index}>
           <Td>{index % 2 === 0 ? `${parseInt(slot.time.split(':')[0], 10)}시` : ''}</Td>
-          {days.map(day => (
+          {pages[currentPage]?.map(day => (
             <Td
               key={`${day}-${index}`}
-              isActive={timeSlots[day][index]?.isActive}
+              isActive={slot?.isActive ?? false} // 안전한 접근 방식
               onMouseDown={(e) => handleMouseDown(e, day, index)}
               onMouseEnter={() => handleMouseEnter(day, index)}
               onMouseUp={handleMouseUp}
@@ -117,6 +133,31 @@ function DraggableTimeTable() {
           ))}
         </Tr>
       ))}
+    </tbody> */}
+    <tbody>
+      {Array.from({ length: (endTime - startTime) * 2 }, (_, index) => {
+        // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
+        const isHalfHour = index % 2 !== 0;
+        const hour = Math.floor(startTime + index / 2);
+        const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
+        return (
+          <Tr key={index}>
+            <Td>{timeLabel}</Td>
+            {pages[currentPage]?.map(day => {
+              const isActive = timeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
+              return (
+                <Td
+                  key={`${day}-${index}`}
+                  isActive={isActive}
+                  onMouseDown={(e) => handleMouseDown(e, day, index)}
+                  onMouseEnter={() => handleMouseEnter(day, index)}
+                  onMouseUp={handleMouseUp}
+                />
+              );
+            })}
+          </Tr>
+        );
+      })}
     </tbody>
     </Table>
     </TableContainer>
@@ -151,14 +192,31 @@ const Th = styled.th`
     border: 1px solid #ddd;
     background-color: #f2f2f2;
     width: 100px; /* 셀의 너비를 100px로 설정 */
-    height: 50px; /* 셀의 높이를 50px로 설정 */
+    height: 60px; /* 셀의 높이를 50px로 설정 */
+    &:first-child {
+      background-color: #fff;
+      border-top: none;
+      border-bottom: none;
+      border-left:none;
+      font-size: 16px;
+      font-weight: bold;
+    }
   `;
 
 const Td = styled.td`
-    cursor: pointer;
-    background-color: ${({ isActive }) => (isActive ? '#009652' : 'transparent')};
-    padding: 8px;
-    border: 1px solid #ddd;
-    width: 100px;
-    height: 50px;
+  cursor: pointer;
+  background-color: ${({ isActive }) => (isActive ? '#009652' : 'transparent')};
+  padding: 0px;
+  border: 1px solid #ddd;
+  width: 100px;
+  height: 30px;
+
+  /* 시간을 나타내는 첫 번째 Td의 위아래 border 제거 */
+  &:first-child {
+    border-top: none;
+    border-bottom: none;
+    border-left:none;
+    font-size: 16px;
+    font-weight: bold;
+  }
   `;

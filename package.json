@@ -13,7 +13,8 @@
     "next": "14.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "twin.macro": "^3.4.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
