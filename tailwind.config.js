@@ -15,17 +15,36 @@ module.exports = {
       fontFamily:{
         'main' : ['Spoqa Han Sans Neo']
       },
+      fontSize: {
+        'h1': '48px', 
+        'subtitle1': '32px',     
+        'subtitle2': '24px',  
+        'subtitle3': '20px',  
+        'body1': '24px',  
+        'body2': '20px',  
+        'body3': '16px',  
+      },
+      fontWeight: {
+        'normal':400,
+        'medium': 500,   
+        'bold': 700,   
+      },
     },
 
     colors:{
-      'primary' : '#009652',
-      'secondary' : '#CCF2E1',
-      'disabled' : '#E0E0E0',
-      'primary-border' : '#00713E',
-      'secondary-border' : '#009652',
-      'primary-btn-text' : '#FFFEFE',
-      'secondary-btn-text':'#070707',
-      'disabled-btn-text' : '#9E9E9E',
+      'green-100' : '#CCF2E1',
+      'green-600':'#009652',
+      'green-700':'#00713E',
+
+      'white' : '#FFFEFE',
+      'gray-100' : '#F5F5F5',
+      'gray-300' : '#E0E0E0',
+      'gray-500' : '#9E9E9E',
+      'gray-800' : '#424242',
+      'black':'#070707',
+
+      'orange-100':'#FEEED2',
+      'orange-200':'#FEDEA6',
     }
   },
   plugins: [],
