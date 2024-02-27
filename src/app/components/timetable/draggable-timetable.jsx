@@ -192,14 +192,13 @@ const Th = styled.th`
     border: 1px solid #ddd;
     background-color: #f2f2f2;
     width: 100px; /* 셀의 너비를 100px로 설정 */
-    height: 60px; /* 셀의 높이를 50px로 설정 */
+    height: 60px; /* 셀의 높이를 60px로 설정 */
     &:first-child {
       background-color: #fff;
       border-top: none;
       border-bottom: none;
       border-left:none;
       font-size: 16px;
-      font-weight: bold;
     }
   `;
 
@@ -217,6 +216,5 @@ const Td = styled.td`
     border-bottom: none;
     border-left:none;
     font-size: 16px;
-    font-weight: bold;
   }
   `;
