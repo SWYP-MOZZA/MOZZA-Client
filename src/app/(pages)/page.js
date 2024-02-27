@@ -1,9 +1,6 @@
 import LongBtn from '../components/common/LongBtn';
 import ShortBtn from '../components/common/ShortBtn';
 import React from 'react';
-import dynamic from 'next/dynamic';
-
-
 
 export default function Home() {
     return (
