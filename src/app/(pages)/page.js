@@ -7,16 +7,21 @@ import ShortBtn from '../components/common/ShortBtn';
 import CheckNumCircle from '../components/mainPage/CheckNumCircle';
 import CustomCalendar from '../components/mainPage/CustomCalender';
 import TimeSelector from '../components/mainPage/TimeSelector';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+// import '../styles/custom-checkbox-style.css';
 
 export default function Home() {
+    const router = useRouter();
     const [isCheck, setIsCheck] = useState([true,true,false]);
+    
     return (
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <img src='svg/logoFull.svg' className='logo w-[200px] h-[88.24px]' />
             <h1 className='title text-h1 font-bold w-[575px] text-center'>
-                결정하기 어려웠던 모임시간, 
+                단 <mark className='bg-orange-200'>3단계</mark>로 모임 일정을
                 <br/>
-                단 <mark className='bg-orange-200'>3단계</mark>로 결정하세요
+                빠르게 정해보세요!
             </h1>
         
             <Container type={'container-gray'} style={'h-[160px] p-[24px] flex justify-start items-start'}>
@@ -56,14 +61,18 @@ export default function Home() {
                         <TimeSelector/>
                         <div>까지</div>
                     </div>
-                    <div className='flex justify-start items-center'>
-                        <input type='checkbox' className='w-8 h-8 mr-3'/>
-                        <label className='text-body2 font-normal'>날짜만 정하면 돼요!</label>
+                    <div className='checkbox-container flex justify-start items-center'>
+                        <input type='checkbox' id='onlyDate' className='checkbox-input w-8 h-8 mr-3'/>
+                        <label className='text-body2 font-normal cursor-pointer' for='onlyDate'>날짜만 정하면 돼요!</label>
                     </div>
                     <div className='text-center'>초기화</div>
                 </div>
             </Container>
-            <LongBtn style={'primary-longBtn'} disabled={'disabled'} >모임만들기</LongBtn>
+            <LongBtn style={'primary-longBtn'} onClick={() => router.push('/[slug]', { scroll: false })}>
+                모임만들기
+            </LongBtn>
+
+            
         </div>
     );
   }
