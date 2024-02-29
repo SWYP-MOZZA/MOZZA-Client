@@ -1,6 +1,6 @@
 'use client' 
 
-import {useState } from 'react';
+import React,{useState } from 'react';
 import Container from '../components/common/Container';
 import LongBtn from '../components/common/LongBtn';
 import ShortBtn from '../components/common/ShortBtn';
