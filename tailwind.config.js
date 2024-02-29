@@ -45,7 +45,11 @@ module.exports = {
 
       'orange-100':'#FEEED2',
       'orange-200':'#FEDEA6',
-    }
+
+      'yellow':'#FEE500',
+    },
+
+    
   },
   plugins: [],
 };

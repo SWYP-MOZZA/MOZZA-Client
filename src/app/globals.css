@@ -40,7 +40,9 @@ body {
   src: url("/font/SpoqaHanSansNeo-Medium.ttf") format("truetype");
 }
 
-
+  .kakao-longBtn {
+    @apply w-[588px] h-16 px-16 bg-yellow rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-yellow text-black
+  }
   .primary-longBtn {
     @apply w-[588px] h-16 px-16 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white
   }
