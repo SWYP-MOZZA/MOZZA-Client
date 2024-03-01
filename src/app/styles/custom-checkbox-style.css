@@ -1,31 +1,27 @@
-.checkbox-container {
-    display: flex;
 
-    position: relative;
+  .check{
+    display:none;
   }
+  label::before{
+    content: ' ';
+    display:block;
+    width:32px;
+    height:32px;
+    float:left;
+    margin-right:8px;
+    border:1.5px solid #9E9E9E;
+    border-radius: 4px;
+    background-color: white;
 
-.checkbox-input:checked + label:before {
-    content: '\2713'; /* 체크 모양 아이콘을 유니코드로 추가합니다. */
-    display: inline-block;
-    font-size: 1.5em;
-    color: green; /* 체크된 상태일 때의 색상을 지정합니다. */
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1em;
-    height: 1em;
+    
   }
-  
-  /* 선택하지 않은 상태의 스타일을 지정합니다. */
-  .checkbox-input + label:before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    border: 2px solid green; /* 테두리 스타일 지정 */
-    position: absolute;
-    left: 0;
-    top: 0;
+  .check:checked+label::before{
+    content: '\2713';
+    text-align: center;
+    color:green;
+    border:1.5px solid green;
+    font-weight: 900;
+
   }
 
   
