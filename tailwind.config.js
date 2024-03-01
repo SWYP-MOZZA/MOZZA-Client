@@ -22,7 +22,8 @@ module.exports = {
         'subtitle3': '20px',  
         'body1': '24px',  
         'body2': '20px',  
-        'body3': '16px',  
+        'body3': '16px', 
+        'emoji' : '160px' 
       },
       fontWeight: {
         'normal':400,
@@ -33,6 +34,7 @@ module.exports = {
 
     colors:{
       'green-100' : '#CCF2E1',
+      'green-500':'#00BC67',
       'green-600':'#009652',
       'green-700':'#00713E',
 
@@ -45,6 +47,7 @@ module.exports = {
 
       'orange-100':'#FEEED2',
       'orange-200':'#FEDEA6',
+      'yellow-400':'#FEE500',
     }
   },
   plugins: [],
