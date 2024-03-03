@@ -73,6 +73,10 @@ body {
   @apply w-[588px] bg-white rounded-3xl border-2 border-green-600 font-main;
 }
 
+.container-dateregister{
+  @apply w-[588px] bg-white;
+}
+
 @keyframes slide {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(10px); }

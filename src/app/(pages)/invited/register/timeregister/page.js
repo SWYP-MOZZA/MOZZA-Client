@@ -10,6 +10,8 @@ const DraggableTimeTable = dynamic(() => import('../../../../components/table/dr
 
 const TimeRegister = () => {
   const [selected, setSelected] = useState('register');
+  // DraggableTimeTable 컴포넌트에서 받아올 상태
+  const [parentTimeSlots, setParentTimeSlots] = useState({});
 
   //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
@@ -21,6 +23,14 @@ const TimeRegister = () => {
       console.log('selected');
     }
 };
+
+  // 등록하기 버튼 클릭 시 실행할 함수
+  const handleRegisterClick = async () => {
+    console.log(parentTimeSlots); // 콘솔에 현재 상태 출력
+
+    // 여기에 서버로 상태 전송하는 로직을 구현
+    // 예: axios.post('서버 URL', timeSlots);
+  };
 
   return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
@@ -48,12 +58,20 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
-          <DraggableTimeTable />
+          <DraggableTimeTable parentTimeSlots={parentTimeSlots} setParentTimeSlots={setParentTimeSlots}/>
           <div className='m-[20px]'/>
-          <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
+          <LongBtn style={'primary-longBtn'} onClick={handleRegisterClick}>등록하기</LongBtn>
         </div> : 
         // 일정 결과 페이지
-        <div>일정 결과</div>}
+        <div className='container flex flex-grow justify-evenly items-center'>
+          <div className='w-[1/2]'>
+            결과 테이블
+          </div>
+          <div className='w-[1/2]'>
+            결과 박스
+          </div>
+        </div>
+        }
     </div>
   );
 }

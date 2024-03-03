@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
-function DraggableTimeTable() {
+function DraggableTimeTable({ parentTimeSlots, setParentTimeSlots }) {
     const [timeSlots, setTimeSlots] = useState({});
     const [isDragging, setIsDragging] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
@@ -22,6 +22,8 @@ function DraggableTimeTable() {
     const endTime = 15;
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
+
+    //1번째 useEffect
     useEffect(() => {
       // 서버에서 받은 날짜들을 상태로 저장하는 부분은 생략합니다.
       // 여기서는 예시로 몇 가지 날짜를 직접 정의합니다.
@@ -52,6 +54,11 @@ function DraggableTimeTable() {
       console.log('타임슬롯 : ',slots);
       setPages(paginateDates(serverDates, pageSize))
     }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
+
+    //2번째 useEffect
+    useEffect(() => {
+      setParentTimeSlots(timeSlots);
+    } , [timeSlots]);
   
     // 페이지 넘김 기능
     const nextPage = () => {

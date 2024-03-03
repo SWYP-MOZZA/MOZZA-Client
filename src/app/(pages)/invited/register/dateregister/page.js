@@ -3,8 +3,9 @@ import React,{ useState,useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
+import CustomCalendar from '@/app/components/mainPage/CustomCalender';
 
-const TimeRegister = () => {
+const DateRegister = () => {
   const [selected, setSelected] = useState('register');
 
   //버튼 클릭시마다 타입을 바꿔줍니다
@@ -19,7 +20,7 @@ const TimeRegister = () => {
 };
 
   return (
-    <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
+    <div className='container-dateregister w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       <Switch value={selected}>
         <span /> 
         <ResultBtn //상세정보 버튼
@@ -44,16 +45,28 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
-          <div className='m-[20px]'/>
+          <div className='w-[588px] bg-white p-4 flex flex-col'>
+                <div className='content-container flex justify-center flex-col items-center'>
+                    <CustomCalendar/>
+                </div>
+            </div>
           <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
         </div> : 
         // 일정 결과 페이지
-        <div>일정 결과</div>}
+        <div className='flex justify-evenly items-center'>
+          <div>
+            결과 테이블
+          </div>
+          <div>
+            결과 박스
+          </div>
+        </div>
+        }
     </div>
   );
 }
 
-export default TimeRegister;
+export default DateRegister;
 
 const Switch = styled.div`
   position: relative;

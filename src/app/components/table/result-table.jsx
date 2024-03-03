@@ -1,0 +1,155 @@
+import React ,{useState,useEffect}from 'react';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko'; // 한국어 locale을 직접 불러옴
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(isSameOrBefore); // isSameOrBefore 플러그인 활성화
+dayjs.locale('ko'); // locale을 한국어로 설정
+import styled from 'styled-components';
+// icon
+import { AiOutlineLeft } from "react-icons/ai";
+import { AiOutlineRight } from "react-icons/ai";
+
+const ResultTable= () => {
+    const [timeSlots, setTimeSlots] = useState({});
+    const [isDragging, setIsDragging] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pages, setPages] = useState([]);
+
+    const startTime = 9;
+    const endTime = 15;
+    const pageSize = 7; // 한 페이지에 보여줄 날짜 수
+
+    useEffect(() => {
+      // 서버에서 받은 날짜들을 상태로 저장하는 부분은 생략합니다.
+      // 여기서는 예시로 몇 가지 날짜를 직접 정의합니다.
+      const serverDates = ["2023-03-12", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-20", "2023-03-22", "2023-03-23", "2023-03-24", "2023-03-25", "2023-03-26", "2023-03-27", "2023-03-28"];
+      
+      const paginateDates = (dates, pageSize) => {
+        const pages = [];
+        for (let i = 0; i < dates.length; i += pageSize) {
+          pages.push(dates.slice(i, i + pageSize));
+        }
+        return pages;
+      };
+
+      const slots = {};
+      serverDates.forEach(day => {
+        const slotCount = (endTime - startTime) * 2; // 30분 간격으로 타임슬롯 계산
+        slots[day] = Array.from({ length: slotCount }, (_, i) => {
+          const hour = startTime + Math.floor(i / 2);
+          const minute = i % 2 === 0 ? '00' : '30';
+          return {
+            time: `${hour}:${minute}`,
+            isActive: false // 초기 상태는 비활성화
+          };
+        });
+      });
+    
+      setTimeSlots(slots);
+      console.log('타임슬롯 : ',slots);
+      setPages(paginateDates(serverDates, pageSize))
+    }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
+  
+    // 페이지 넘김 기능
+    const nextPage = () => {
+      if (currentPage < pages.length - 1) {
+        setCurrentPage(currentPage + 1);
+      }
+    };
+
+    const prevPage = () => {
+      if (currentPage > 0) {
+        setCurrentPage(currentPage - 1);
+      }
+    };
+  // Your calendar component logic goes here
+
+  return (
+    <div>
+        <div className='flex justify-between items-center'>
+            <span>참여 인원</span>
+            <span>페이지</span>
+        </div>
+        <TableContainer>
+            <Table>
+            <thead>
+              <Tr>
+                <Th>
+                  <button className=''onClick={prevPage} disabled={currentPage <= 0}>
+                    <AiOutlineLeft size={24} />
+                  </button></Th>
+                {pages[currentPage]?.map(day => { // 현재 페이지에 해당하는 날짜들을 순회
+                  const date = dayjs(day);
+                  const monthDay = date.format('MM/DD'); // "월/일" 형식
+                  const dayOfWeek = date.format('ddd'); // "요일" 형식
+                  return <Th key={day}>{monthDay}<br />{dayOfWeek}</Th>;
+                })}
+                <Th>
+                  <button onClick={nextPage} disabled={currentPage >= pages.length - 1}>
+                    <AiOutlineRight size={24} />
+                    </button></Th>
+              </Tr>
+            </thead>
+                <tbody>
+                    {/* Your calendar component logic goes here */}
+                </tbody>
+            </Table>
+        </TableContainer>
+    </div>
+  );
+};
+
+export default ResultTable;
+
+const TableContainer = styled.div`
+    display: flex;
+    overflow-x: auto;
+    margin-top: 20px;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    `;
+
+const Table = styled.table`
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: center;
+    `;
+
+const Tr = styled.tr`
+    font-size: 12px;
+  `;
+  
+const Th = styled.th`
+    padding: 8px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    width: 100px; /* 셀의 너비를 100px로 설정 */
+    height: 60px; /* 셀의 높이를 60px로 설정 */
+    &:first-child,
+    &:last-child {
+      background-color: #fff;
+      border:none;
+      font-size: 16px;
+    }
+  `;
+
+const Td = styled.td`
+  cursor: pointer;
+  background-color: ${({ isActive }) => (isActive ? '#009652' : 'transparent')};
+  padding: 0px;
+  border: 1px solid #ddd;
+  width: 100px;
+  height: 30px;
+
+  /* 시간을 나타내는 첫 번째 Td와 마지막 Td의 위아래 border 제거 */
+  &:first-child,
+  &:last-child {
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    border-right: none; /* 마지막 Td에도 border 제거 추가 */
+    font-size: 16px;
+  }
+  `;
