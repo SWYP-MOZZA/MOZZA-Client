@@ -17,7 +17,7 @@ export default function TimeSelector({reset}){
 
             <div className='select-tag' id='time-select'>
             <select className='select-box' value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)}>
-                <option value='00:00' selected>00:00</option>
+                <option value='00:00'>00:00</option>
                 <option value='00:30'>00:30</option>
                 <option value='01:00'>01:00</option>
                 <option value='01:30'>01:30</option>

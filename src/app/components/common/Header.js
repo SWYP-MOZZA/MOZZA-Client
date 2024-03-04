@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Header(){
     return (
-        <div className='navbar flex justify-between items-center fixed w-full h-[80px] top-0 left-0 shadow-sm px-[22.5rem] bg-white font-main text-subtitle3'>
+        <div className='navbar flex justify-between items-center fixed w-full h-[80px] top-0 left-0 shadow-sm px-[22.5rem] bg-white font-main text-subtitle3 z-50'>
             <Link href='/' className='navbar_logo'>
                 <img src='/svg/smallLogo.svg' alt='이미지_설명' />
             </Link>

@@ -2,7 +2,7 @@ import Calendar from 'react-calendar';
 import React, { useState, useEffect } from 'react';
 import '../../styles/custom-calendar.css';
 
-export default function CustomCalendar(){
+export default function CustomCalendar({setIsCheck}){
     const [isClient, setIsClient] = useState(false)
     const [value, onChange] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([])
@@ -20,16 +20,24 @@ export default function CustomCalendar(){
             day: '2-digit',
           });         
         const selectedDate = formattedDate.split('. ').join('-').replace(/\.$/, '')
-
-        //중복 방지 & 선택해제 
-        if(selectedDates.includes(selectedDate)){
-            const indexToRemove = selectedDates.indexOf(selectedDate);
-            return selectedDates.splice(indexToRemove,1);
+        // 중복 방지 & 선택 해제 
+        console.log(selectedDate)
+        const updatedSelectedDates = [...selectedDates]
+        if (selectedDates.includes(selectedDate)) {
+            console.log(selectedDates.includes(selectedDate),'들어있다')
+            const removeIndex = selectedDates.indexOf(selectedDate);
+            updatedSelectedDates.splice(removeIndex,1);
+            setSelectedDates(updatedSelectedDates);
+            return;
+            // return setSelectedDates((prev)=> {selectedDates.splice(removeIndex)})
             
         }
 
-        //클릭한 날짜 추가
-        setSelectedDates(prevSelectedDates => [...new Set([...prevSelectedDates, selectedDate])]);
+        // 클릭한 날짜 추가
+        setSelectedDates(prevSelectedDates => {
+            const newDates = [...prevSelectedDates, selectedDate];
+            return [...new Set(newDates)]; // 중복 제거
+        });
         
     }
     const tileClassName = ({ date }) => {
@@ -47,6 +55,26 @@ export default function CustomCalendar(){
         setSelectedDates([]);
 
     }
+
+    function setIsChecked(isCheck){
+        // const newArr = [...props.isCheck];
+        // newArr[1] = isCheck;
+        // props.setIsCheck(newArr);
+        setIsCheck((prev)=>{
+            console.log(isCheck);
+            const newArr = [...prev];
+            newArr[1] = isCheck;
+            return newArr;
+        })
+    }
+    useEffect(()=>{
+        console.log('길이', selectedDates.length, selectedDates);
+        if(selectedDates.length !== 0){
+            setIsChecked(true);
+        }else if(selectedDates.length === 0){
+            setIsChecked(false)
+        }
+    },[selectedDates])
     return (
         <div>
             { isClient? (

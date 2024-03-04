@@ -14,8 +14,21 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 
 export default function Home() {
     const router = useRouter();
-    const [isCheck, setIsCheck] = useState([true,true,false]);
+    const [isCheck, setIsCheck] = useState([false,false,false]);
     const [isOnClick, setIsOnClick] = useState(false);
+
+    function handleInputChange(input){
+        console.log(input.target.value);
+        if(inputVal !== ''){
+            const newArr = [...isCheck];
+            newArr[0]=true;
+            setIsCheck(newArr);
+        }else{
+            const newArr = [...isCheck];
+            newArr[0]=false;
+            setIsCheck(newArr);
+        }
+    }
 
     return (
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
@@ -32,7 +45,7 @@ export default function Home() {
                     <div className='text-subtitle2 font-medium text-black'>모임명을 입력해주세요.</div>
                 </div>
                 <div className='content-container pl-[54px] pt-[16px]'>
-                    <input className='input-name w-[448px]  p-[16px]' placeholder='예)모짜모임'></input>
+                    <input className='input-name w-[448px]  p-[16px]' placeholder='예)모짜모임' onChange={(e)=>{handleInputChange(e)}}></input>
                 </div>
             </Container>
             <Container type={'container-gray'} style={'p-4 flex flex-col'}>
@@ -43,10 +56,10 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <CustomCalendar/>
+                <CustomCalendar setIsCheck={setIsCheck}/>
                     
             </Container>
-            <Container type={'container-gray'} style={' p-4'}>
+            <Container type={'container-gray'} style={' p-4 z-10'}>
                 <div className='subtitle-container flex gap-[16px]'>
                     <CheckNumCircle isCheck={isCheck} num={3}/>
                     <div className='text_container flex flex-col '>
@@ -63,7 +76,7 @@ export default function Home() {
                     </div>
                     <div className='checkbox-container flex justify-start items-center'>
                         <input type='checkbox' id='onlyDate' className='check w-8 h-8 mr-3'/>
-                        <label className='text-body2 font-normal cursor-pointer' for='onlyDate'>날짜만 정하면 돼요!</label>
+                        <label className='text-body2 font-normal cursor-pointer' htmlFor='onlyDate'>날짜만 정하면 돼요!</label>
                     </div>
                     <div className='text-center cursor-pointer underline underline-offset-4' onClick={()=>setIsOnClick(!isOnClick)}>초기화</div>
                 </div>
