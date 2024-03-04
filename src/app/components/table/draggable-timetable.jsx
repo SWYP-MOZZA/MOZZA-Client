@@ -8,6 +8,10 @@ dayjs.extend(isSameOrBefore); // isSameOrBefore 플러그인 활성화
 dayjs.locale('ko'); // locale을 한국어로 설정
 import styled from 'styled-components';
 
+// icon
+import { AiOutlineLeft } from "react-icons/ai";
+import { AiOutlineRight } from "react-icons/ai";
+
 function DraggableTimeTable() {
     const [timeSlots, setTimeSlots] = useState({});
     const [isDragging, setIsDragging] = useState(false);
@@ -101,67 +105,61 @@ function DraggableTimeTable() {
       };
 
   return (
-    <>
-    <button onClick={prevPage} disabled={currentPage <= 0}>이전</button>
-    <button onClick={nextPage} disabled={currentPage >= pages.length - 1}>다음</button>
-    <button onClick={resetTimeSlots}>초기화</button>
+    <div className='flex flex-col justify-center items-center'>
+      <div className="w-full pt-[20px] flex flex-row justify-center items-start">
     <TableContainer>
-    <Table>
-    <thead>
-      <Tr>
-        <Th></Th>
-        {pages[currentPage]?.map(day => { // 현재 페이지에 해당하는 날짜들을 순회
-          const date = dayjs(day);
-          const monthDay = date.format('MM/DD'); // "월/일" 형식
-          const dayOfWeek = date.format('ddd'); // "요일" 형식
-          return <Th key={day}>{monthDay}<br />{dayOfWeek}</Th>;
-        })}
-      </Tr>
-    </thead>
-    {/* <tbody>
-      {Object.values(timeSlots)[0]?.map((slot, index) => (
-        <Tr key={index}>
-          <Td>{index % 2 === 0 ? `${parseInt(slot.time.split(':')[0], 10)}시` : ''}</Td>
-          {pages[currentPage]?.map(day => (
-            <Td
-              key={`${day}-${index}`}
-              isActive={slot?.isActive ?? false} // 안전한 접근 방식
-              onMouseDown={(e) => handleMouseDown(e, day, index)}
-              onMouseEnter={() => handleMouseEnter(day, index)}
-              onMouseUp={handleMouseUp}
-            />
-          ))}
+      <Table>
+      <thead>
+        <Tr>
+          <Th>
+            <button className=''onClick={prevPage} disabled={currentPage <= 0}>
+              <AiOutlineLeft size={24} />
+            </button></Th>
+          {pages[currentPage]?.map(day => { // 현재 페이지에 해당하는 날짜들을 순회
+            const date = dayjs(day);
+            const monthDay = date.format('MM/DD'); // "월/일" 형식
+            const dayOfWeek = date.format('ddd'); // "요일" 형식
+            return <Th key={day}>{monthDay}<br />{dayOfWeek}</Th>;
+          })}
+          <Th>
+            <button onClick={nextPage} disabled={currentPage >= pages.length - 1}>
+              <AiOutlineRight size={24} />
+              </button></Th>
         </Tr>
-      ))}
-    </tbody> */}
-    <tbody>
-      {Array.from({ length: (endTime - startTime) * 2 }, (_, index) => {
-        // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
-        const isHalfHour = index % 2 !== 0;
-        const hour = Math.floor(startTime + index / 2);
-        const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
-        return (
-          <Tr key={index}>
-            <Td>{timeLabel}</Td>
-            {pages[currentPage]?.map(day => {
-              const isActive = timeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
-              return (
-                <Td
-                  key={`${day}-${index}`}
-                  isActive={isActive}
-                  onMouseDown={(e) => handleMouseDown(e, day, index)}
-                  onMouseEnter={() => handleMouseEnter(day, index)}
-                  onMouseUp={handleMouseUp}
-                />
-              );
-            })}
-          </Tr>
-        );
-      })}
-    </tbody>
-    </Table>
+      </thead>
+      <tbody>
+        {Array.from({ length: (endTime - startTime) * 2 }, (_, index) => {
+          // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
+          const isHalfHour = index % 2 !== 0;
+          const hour = Math.floor(startTime + index / 2);
+          const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
+          return (
+            <Tr key={index}>
+              <Td>{timeLabel}</Td>
+              {pages[currentPage]?.map(day => {
+                const isActive = timeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
+                return (
+                  <Td
+                    key={`${day}-${index}`}
+                    isActive={isActive}
+                    onMouseDown={(e) => handleMouseDown(e, day, index)}
+                    onMouseEnter={() => handleMouseEnter(day, index)}
+                    onMouseUp={handleMouseUp}
+                  />
+                );
+              })}
+              <Td />
+            </Tr>
+            
+          );
+        })}
+      </tbody>
+      </Table>
     </TableContainer>
-    </>
+    
+    </div>
+      <button className='mt-[10px] border-b border-gray-800 text-gray-800' onClick={resetTimeSlots}>초기화</button>
+    </div>
   );
 };
 
@@ -177,7 +175,6 @@ const TableContainer = styled.div`
     `;
 
 const Table = styled.table`
-    width: 70%;
     border-collapse: collapse;
     border-spacing: 0;
     text-align: center;
@@ -193,11 +190,10 @@ const Th = styled.th`
     background-color: #f2f2f2;
     width: 100px; /* 셀의 너비를 100px로 설정 */
     height: 60px; /* 셀의 높이를 60px로 설정 */
-    &:first-child {
+    &:first-child,
+    &:last-child {
       background-color: #fff;
-      border-top: none;
-      border-bottom: none;
-      border-left:none;
+      border:none;
       font-size: 16px;
     }
   `;
@@ -210,11 +206,13 @@ const Td = styled.td`
   width: 100px;
   height: 30px;
 
-  /* 시간을 나타내는 첫 번째 Td의 위아래 border 제거 */
-  &:first-child {
+  /* 시간을 나타내는 첫 번째 Td와 마지막 Td의 위아래 border 제거 */
+  &:first-child,
+  &:last-child {
     border-top: none;
     border-bottom: none;
-    border-left:none;
+    border-left: none;
+    border-right: none; /* 마지막 Td에도 border 제거 추가 */
     font-size: 16px;
   }
   `;
