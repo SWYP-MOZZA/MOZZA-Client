@@ -3,6 +3,12 @@ import React,{ useState,useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
+import ResultBox from '../../../../components/result/resultBox';
+import HoverBox from '../../../../components/result/hoverBox';
+
+const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
+  ssr: false
+  });
 
 const DraggableTimeTable = dynamic(() => import('../../../../components/table/draggable-timetable'), {
   ssr: false
@@ -10,6 +16,12 @@ const DraggableTimeTable = dynamic(() => import('../../../../components/table/dr
 
 const TimeRegister = () => {
   const [selected, setSelected] = useState('register');
+  const [isHover, setIsHover] = useState(false);
+
+  const onClickFilterBtn = () => {
+    console.log('필터 버튼 클릭');
+    setIsHover(!isHover);
+  }
 
   //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
@@ -23,7 +35,7 @@ const TimeRegister = () => {
 };
 
   return (
-    <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
+    <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       <Switch value={selected}>
         <span /> 
         <ResultBtn //상세정보 버튼
@@ -53,7 +65,21 @@ const TimeRegister = () => {
           <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
         </div> : 
         // 일정 결과 페이지
-        <div>일정 결과</div>}
+        <div className='w-[3/4] flex justify-between'>
+          <div>
+                <ResultTimeTable/>
+            </div>
+            <div className='flex flex-col gap-2.5 mt-[50px]'>
+                {isHover && <HoverBox/>}
+                <div className='flex justify-end'>
+                    <button onClick={onClickFilterBtn} className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-gray-300">필터</button>
+                </div>
+                <ResultBox/>
+                <ResultBox/>
+                <ResultBox/>
+                <ResultBox/>
+            </div>
+          </div>}
     </div>
   );
 }

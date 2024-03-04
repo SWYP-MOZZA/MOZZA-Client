@@ -3,8 +3,10 @@ import React,{ useState,useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
+import Container from '@/app/components/common/Container';
+import CustomCalendar from '@/app/components/mainPage/CustomCalender';
 
-const TimeRegister = () => {
+const DateRegister = () => {
   const [selected, setSelected] = useState('register');
 
   //버튼 클릭시마다 타입을 바꿔줍니다
@@ -44,6 +46,9 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
+          <Container type={'container-basic'} style={'p-4 flex flex-col'}>
+            <CustomCalendar/>
+          </Container>
           <div className='m-[20px]'/>
           <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
         </div> : 
@@ -53,7 +58,7 @@ const TimeRegister = () => {
   );
 }
 
-export default TimeRegister;
+export default DateRegister;
 
 const Switch = styled.div`
   position: relative;

@@ -30,6 +30,10 @@ module.exports = {
         'medium': 500,   
         'bold': 700,   
       },
+      borderRadius: {
+        'resultBox': '24px',
+        'resultName': '16px',
+      }
     },
 
     colors:{

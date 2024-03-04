@@ -22,6 +22,7 @@ function DraggableTimeTable() {
     const endTime = 15;
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
+
     useEffect(() => {
       // 서버에서 받은 날짜들을 상태로 저장하는 부분은 생략합니다.
       // 여기서는 예시로 몇 가지 날짜를 직접 정의합니다.

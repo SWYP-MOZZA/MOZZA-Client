@@ -65,7 +65,9 @@ body {
 .secondary-shortBtn[disabled] {
   @apply bg-gray-300 border-gray-500 text-gray-500;
 }
-
+.container-basic {
+  @apply w-[588px] bg-white font-main;
+}
 .container-gray{
   @apply w-[588px] bg-gray-100 rounded-3xl font-main font-medium;
 }
