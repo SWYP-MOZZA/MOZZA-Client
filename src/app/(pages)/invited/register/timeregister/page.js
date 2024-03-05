@@ -3,8 +3,9 @@ import React,{ useState,useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
-import ResultBox from '../../../../components/result/resultBox';
-import HoverBox from '../../../../components/result/hoverBox';
+import ResultBox from '../../../../components/result/result-time/unconfirmed-resultBox';
+import HoverBox from '../../../../components/result/result-time/hoverBox';
+import { usePathname, useRouter } from 'next/navigation';
 
 const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
   ssr: false
@@ -15,6 +16,7 @@ const DraggableTimeTable = dynamic(() => import('../../../../components/table/dr
   }); 
 
 const TimeRegister = () => {
+  const router = useRouter();
   const [selected, setSelected] = useState('register');
   const [isHover, setIsHover] = useState(false);
 
@@ -32,7 +34,12 @@ const TimeRegister = () => {
       setSelected("register");
       console.log('selected');
     }
-};
+  };
+
+  const onClickRegisterBtn = () => {
+    console.log('등록하기 버튼 클릭');
+    router.push('/');
+  }
 
   return (
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
@@ -62,7 +69,8 @@ const TimeRegister = () => {
           </div>
           <DraggableTimeTable />
           <div className='m-[20px]'/>
-          <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
+          <LongBtn style={'primary-longBtn'} 
+          onClick={onClickRegisterBtn}>등록하기</LongBtn>
         </div> : 
         // 일정 결과 페이지
         <div className='w-[3/4] flex justify-between'>

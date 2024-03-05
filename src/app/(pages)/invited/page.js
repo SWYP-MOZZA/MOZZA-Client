@@ -35,6 +35,7 @@ const InvitedPage = () => {
 
     const onClickResult = () => {
         console.log('click Result');
+        router.push('/invited/timeresult');
     }
     
 

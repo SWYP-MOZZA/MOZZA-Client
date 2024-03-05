@@ -13,11 +13,11 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
 const serverDatesData = {'2023-03-12': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
+  {'time': '09:30', 'member': 2},
+  {'time': '10:00', 'member': 12},
+  {'time': '10:30', 'member': 4},
+  {'time': '11:00', 'member': 5},
+  {'time': '11:30', 'member': 10},
   {'time': '12:00', 'member': 9},
   {'time': '12:30', 'member': 9},
   {'time': '13:00', 'member': 9},
@@ -157,6 +157,7 @@ const serverDatesData = {'2023-03-12': [{'time': '09:00', 'member': 9},
   {'time': '14:00', 'member': 9},
   {'time': '14:30', 'member': 9}]};
 
+const totalParticipants = 12;
 function ResultTimeTable() {
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
@@ -196,10 +197,25 @@ function ResultTimeTable() {
         setCurrentPage(current => Math.max(current - 1, 0));
     };
 
+
+    // 배경색을 결정하는 함수
+    // 배경색 적용을 위한 함수 수정
+    // 주의: 실제 CSS 배경색 적용을 위해 className 대신 style 객체를 사용
+    const getBackgroundColorStyle = (member) => {
+        const percentage = (member / totalParticipants) * 100;
+        let color;
+        if (percentage <= 20) color = '#FFFFFF'; // white
+        else if (percentage <= 40) color = '#CCF2E1'; // green-100
+        else if (percentage <= 60) color = '#66D19E'; // green-300
+        else if (percentage <= 80) color = '#32B67A'; // green-500
+        else color = '#008248'; // green-700
+
+        return { backgroundColor: color };
+    };
       return (
        <div className='flex flex-col'>
             <div className='flex justify-between items-center'>
-                <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">12명 참여</span>
+                <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">{totalParticipants}명 참여</span>
 
                 <span className='mr-[72px]'>{currentPage + 1}/{totalPages}</span>
             </div>
@@ -229,17 +245,21 @@ function ResultTimeTable() {
                         <tbody>
                         {allTimes.map((time, index) => (
                             <Tr key={index}>
-                            <Td>
-                                {time.endsWith(':00') ? `${time.split(':')[0]}시` : ''}
-                            </Td>
-                            {currentDateKeys.map(date => (
-                                <Td key={date}>{serverDatesData[date]?.find(slot => slot.time === time)?.member || ''}</Td>
-                            ))}
+                            <Td>{time.endsWith(':00') ? `${time.split(':')[0]}시` : ''}</Td>
+                            {currentDateKeys.map(date => {
+                                const slot = serverDatesData[date]?.find(slot => slot.time === time);
+                                const style = getBackgroundColorStyle(slot ? slot.member : 0); // 스타일 적용
+                                return (
+                                <Td key={date} style={style}>
+                                    {slot ? slot.member : ''}
+                                </Td>
+                                );
+                            })}
                             <Td />
                             </Tr>
                         ))}
-                        
                         </tbody>
+
                     </Table>
                 </TableContainer>
             </div>

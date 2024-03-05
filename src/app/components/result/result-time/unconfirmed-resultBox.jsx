@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
-const HoverBox = () => {
+const UnconfirmedTimeResultBox = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
 
@@ -20,7 +20,13 @@ const HoverBox = () => {
         <div className='flex flex-col w-[588px] px-8 py-6 border-2 border-green-600 rounded-resultBox bg-white'>
             <div className='flex items-center justify-between'>
                 <div className='flex items-center gap-4 font-main text-body1 font-normal'>
-                    <span>{formattedDate} (금) {meetingInfo.time}</span>
+                    <input 
+                        type="checkbox" 
+                        checked={isChecked} 
+                        onChange={() => setIsChecked(!isChecked)} 
+                        className="form-checkbox h-7 w-7 text-green-600"
+                    />
+                    <span>{formattedDate} (금) {meetingInfo.time ? meetingInfo.time : ''}</span>
                     
                 </div>
                 <div className='flex items-center'>
@@ -31,7 +37,7 @@ const HoverBox = () => {
                 </div>
             </div>
             {isOpen && (
-                <div className='w-full pt-4 flex flex-wrap justify-between'>
+                <div className='w-full pt-4 flex flex-wrap justify-between gap-y-2'>
                 {meetingInfo.participantsList.map((participant, index) => (
                   <div key={index} className='w-[18%] p-1 flex justify-center items-center rounded-resultName bg-gray-100'>{participant}</div>
                 ))}
@@ -42,4 +48,4 @@ const HoverBox = () => {
     );
 };
 
-export default HoverBox;
+export default UnconfirmedTimeResultBox;

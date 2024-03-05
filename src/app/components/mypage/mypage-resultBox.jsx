@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import { FaRegTrashAlt } from "react-icons/fa";
+import {useRouter} from 'next/navigation';
 
 const MypageResultBox = () => {
+    const router = useRouter();
 
     const meetingInfo = {
         name: "3월 면접 스터디",
@@ -20,6 +22,7 @@ const MypageResultBox = () => {
 
     const onClickDetailBtn = () => {
         console.log('detail');
+        router.push('/mypage/timedetail/confirmed');
     }
 
     return (
@@ -39,7 +42,7 @@ const MypageResultBox = () => {
                     <div className='flex flex-col items-center '>
                         <div className='flex-1 shrink-0 basis-0 font-main text-body3 font-normal text-gray-800 leading-resultBox'>모임 생성일: {meetingInfo.date}</div>
                     </div>
-                    <button class="flex h-12 px-8 text-white justify-center items-center gap-2.5 rounded-full bg-green-600"
+                    <button className="flex h-12 px-8 text-white justify-center items-center gap-2.5 rounded-full bg-green-600"
                         onClick={onClickDetailBtn}>
                     자세히 보기
                     </button>

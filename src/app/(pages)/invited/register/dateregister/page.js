@@ -5,9 +5,17 @@ import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
 import Container from '@/app/components/common/Container';
 import CustomCalendar from '@/app/components/mainPage/CustomCalender';
-
+import UnconfirmedDateResultBox from '@/app/components/\bresult/result-date/unconfirmed-resultBox';
+import HoverDateBox from '@/app/components/\bresult/result-date/hoverBox';
+import ResultCalendar from '@/app/components/table/result-calendar';
 const DateRegister = () => {
   const [selected, setSelected] = useState('register');
+  const [isHover, setIsHover] = useState(false);
+
+  const onClickFilterBtn = () => {
+    console.log('필터 버튼 클릭');
+    setIsHover(!isHover);
+  }
 
   //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
@@ -53,7 +61,21 @@ const DateRegister = () => {
           <LongBtn style={'primary-longBtn'} >등록하기</LongBtn>
         </div> : 
         // 일정 결과 페이지
-        <div>일정 결과</div>}
+        <div className='w-[3/4] flex justify-between'>
+          <div>
+                <ResultCalendar/>
+            </div>
+            <div className='flex flex-col gap-2.5 mt-[50px]'>
+                {isHover && <HoverDateBox/>}
+                <div className='flex justify-end'>
+                    <button onClick={onClickFilterBtn} className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-gray-300">필터</button>
+                </div>
+                <UnconfirmedDateResultBox/>
+                <UnconfirmedDateResultBox/>
+                <UnconfirmedDateResultBox/>
+                <UnconfirmedDateResultBox/>
+            </div>
+          </div>}
     </div>
   );
 }

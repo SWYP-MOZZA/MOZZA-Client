@@ -1,8 +1,8 @@
 "use client";
 import React,{useState}from 'react';
 import dynamic from 'next/dynamic';
-import ResultBox from '../../components/result/resultBox';
-import HoverBox from '../../components/result/hoverBox';
+import ResultBox from '../../components/result/result-time/unconfirmed-resultBox';
+import HoverBox from '../../components/result/result-time/hoverBox';
 import MypageResultBox from '@/app/components/mypage/mypage-resultBox';
 
 const ResultTimeTable = dynamic(() => import('../../components/table/result-timetable'), {

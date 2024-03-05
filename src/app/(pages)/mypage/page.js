@@ -1,9 +1,11 @@
 "use client";
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import MypageResultBox from '@/app/components/mypage/mypage-resultBox';
 
 export default function MyPage(){
     const [selected, setSelected] = useState('unconfirmed');
+    const [isLatest, setIsLatest] = useState(false);
 
     //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
@@ -14,28 +16,61 @@ export default function MyPage(){
       setSelected("confirmed");
       console.log('selected');
     }
-};
+    };
+    
     return (
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
-        <Switch value={selected}>
-            <span /> 
-            <UnconfirmedBtn //상세정보 버튼
-            type="button"
-            value={selected}
-            onClick={() => onChangeMode("confirmed")}
-            >
-            미확정된 모임
-            </UnconfirmedBtn>
-            <ConfirmedBtn //전시리뷰 버튼
-            type="button"
-            value={selected}
-            onClick={() => onChangeMode("unconfirmed")}
-            >
-            확정된 모임
-            </ConfirmedBtn>
-        </Switch>
-        </div>
-    )
+            <Switch value={selected}>
+                <span /> 
+                <UnconfirmedBtn //상세정보 버튼
+                type="button"
+                value={selected}
+                onClick={() => onChangeMode("confirmed")}
+                >
+                미확정된 모임
+                </UnconfirmedBtn>
+                <ConfirmedBtn //전시리뷰 버튼
+                type="button"
+                value={selected}
+                onClick={() => onChangeMode("unconfirmed")}
+                >
+                확정된 모임
+                </ConfirmedBtn>
+            </Switch>
+            <div className='flex flex-col justify-center items-center'>
+                <div className="inline-flex w-[588px] pt-[20px] items-start gap-2">
+                <button
+                    className={`flex px-6 py-2 justify-center items-center gap-2 rounded-full font-normal font-main ${isLatest ? 'bg-green-100' : 'bg-gray-300'}`}
+                    onClick={() => setIsLatest(true)}
+                >
+                    최신순
+                </button>
+                <button
+                    className={`flex px-6 py-2 justify-center items-center gap-2 rounded-full font-normal font-main ${!isLatest ? 'bg-green-100' : 'bg-gray-300'}`}
+                    onClick={() => setIsLatest(false)}
+                >
+                    오래된순
+                </button>
+                </div>
+            </div>
+            {selected === "unconfirmed" ? 
+            // 일정 등록 페이지
+            <div className='flex flex-col gap-6'>
+                <MypageResultBox/>
+                <MypageResultBox/>
+                <MypageResultBox/>
+            </div>
+            
+             : 
+            // 일정 결과 페이지
+            <div className='flex flex-col gap-6'>
+                <MypageResultBox/>
+                <MypageResultBox/>
+                <MypageResultBox/>
+            </div>}
+            </div>
+    );
+
 }
 
 const Switch = styled.div`
