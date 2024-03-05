@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 const MypageResultBox = () => {
 
@@ -14,15 +14,35 @@ const MypageResultBox = () => {
     const [, month, day] = meetingDate.split('.');
     const formattedDate = `${month}월 ${day}일`;
 
+    const onClickDeleteBtn  = () => {
+        console.log('delete');
+    }
+
+    const onClickDetailBtn = () => {
+        console.log('detail');
+    }
+
     return (
         <div className='flex flex-col w-[588px] px-8 py-6 border-2 border-green-600 rounded-resultBox bg-white'>
-            <div className='flex items-center justify-between'>
+            <div className='flex flex-col justify-between'>
+                <div className='flex justify-between font-main text-body1 font-normal'>
+                    <span>{meetingInfo.name}</span>
+                    <button onClick={onClickDeleteBtn}>
+                        <FaRegTrashAlt size={32} />
+                    </button>
+                </div>
                 <div className='flex items-center gap-4 font-main text-body1 font-normal'>
-                    <span>{formattedDate} (금) {meetingInfo.time}</span>
+                    <span>현재 {meetingInfo.participants}명 참여</span>
                     
                 </div>
-                <div className='flex items-center'>
-                <span className='font-main text-body1 font-normal'>{meetingInfo.participants}명</span>
+                <div className='flex w-[524px] items-end justify-between'>
+                    <div className='flex flex-col items-center '>
+                        <div className='flex-1 shrink-0 basis-0 font-main text-body3 font-normal text-gray-800 leading-resultBox'>모임 생성일: {meetingInfo.date}</div>
+                    </div>
+                    <button class="flex h-12 px-8 text-white justify-center items-center gap-2.5 rounded-full bg-green-600"
+                        onClick={onClickDetailBtn}>
+                    자세히 보기
+                    </button>
                 </div>
             </div>
         </div>  
