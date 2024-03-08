@@ -41,7 +41,7 @@ const InvitedPage = () => {
 
   return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[80px] gap-y-6'>
-      <span className="text-h1 font-bold">가능한 시간을 선택해주세요!</span>
+      <span className="text-h1 font-bold">가능한 일정을 등록해주세요!</span>
       <div className={' w-[588px] bg-gray-100 rounded-3xl font-main font-normal p-[24px] flex flex-col justify-center text-subtitle3'}>
         <div className="w-full pt-[20px] ">
             <span className="w-[100px] inline-block">모임명</span> <span>{meetingInfo.name}</span>

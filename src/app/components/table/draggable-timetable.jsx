@@ -12,22 +12,18 @@ import styled from 'styled-components';
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
-function DraggableTimeTable() {
-    const [timeSlots, setTimeSlots] = useState({});
+function DraggableTimeTable(
+  { meetingData, updateTimeSlots }
+  ) {
+    const [localTimeSlots, setLocalTimeSlots] = useState({}); // 이름 변경
     const [isDragging, setIsDragging] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [pages, setPages] = useState([]);
-
-    const startTime = 9;
-    const endTime = 15;
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
 
     useEffect(() => {
-      // 서버에서 받은 날짜들을 상태로 저장하는 부분은 생략합니다.
-      // 여기서는 예시로 몇 가지 날짜를 직접 정의합니다.
-      const serverDates = ["2023-03-12", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-20", "2023-03-22", "2023-03-23", "2023-03-24", "2023-03-25", "2023-03-26", "2023-03-27", "2023-03-28"];
-      
+      const serverDates = meetingData.dates;
       const paginateDates = (dates, pageSize) => {
         const pages = [];
         for (let i = 0; i < dates.length; i += pageSize) {
@@ -38,9 +34,9 @@ function DraggableTimeTable() {
 
       const slots = {};
       serverDates.forEach(day => {
-        const slotCount = (endTime - startTime) * 2; // 30분 간격으로 타임슬롯 계산
+        const slotCount = (meetingData.endTime - meetingData.startTime) * 2; // 30분 간격으로 타임슬롯 계산
         slots[day] = Array.from({ length: slotCount }, (_, i) => {
-          const hour = startTime + Math.floor(i / 2);
+          const hour = meetingData.startTime + Math.floor(i / 2);
           const minute = i % 2 === 0 ? '00' : '30';
           return {
             time: `${hour}:${minute}`,
@@ -49,10 +45,11 @@ function DraggableTimeTable() {
         });
       });
     
-      setTimeSlots(slots);
+      setLocalTimeSlots(slots);
       console.log('타임슬롯 : ',slots);
       setPages(paginateDates(serverDates, pageSize))
-    }, []); // 의존성 배열을 비워서 컴포넌트 마운트 시 한 번만 실행되도록 함
+      updateTimeSlots(slots); // 상위 컴포넌트의 상태 업데이트
+    }, [meetingData, setLocalTimeSlots]);
   
     // 페이지 넘김 기능
     const nextPage = () => {
@@ -71,14 +68,14 @@ function DraggableTimeTable() {
     const resetTimeSlots = () => {
       // 새 객체를 생성하여 각 타임슬롯의 isActive를 false로 설정
       const resetSlots = Object.fromEntries(
-        Object.entries(timeSlots).map(([day, slots]) => [
+        Object.entries(localTimeSlots).map(([day, slots]) => [
           day,
           slots.map(slot => ({ ...slot, isActive: false }))
         ])
       );
     
       // 업데이트된 객체로 timeSlots 상태를 설정
-      setTimeSlots(resetSlots);
+      setLocalTimeSlots(resetSlots);
     };
 
       const handleMouseDown = (e, day, index) => {
@@ -95,11 +92,11 @@ function DraggableTimeTable() {
     
       const handleMouseUp = () => {
         setIsDragging(false);
-        console.log(timeSlots);
+        console.log(localTimeSlots);
       };
 
       const toggleSlot = (day, index) => {
-        setTimeSlots(prev => ({
+        setLocalTimeSlots(prev => ({
           ...prev,
           [day]: prev[day].map((slot, i) => i === index ? { ...slot, isActive: !slot.isActive } : slot)
         }));
@@ -129,16 +126,16 @@ function DraggableTimeTable() {
         </Tr>
       </thead>
       <tbody>
-        {Array.from({ length: (endTime - startTime) * 2 }, (_, index) => {
+        {Array.from({ length: (meetingData.endTime - meetingData.startTime) * 2 }, (_, index) => {
           // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
           const isHalfHour = index % 2 !== 0;
-          const hour = Math.floor(startTime + index / 2);
+          const hour = Math.floor(meetingData.startTime + index / 2);
           const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
           return (
             <Tr key={index}>
               <Td>{timeLabel}</Td>
               {pages[currentPage]?.map(day => {
-                const isActive = timeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
+                const isActive = localTimeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
                 return (
                   <Td
                     key={`${day}-${index}`}

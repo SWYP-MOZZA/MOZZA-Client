@@ -1,49 +1,53 @@
 import React, {useState} from 'react';
 import { FaRegTrashAlt } from "react-icons/fa";
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-const MypageResultBox = () => {
+
+const MypageResultBox = ({
+    handleDeletePopup,
+    meeting
+}) => {
     const router = useRouter();
 
-    const meetingInfo = {
-        name: "3월 면접 스터디",
-        date: "2024.03.14",
-        time: "14:00 - 14:30",
-        participants: 10,
-        participantsList: ['김철수', '박영희', '이영수', '홍길동', '김성진', '박지우', '최유정', '여성찬', '윤혜원', '오승준'],
-    };
-    const meetingDate = meetingInfo.date;
-    const [, month, day] = meetingDate.split('.');
-    const formattedDate = `${month}월 ${day}일`;
+    // Date 객체 생성
+    const date = new Date(meeting.createdAt);
+
+    // Date 객체를 원하는 형식의 문자열로 변환
+    const formattedDate = `${date.getFullYear()}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getDate().toString().padStart(2, '0')}`;
 
     const onClickDeleteBtn  = () => {
         console.log('delete');
+        handleDeletePopup();
     }
 
-    const onClickDetailBtn = () => {
+    const onClickDetailBtn = (meetingId) => {
         console.log('detail');
-        router.push('/mypage/timedetail/confirmed');
+        router.push({
+            pathname: '/mypage/timedetail/confirmed', // 이동하려는 페이지의 경로
+            query: { meetingId: meetingId }, // 전달하고자 하는 쿼리 파라미터
+          });
     }
+    
 
     return (
         <div className='flex flex-col w-[588px] px-8 py-6 border-2 border-green-600 rounded-resultBox bg-white'>
             <div className='flex flex-col justify-between'>
                 <div className='flex justify-between font-main text-body1 font-normal'>
-                    <span>{meetingInfo.name}</span>
+                    <span>{meeting.meetingName}</span>
                     <button onClick={onClickDeleteBtn}>
                         <FaRegTrashAlt size={32} />
                     </button>
                 </div>
                 <div className='flex items-center gap-4 font-main text-body1 font-normal'>
-                    <span>현재 {meetingInfo.participants}명 참여</span>
+                    <span>현재 {meeting.submitUserNumber}명 참여</span>
                     
                 </div>
                 <div className='flex w-[524px] items-end justify-between'>
                     <div className='flex flex-col items-center '>
-                        <div className='flex-1 shrink-0 basis-0 font-main text-body3 font-normal text-gray-800 leading-resultBox'>모임 생성일: {meetingInfo.date}</div>
+                        <div className='flex-1 shrink-0 basis-0 font-main text-body3 font-normal text-gray-800 leading-resultBox'>모임 생성일: {formattedDate}</div>
                     </div>
                     <button className="flex h-12 px-8 text-white justify-center items-center gap-2.5 rounded-full bg-green-600"
-                        onClick={onClickDetailBtn}>
+                        onClick={() => onClickDetailBtn(meeting.meetingId)}>
                     자세히 보기
                     </button>
                 </div>

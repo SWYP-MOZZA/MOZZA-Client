@@ -12,158 +12,17 @@ import styled from 'styled-components';
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
-const serverDatesData = {'2023-03-12': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 2},
-  {'time': '10:00', 'member': 12},
-  {'time': '10:30', 'member': 4},
-  {'time': '11:00', 'member': 5},
-  {'time': '11:30', 'member': 10},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-13': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-15': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-17': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-20': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-22': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-23': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-24': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-25': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-26': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-27': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}],
- '2023-03-28': [{'time': '09:00', 'member': 9},
-  {'time': '09:30', 'member': 9},
-  {'time': '10:00', 'member': 9},
-  {'time': '10:30', 'member': 9},
-  {'time': '11:00', 'member': 9},
-  {'time': '11:30', 'member': 9},
-  {'time': '12:00', 'member': 9},
-  {'time': '12:30', 'member': 9},
-  {'time': '13:00', 'member': 9},
-  {'time': '13:30', 'member': 9},
-  {'time': '14:00', 'member': 9},
-  {'time': '14:30', 'member': 9}]};
 
 const totalParticipants = 12;
-function ResultTimeTable() {
+function ResultTimeTable(
+    { onHoverChange,resultData }
+    ) {
     const [currentPage, setCurrentPage] = useState(0);
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
+    const serverDatesData = resultData.data;
     // 모든 날짜의 키들을 가져옴
-    const allDates = Object.keys(serverDatesData);
+    const allDates = serverDatesData.flatMap(obj => Object.keys(obj));
 
     // 총 페이지 수 계산
     const totalPages = Math.ceil(allDates.length / pageSize);
@@ -179,14 +38,17 @@ function ResultTimeTable() {
 
     // 모든 시간대를 찾아내는 로직
     let allTimes = [];
-    Object.values(serverDatesData).forEach(day => {
-        day.forEach(slot => {
+    serverDatesData.forEach(dayObject => {
+    Object.values(dayObject).forEach(slots => {
+        slots.forEach(slot => {
         if (!allTimes.includes(slot.time)) {
             allTimes.push(slot.time);
         }
         });
     });
+    });
     allTimes = allTimes.sort(); // 시간대 정렬
+
 
     // 페이지 이동 함수
     const nextPage = () => {
@@ -197,12 +59,21 @@ function ResultTimeTable() {
         setCurrentPage(current => Math.max(current - 1, 0));
     };
 
+    // 셀에 대한 마우스 호버 이벤트 핸들러
+    const handleMouseEnter = (date, time) => {
+        onHoverChange(date, time); // 부모 컴포넌트에 날짜와 시간대 전달
+        console.log(date, time);
+    };
+
+    const handleMouseLeave = () => {
+        onHoverChange(null, null); // 호버가 종료되면 null을 전달
+    };
 
     // 배경색을 결정하는 함수
     // 배경색 적용을 위한 함수 수정
     // 주의: 실제 CSS 배경색 적용을 위해 className 대신 style 객체를 사용
     const getBackgroundColorStyle = (member) => {
-        const percentage = (member / totalParticipants) * 100;
+        const percentage = (member / resultData.numberOfSubmit) * 100;
         let color;
         if (percentage <= 20) color = '#FFFFFF'; // white
         else if (percentage <= 40) color = '#CCF2E1'; // green-100
@@ -215,7 +86,7 @@ function ResultTimeTable() {
       return (
        <div className='flex flex-col'>
             <div className='flex justify-between items-center'>
-                <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">{totalParticipants}명 참여</span>
+                <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">{resultData.numberOfSubmit}명 참여</span>
 
                 <span className='mr-[72px]'>{currentPage + 1}/{totalPages}</span>
             </div>
@@ -244,19 +115,28 @@ function ResultTimeTable() {
                         </thead>
                         <tbody>
                         {allTimes.map((time, index) => (
-                            <Tr key={index}>
+                        <Tr key={index}>
                             <Td>{time.endsWith(':00') ? `${time.split(':')[0]}시` : ''}</Td>
                             {currentDateKeys.map(date => {
-                                const slot = serverDatesData[date]?.find(slot => slot.time === time);
-                                const style = getBackgroundColorStyle(slot ? slot.member : 0); // 스타일 적용
+                                let slot;
+                                serverDatesData.forEach(obj => {
+                                    if(obj[date]) { // 날짜에 해당하는 객체를 찾습니다.
+                                        slot = obj[date].find(slotItem => slotItem.time === time);
+                                    }
+                                });
+                                const style = getBackgroundColorStyle(slot ? slot.attendee.length : 0); // 스타일 적용
                                 return (
-                                <Td key={date} style={style}>
-                                    {slot ? slot.member : ''}
-                                </Td>
+                                    <Td 
+                                    key={`${date}-${time}`} 
+                                    onMouseEnter={() => handleMouseEnter(date, time)}
+                                    onMouseLeave={handleMouseLeave}
+                                    style={style}>
+                                        {slot ? slot.attendee.length : ''}
+                                    </Td>
                                 );
                             })}
                             <Td />
-                            </Tr>
+                        </Tr>
                         ))}
                         </tbody>
 

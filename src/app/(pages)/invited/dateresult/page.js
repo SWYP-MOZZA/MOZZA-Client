@@ -1,7 +1,7 @@
 "use client";
 import React,{useState} from 'react';
-import ResultBox from '@/app/components/result/result-time/confirmed-resultBox';
-import HoverBox from '@/app/components/result/result-time/hoverBox';
+import ResultBox from '@/app/components/result/result-time/confirmed-resultBox';
+import HoverBox from '@/app/components/result/result-time/hoverBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 
 const ResultPage = () => {

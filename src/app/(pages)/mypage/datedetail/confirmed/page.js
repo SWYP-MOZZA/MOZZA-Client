@@ -1,7 +1,7 @@
 "use client";
-import ConfirmedBox from '@/app/components/result/result-time/confirmedmeetingBox';
-import HoverBox from '@/app/components/result/result-time/hoverBox';
-import ConfirmedResultBox from '@/app/components/result/result-time/confirmed-resultBox';
+import ConfirmedBox from '@/app/components/result/result-time/confirmedmeetingBox';
+import HoverBox from '@/app/components/result/result-time/hoverBox';
+import ConfirmedResultBox from '@/app/components/result/result-time/confirmed-resultBox';
 import React,{useState} from 'react';
 
 const MypageDateConfirmedDetail = () => {

@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
 import Container from '@/app/components/common/Container';
 import CustomCalendar from '@/app/components/mainPage/CustomCalender';
-import UnconfirmedDateResultBox from '@/app/components/\bresult/result-date/unconfirmed-resultBox';
-import HoverDateBox from '@/app/components/\bresult/result-date/hoverBox';
+import UnconfirmedDateResultBox from '@/app/components/result/result-date/unconfirmed-resultBox';
+import HoverDateBox from '@/app/components/result/result-date/hoverBox';
 import ResultCalendar from '@/app/components/table/result-calendar';
 const DateRegister = () => {
   const [selected, setSelected] = useState('register');
