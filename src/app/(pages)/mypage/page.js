@@ -122,6 +122,7 @@ export default function MyPage(){
               },
             });
             console.log(response.data);
+            
             // 받아온 데이터를 createdAt 날짜 기준으로 오름차순 정렬
             const sortedConfirmedMeetings = response.data.ConfirmedMeeting.sort((a, b) => 
             new Date(a.createdAt) - new Date(b.createdAt)

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const MeetConfirmed1 = (
+const LinkShared = (
     {
         onConfirm,
         onDecline
@@ -11,19 +11,15 @@ const MeetConfirmed1 = (
     return (
         <Popup>
             <div className='text-subtitle2 font-normal text-gray-800 leading-relaxed'>선택하신 일정이 등록되었어요!</div>
-            <div className='flex flex-col items-center text-subtitle1 font-normal text-gray-1000 mt-[10px]'>
-                <span>일정이 확정되면</span> 
-                <span>카카오톡 알림을 받으실래요?</span>
-            </div>
+                <div>링크가 복사되었어요!</div>
             <ButtonGroup>
-                <button className="bg-green-100 w-[195px] h-[64px] rounded-full px-[64px] text-main text-subtitle2" onClick={onDecline}>아니요</button>
                 <button className="bg-green-600 text-white w-[195px] h-[64px] rounded-full px-[32px] text-main text-subtitle2 " onClick={onConfirm}>받을래요</button>
             </ButtonGroup>
         </Popup>
     );
 };
 
-export default MeetConfirmed1;
+export default LinkShared;
 
 const Popup = styled.div`
     position: fixed;
@@ -31,7 +27,7 @@ const Popup = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    border-radius: 24px;
+    border-radius: 16px;
     width: 588px;
     height: 326px;
     background-color: #FFFEFE;

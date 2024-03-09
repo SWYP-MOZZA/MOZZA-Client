@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
 import ConfirmedResultBox from '../../../../components/result/result-time/confirmed-resultBox';
 import HoverBox from '../../../../components/result/result-time/hoverBox';
-import { usePathname, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
@@ -36,13 +36,20 @@ const TimeRegister = () => {
 
   //라우터
   const router = useRouter();
+  const params = useSearchParams();
+  const meetingId = params.get('meetingId');
+
   //스위치 전환
   const [selected, setSelected] = useState('register');
 
   // 일정 결과에 필요한 상태
   // 더미데이터
   const [resultData, setResultData] = useState({
+    "meeting id" : 1,
+	  "createdAt" : "2024-03-02T23:33",
     "numberOfSubmit":6,
+    "confirmedDate" : "2023-03-12",
+	  "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
     "data":[
     {
       '2023-03-12': [
@@ -236,7 +243,7 @@ const TimeRegister = () => {
   // meetingData 형식 {날짜: 배열 , 시작시간 : string, 끝나는 시간:string}
   const bringMeetingData = async() => {
     try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting`);
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/detail`);
       setMeetingData(response.data);
       console.log(response.data);
     }
@@ -265,17 +272,22 @@ const TimeRegister = () => {
   const [currentPopup, setCurrentPopup] = useState(null);
   
   // "예" 버튼 핸들러
-  const handleYesPopup = () => setCurrentPopup(currentPopup+1); // 두 번째 팝업으로
+  const handleYesPopup = () => setCurrentPopup(currentPopup+1); 
+  const handleKakaoLogin = () => {
+    console.log('카카오 로그인');
+    setCurrentPopup(currentPopup+1)
+  }
 
   // "아니오" 버튼 핸들러
-  const handleNoPopup = () => {
-    sendRequestAndClosePopup(); // request 보내고 팝업 닫기
+  const handleNoPopup = (meetingId) => {
+    sendRequestAndClosePopup(meetingId); // request 보내고 팝업 닫기
   };
 
-  const sendRequestAndClosePopup = async () => {
+  const sendRequestAndClosePopup = async (meetingId) => {
     try {
       const response = await axios.post(`${SERVER_BASE_URL}/meeting/register`, timeSlots);
       console.log('Request sent successfully', response.data);
+      router.push(`/invited/timeresult?meetingId={meetingId}`)
     } catch (error) {
       console.error('Error sending request:', error);
     }
@@ -361,9 +373,9 @@ const TimeRegister = () => {
           <div className='m-[20px]'/>
           <LongBtn style={'primary-longBtn'} 
           onClick={onClickRegisterBtn}>등록하기</LongBtn>
-          {currentPopup === 1 && <MeetConfirmed1 onConfirm={handleYesPopup} onDecline={handleNoPopup} />}
-          {currentPopup === 2 && <MeetConfirmed2 onConfirm={handleYesPopup} onDecline={handleNoPopup} />}
-          {currentPopup === 3 && <MeetConfirmed3 onConfirm={handleNoPopup} />}
+          {currentPopup === 1 && <MeetConfirmed1 onConfirm={handleYesPopup} onDecline={()=>handleNoPopup(meetingId)} />}
+          {currentPopup === 2 && <MeetConfirmed2 onConfirm={handleKakaoLogin} onDecline={()=>handleNoPopup(meetingId)} />}
+          {currentPopup === 3 && <MeetConfirmed3 onConfirm={()=>handleNoPopup(meetingId)} />}
 
         </div> : 
         // 일정 결과 페이지

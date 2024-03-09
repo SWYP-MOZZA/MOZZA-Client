@@ -4,11 +4,14 @@ import HoverBox from '@/app/components/result/result-time/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/result-time/confirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import React,{useState,useEffect} from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter,useSearchParams } from 'next/navigation';
 
 
 const MypageConfirmedDetail = () => {
+  // 쿼리 파라미터
   const router = useRouter();
+  const searchParams = useSearchParams()
+  const meetingId = searchParams.get('meetingId');
 
   const [filteredResultData, setFilteredResultData] = useState([]);
   const [resultData, setResultData] = useState({
@@ -202,13 +205,9 @@ const MypageConfirmedDetail = () => {
   }, [resultData]); // 의존성 배열에 resultData 추가
 
   useEffect(() => {
-    if(router.isReady) {
-      console.log(router.query); // 전체 쿼리 파라미터를 콘솔에 출력
-      const { meetingId } = router.query;
-      console.log(meetingId);
-      // meetingId를 사용하는 로직...
-    }
-  }, [router.isReady, router.query]);
+    console.log(meetingId);
+  }
+  , [meetingId]);
 
 
   return (

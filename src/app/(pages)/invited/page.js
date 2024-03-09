@@ -12,30 +12,30 @@ const InvitedPage = () => {
     const [isOpen, setIsOpen] = useState(false); // 참여자 목록 토글 상태
 
     // 모임 정보 (예시 데이터)
-    const meetingInfo = {
-        name: "3월 면접 스터디",
-        date: "2024.03.07 - 2024.03.14",
-         time: "14:00 - 20:00",
-        participants: 10, // 참여자 수
-        participantsList: ['김철수','박영희', '이영수', '홍길동', '김성진','박지우','최유정','여성찬','윤혜원','오승준'],
-    };
+    // 더미데이터
+    const [meetingInfo, setMeetingInfo] = useState({
+        "meetingId": 1,
+        "name": "Meeting1",
+        "startDate": "2024-03-12",
+        "endDate" : "2024-03-15",
+        "startTime": "09:00",
+        "endTime": "10:30",
+        "numberOfVoter": 4,
+        "attendee" : ["최유정", "윤혜원", "여성찬","김성진"] 
+    });
 
-    useEffect(() => {
-        // 컴포넌트가 마운트된 후에 라우터를 사용
-        // 예: 초기 경로 설정, 리디렉션 등
-    }, []);
-    const onClickRegister = () => {
+    const onClickRegister = (meetingId) => {
         console.log('click Register');
-        router.push('/invited/register');
+        router.push(`/invited/register?meetingId=${meetingId}`);
     }
 
     const onClickInvite = () => {
         console.log('click Invite');
     }
 
-    const onClickResult = () => {
+    const onClickResult = (meetingId) => {
         console.log('click Result');
-        router.push('/invited/timeresult');
+        router.push(`/invited/timeresult?meetingId=${meetingId}`);
     }
     
 
@@ -47,16 +47,16 @@ const InvitedPage = () => {
             <span className="w-[100px] inline-block">모임명</span> <span>{meetingInfo.name}</span>
         </div>
         <div className="w-full pt-[20px]">
-            <span className="w-[100px] inline-block">모임날짜</span> <span>{meetingInfo.date}</span>
+            <span className="w-[100px] inline-block">모임날짜</span> <span>{meetingInfo.startDate} ~ {meetingInfo.endDate}</span>
         </div>
         <div className="w-full pt-[20px] pb-[20px]">
-            <span className="w-[100px] inline-block">시간대</span> <span>{meetingInfo.time}</span>
+            <span className="w-[100px] inline-block">시간대</span> <span>{meetingInfo.startTime} ~ {meetingInfo.endTime}</span>
         </div>
         <hr className="w-full border-t border-gray-300 my-2 " /> {/* 가로선 */}
         <div className='w-full flex justify-between items-center pt-[20px]'>
             <div className='flex items-center gap-[10px]'> {/* 내부 컨테이너 추가 */}
                 <span className="w-[100px] inline-block">참여자</span>
-                <span>총 {meetingInfo.participants} 명</span>
+                <span>총 {meetingInfo.numberOfSubmit} 명</span>
             </div>
             <button onClick={() => setIsOpen(!isOpen)} className='bg-blue-500 text-black p-2 rounded-md'>
                 {isOpen ? <AiOutlineUp size={24}/> : <AiOutlineDown size={24} />}
@@ -64,16 +64,16 @@ const InvitedPage = () => {
         </div>
         {isOpen && (
             <div className='w-full pt-[20px] flex flex-wrap justify-start'>
-            {meetingInfo.participantsList.map((participant, index) => (
+            {meetingInfo.attendee.map((participant, index) => (
               <div key={index} className='w-1/5 min-w-[20%] p-1 flex justify-center items-center text-center'>{participant}</div>
             ))}
           </div>    
         )}
         </div>
         <div className="w-full pt-[20px]"/>
-        <LongBtn style={'primary-longBtn'} onClick={onClickRegister}>일정 등록하기</LongBtn>
+        <LongBtn style={'primary-longBtn'} onClick={()=>onClickRegister(meetingInfo.meetingId)}>일정 등록하기</LongBtn>
         <LongBtn style={'secondary-longBtn'} onClick={onClickInvite}>모임 초대하기</LongBtn>
-        <LongBtn style={'secondary-longBtn'} onClick={onClickResult}>결과 확인하기</LongBtn>
+        <LongBtn style={'secondary-longBtn'} onClick={()=> onClickResult(meetingInfo.meetingId)}>결과 확인하기</LongBtn>
         {/* <SpeechBubble>
             <span>모임장이 일정을 확정하면</span>
             <span>바로 카카오 알림을 보내드려요!</span>

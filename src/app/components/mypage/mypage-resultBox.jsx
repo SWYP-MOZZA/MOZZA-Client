@@ -20,13 +20,15 @@ const MypageResultBox = ({
         handleDeletePopup();
     }
 
-    const onClickDetailBtn = (meetingId) => {
+    const onClickDetailBtn = (meetingId, meeting) => {
         console.log('detail');
-        router.push({
-            pathname: '/mypage/timedetail/confirmed', // 이동하려는 페이지의 경로
-            query: { meetingId: meetingId }, // 전달하고자 하는 쿼리 파라미터
-          });
-    }
+        if (meeting.confirmedDate === null) {
+          router.push(`/mypage/timedetail/unconfirmed?meetingId=${meetingId}`);
+        } else {
+          router.push(`/mypage/timedetail/confirmed?meetingId=${meetingId}`);
+        }
+      }
+      
     
 
     return (
@@ -47,7 +49,7 @@ const MypageResultBox = ({
                         <div className='flex-1 shrink-0 basis-0 font-main text-body3 font-normal text-gray-800 leading-resultBox'>모임 생성일: {formattedDate}</div>
                     </div>
                     <button className="flex h-12 px-8 text-white justify-center items-center gap-2.5 rounded-full bg-green-600"
-                        onClick={() => onClickDetailBtn(meeting.meetingId)}>
+                        onClick={() => onClickDetailBtn(meeting.meetingId,meeting)}>
                     자세히 보기
                     </button>
                 </div>
