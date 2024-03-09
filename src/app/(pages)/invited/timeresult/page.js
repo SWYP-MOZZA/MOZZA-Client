@@ -4,6 +4,7 @@ import ConfiremdResultBox from '@/app/components/result/result-time/confirmed-re
 import HoverBox from '@/app/components/result/result-time/hoverBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { useQuery } from 'react-query';
 import axios from 'axios';
 
 const ResultPage = () => {
@@ -193,7 +194,12 @@ const ResultPage = () => {
         { "time":"14:00", "attendee" : ["류준열", "전도연"] },
         { "time":"14:30", "attendee" : ["조승우", "배두나"] }
       ]}]});
-      
+  
+  // 리액트 쿼리 API 호출 로직
+  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
+  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
+  // });
+
   //resultBox 생성
   const [filteredResultData, setFilteredResultData] = useState([]);
   
@@ -232,21 +238,6 @@ const ResultPage = () => {
   };
 
   const slotData = findDataForHoveredInfo();
-
-
-  // useEffect(() => {
-
-  // console.log('meetingInfo:', meetingInfo);
-  //   // try {
-  //   //   const response = axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}`);
-  //   //   setMeetingInfo(response.data);
-  //   //   console.log(response.data);
-  //   // }
-  //   // catch (error) {
-  //   //   console.error('error:', error.response || error.message);
-  //   // }
-  // }
-  // ,[]);
 
   useEffect(() => {
     // 필터링 및 정렬 로직

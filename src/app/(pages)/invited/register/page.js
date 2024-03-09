@@ -39,8 +39,6 @@ const Register = () => {
             localStorage.setItem('guestState', JSON.stringify(guestState));
             // 페이지 이동
             router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
-
-
         } catch (error) {
             // 오류 처리
             console.error('Login error:', error.response || error.message);

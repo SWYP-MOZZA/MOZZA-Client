@@ -1,17 +1,25 @@
 "use client";
-import ConfirmedMessage from '@/app/components/popup/confirmedMessage';
-import ConfirmedBox from '@/app/components/result/result-time/confirmedmeetingBox';
+import ConfirmedMessage from '@/app/components/popup/confirmed-message';
+import axios from 'axios';
+import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeMessage';
 import HoverBox from '@/app/components/result/result-time/hoverBox';
 import UnconfirmedResultBox from '@/app/components/result/result-time/unconfirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import React,{useState,useEffect} from 'react';
-
+import { useQuery } from 'react-query';
 const MypageConfirmedDetail = () => {
   // 호버 상태
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
   const [filteredResultData, setFilteredResultData] = useState([]);
-  const [resultData, setResultData] = useState({
-    "numberOfSubmit":6,
+
+  // 더미데이터
+  const [meetingInfo, setMeetingInfo] = useState({
+    "meetingId" : 1,
+    "createdAt" : "2024-03-02T23:33",
+    "numberOfSubmit" : 6,
+    "confirmedDate" : "2023-03-12",
+    "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
+    "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
     "data":[
     {
       '2023-03-12': [
@@ -182,7 +190,11 @@ const MypageConfirmedDetail = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
-    
+  // 리액트 쿼리 API 호출 로직
+  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
+  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
+  // });
+
   //확정할 약속 데이터  
   const [selectedSlot, setSelectedSlot] = useState(null);
   const handleSlotCheck = (slotData) => {
@@ -203,27 +215,48 @@ const MypageConfirmedDetail = () => {
 
   //확정을 위한 상태 및 함수
   const [isConfirmedPopup, setIsConfirmedPopup] = useState(false);
+  const [isConfirmedPopupComplete, setIsConfirmedPopupComplete] = useState(false);
+
   const onClickConfirmedDeleteBtn = () => {
     setIsConfirmedPopup(false);
     console.log('확정된 모임 삭제 버튼 클릭');
   }
-  //수정 필요
-  const onClickConfirmedGoBtn = () => {
-    try {
-      const reponse = axios.post(`${SERVER_BASE_URL}/meeting/confirm`, {
-        data: selectedSlot,
-        }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        console.log(reponse.data);
-        // 확정 후 새로고침
-        window.location.reload();
-      } catch (error) {
-        console.error('error:', error.response ? error.response : error.message);
-      }
 
+  const onPopupConfirmedComplete = () => {
+    setIsConfirmedPopup(false);
+    setIsConfirmedPopupComplete(true);
+    console.log('확정된 모임 완료 버튼 클릭');
+  }
+  //수정 필요
+  const onClickConfirmedGoBtn = (meetingId) => {
+    const requestData = {
+      "meeting id" : meetingInfo.meetingId,
+      "createdAt" : meetingInfo.createdAt,
+      "numberOfSubmit" : meetingInfo.numberOfSubmit,
+      "confirmedDate" : selectedSlot.date,
+      "confirmedTime" : {"startTime" : selectedSlot.time , "endTime" :"10:00" },
+      "confirmedAttendee" : selectedSlot.attendee
+    }
+    console.log('request:', requestData);
+    // try {
+    //   console.log(requestData);
+    //   const reponse = axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
+    //     data: requestData,
+    //     }, {
+    //       headers: {
+    //         Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //       },
+    //     });
+    //     console.log(reponse.data);
+
+    //     onPopupConfirmedComplete();
+
+    //     // 확정 후 새로고침
+    //     window.location.reload();
+    //   } catch (error) {
+    //     console.error('error:', error.response ? error.response : error.message);
+    //   }
+      onPopupConfirmedComplete();
     }
 
   const onClickConfirmedBtn = () => {
@@ -242,7 +275,7 @@ const MypageConfirmedDetail = () => {
       return null;
     }
 
-    const dayData = resultData.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
+    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
     if (!dayData) {
       return null;
     }
@@ -255,12 +288,12 @@ const MypageConfirmedDetail = () => {
 
   useEffect(() => {
     // 필터링 및 정렬 로직
-    const filteredAndSortedData = resultData.data.flatMap(dayObject => 
+    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
       Object.entries(dayObject).flatMap(([date, slots]) => 
         slots.map(slot => ({
           ...slot,
           date,
-          ratio: slot.attendee.length / resultData.numberOfSubmit
+          ratio: slot.attendee.length / meetingInfo.numberOfSubmit
         }))
         .filter(slot => slot.ratio >= 0.5)
       )
@@ -268,16 +301,16 @@ const MypageConfirmedDetail = () => {
   
     // 필터링 및 정렬된 데이터를 상태에 저장
     setFilteredResultData(filteredAndSortedData);
-  }, [resultData]); // 의존성 배열에 resultData 추가
+  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
   return (
     <div>
-      {isConfirmedPopup === true && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
-      )}
+      { (isConfirmedPopup || isConfirmedPopupComplete) && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+        )}
       <div className='w-[3/4] m-[50px] flex justify-between'>
           <div>
-            <ResultTimeTable onHoverChange={handleHoverChange}  resultData={resultData}/>
+            <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
               {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
@@ -298,12 +331,13 @@ const MypageConfirmedDetail = () => {
             </div>
             <div className='fixed bottom-[24px] left-1/2 transform -translate-x-1/2 flex gap-2 font-main font-normal text-subtitle2'>
                 <button className="flex w-[588px] h-[64px] px-16 justify-center items-center rounded-full bg-green-600 text-white"
-                  onClick={onClickConfirmedBtn}
+                  onClick={()=>onClickConfirmedBtn(meetingInfo.meetingId)}
                 >확정하기</button>
                 
             </div>
           </div>
           {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
+          {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
     </div>
   );
 };

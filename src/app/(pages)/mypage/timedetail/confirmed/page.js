@@ -1,10 +1,10 @@
 "use client";
 import ConfirmedBox from '@/app/components/result/result-time/confirmedmeetingBox';
-import HoverBox from '@/app/components/result/result-time/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/result-time/confirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import React,{useState,useEffect} from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';
+import { useQuery } from 'react-query';
 
 
 const MypageConfirmedDetail = () => {
@@ -14,7 +14,7 @@ const MypageConfirmedDetail = () => {
   const meetingId = searchParams.get('meetingId');
 
   const [filteredResultData, setFilteredResultData] = useState([]);
-  const [resultData, setResultData] = useState({
+  const [meetingInfo, setMeetingInfo] = useState({
     "numberOfSubmit":6,
     "data":[
     {
@@ -186,15 +186,19 @@ const MypageConfirmedDetail = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
+  // 리액트 쿼리 API 호출 로직
+  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
+  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
+  // });
 
   useEffect(() => {
     // 필터링 및 정렬 로직
-    const filteredAndSortedData = resultData.data.flatMap(dayObject => 
+    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
       Object.entries(dayObject).flatMap(([date, slots]) => 
         slots.map(slot => ({
           ...slot,
           date,
-          ratio: slot.attendee.length / resultData.numberOfSubmit
+          ratio: slot.attendee.length / meetingInfo.numberOfSubmit
         }))
         .filter(slot => slot.ratio >= 0.5)
       )
@@ -202,7 +206,7 @@ const MypageConfirmedDetail = () => {
   
     // 필터링 및 정렬된 데이터를 상태에 저장
     setFilteredResultData(filteredAndSortedData);
-  }, [resultData]); // 의존성 배열에 resultData 추가
+  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
   useEffect(() => {
     console.log(meetingId);
@@ -217,7 +221,7 @@ const MypageConfirmedDetail = () => {
       </div>
       <div className='w-[3/4] flex justify-between'>
           <div>
-                <ResultTimeTable onHoverChange={()=> console.log(0)} resultData={resultData}/>
+                <ResultTimeTable onHoverChange={()=> console.log(0)} resultData={meetingInfo}/>
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
                 {/* <div className='flex justify-end'>

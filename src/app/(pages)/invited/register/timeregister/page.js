@@ -10,6 +10,7 @@ import axios from 'axios';
 import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
+import { useQuery } from 'react-query';
 
 const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
   ssr: false
@@ -25,6 +26,7 @@ const TimeRegister = () => {
     name: '',
     password: '',
   });
+
   useEffect(() => {
     // 페이지 로드 시 localStorage에서 guestState를 불러옴
     const storedGuestState = localStorage.getItem('guestState');
@@ -42,9 +44,8 @@ const TimeRegister = () => {
   //스위치 전환
   const [selected, setSelected] = useState('register');
 
-  // 일정 결과에 필요한 상태
-  // 더미데이터
-  const [resultData, setResultData] = useState({
+  // 일정 결과에 필요한 상태, 더미데이터
+  const [meetingInfo, setMeetingInfo] = useState({
     "meeting id" : 1,
 	  "createdAt" : "2024-03-02T23:33",
     "numberOfSubmit":6,
@@ -220,6 +221,11 @@ const TimeRegister = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
+  // 리액트 쿼리 API 호출 로직
+  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
+  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
+  // });
+
 
   // 호버한 쎌 데이터
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
@@ -227,36 +233,43 @@ const TimeRegister = () => {
   // 필터링된 결과 데이터 참여율 50퍼 이상인 데이터만 저장
   const [filteredResultData, setFilteredResultData] = useState([]);
 
-
-  // 일정 등록에 필요한 상태
+  // 일정 등록에 필요한 상태 , 더미데이터
   const [meetingData, setMeetingData] = useState({
     dates: ["2023-03-12", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-20", "2023-03-22", "2023-03-23", "2023-03-24", "2023-03-25", "2023-03-26", "2023-03-27", "2023-03-28"],
     startTime: 9,
     endTime: 15
   });
+  // 일정 등록에 필요한 상태
+  const bringMeetingData = async (meetingId) => {
+    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`, {
+        headers: {
+          // 가져온 토큰을 'Authorization' 헤더에 'Bearer' 스키마와 함께 추가합니다.
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Meeting data fetched successfully', response.data);
+      setMeetingData(response.data);
+    } catch (error) {
+      console.error('Error fetching meeting data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    bringMeetingData();
+  }, []);
+
+
   const [timeSlots, setTimeSlots] = useState({});
 
   const onClickFilterBtn = () => {
     console.log('필터 버튼 클릭');
   }
 
-  // meetingData 형식 {날짜: 배열 , 시작시간 : string, 끝나는 시간:string}
-  const bringMeetingData = async() => {
-    try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/detail`);
-      setMeetingData(response.data);
-      console.log(response.data);
-    }
-    catch (error) {
-      console.error('error:', error.response || error.message);
-    }
-  }
-
-  // useEffect(() => {
-  //   bringMeetingData();
-  // }
-  // ,[]);
-
+  
   //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
     if (type === "result") {
@@ -285,7 +298,7 @@ const TimeRegister = () => {
 
   const sendRequestAndClosePopup = async (meetingId) => {
     try {
-      const response = await axios.post(`${SERVER_BASE_URL}/meeting/register`, timeSlots);
+      const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, timeSlots);
       console.log('Request sent successfully', response.data);
       router.push(`/invited/timeresult?meetingId={meetingId}`)
     } catch (error) {
@@ -312,7 +325,7 @@ const TimeRegister = () => {
       return null;
     }
 
-    const dayData = resultData.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
+    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
     if (!dayData) {
       return null;
     }
@@ -325,12 +338,12 @@ const TimeRegister = () => {
 
   useEffect(() => {
     // 필터링 및 정렬 로직
-    const filteredAndSortedData = resultData.data.flatMap(dayObject => 
+    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
       Object.entries(dayObject).flatMap(([date, slots]) => 
         slots.map(slot => ({
           ...slot,
           date,
-          ratio: slot.attendee.length / resultData.numberOfSubmit
+          ratio: slot.attendee.length / meetingInfo.numberOfSubmit
         }))
         .filter(slot => slot.ratio >= 0.5)
       )
@@ -338,7 +351,7 @@ const TimeRegister = () => {
   
     // 필터링 및 정렬된 데이터를 상태에 저장
     setFilteredResultData(filteredAndSortedData);
-  }, [resultData]); // 의존성 배열에 resultData 추가
+  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
   
   return (
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
@@ -381,7 +394,7 @@ const TimeRegister = () => {
         // 일정 결과 페이지
         <div className='w-[3/4] flex justify-between'>
           <div>
-          <ResultTimeTable onHoverChange={handleHoverChange}  resultData={resultData}/>
+          <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
                 {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
