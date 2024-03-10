@@ -30,6 +30,13 @@ module.exports = {
         'medium': 500,   
         'bold': 700,   
       },
+      borderRadius: {
+        'resultBox': '24px',
+        'resultName': '16px',
+      },
+      lineHeight: {
+        resultBox: '1.4', // 140%에 해당하는 값을 추가
+      },
     },
 
     colors:{
