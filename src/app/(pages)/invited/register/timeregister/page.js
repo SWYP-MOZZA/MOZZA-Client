@@ -1,5 +1,5 @@
 "use client";
-import React,{ useState,useEffect } from 'react';
+import React,{ useState,useEffect,useMemo } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
@@ -11,6 +11,7 @@ import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
 import { useQuery } from 'react-query';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
   ssr: false
@@ -21,6 +22,10 @@ const DraggableTimeTable = dynamic(() => import('../../../../components/table/dr
   }); 
 
 const TimeRegister = () => {
+  const HoverBoxMemo = React.memo(HoverBox);
+  const ConfirmedResultBoxMemo = React.memo(ConfirmedResultBox);
+  const DraggableTimeTableMemo = React.memo(DraggableTimeTable);
+
   //guest 정보
   const [guestState, setGuestState] = useState({
     name: '',
@@ -39,18 +44,23 @@ const TimeRegister = () => {
   //라우터
   const router = useRouter();
   const params = useSearchParams();
-  const meetingId = params.get('meetingId');
+  // const meetingId = params.get('meetingId');
+  const meetingId = 3; // 임시로 1로 설정
+  const [loading, setLoading] = useState(true); // 데이터 로딩 상태 관리
 
   //스위치 전환
   const [selected, setSelected] = useState('register');
 
-  // 일정 결과에 필요한 상태, 더미데이터
+  //더미데이터
   const [meetingInfo, setMeetingInfo] = useState({
-    "meeting id" : 1,
-	  "createdAt" : "2024-03-02T23:33",
+    name: "모임명1", // 추가 요청 
+    "meetingId" : 1,
+    "createdAt" : "2024-03-02T23:33",
     "numberOfSubmit":6,
     "confirmedDate" : "2023-03-12",
-	  "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
+    "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
+    "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
+    "attendee" : ["박지우","최유정","오승준","윤혜원","김태연","정수정"], // 추가 요청
     "data":[
     {
       '2023-03-12': [
@@ -221,12 +231,26 @@ const TimeRegister = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
-  // 리액트 쿼리 API 호출 로직
-  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
-  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
-  // });
 
-
+  const fetchMeetingData = async (meetingId) => {
+    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
+    // const token = localStorage.getItem('token');
+    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
+    try {
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
+        headers: {
+          // 가져온 토큰을 'Authorization
+          // ' 헤더에 'Bearer' 스키마와 함께 추가합니다.
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Meeting data fetched successfully', response.data.Data);
+      setMeetingInfo(response.data.Data);
+    } catch (error) {
+      console.error('Error fetching meeting data:', error);
+    }
+  };
+  
   // 호버한 쎌 데이터
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
   
@@ -234,16 +258,13 @@ const TimeRegister = () => {
   const [filteredResultData, setFilteredResultData] = useState([]);
 
   // 일정 등록에 필요한 상태 , 더미데이터
-  const [meetingData, setMeetingData] = useState({
-    dates: ["2023-03-12", "2023-03-13", "2023-03-15", "2023-03-17", "2023-03-20", "2023-03-22", "2023-03-23", "2023-03-24", "2023-03-25", "2023-03-26", "2023-03-27", "2023-03-28"],
-    startTime: 9,
-    endTime: 15
-  });
+  const [meetingData, setMeetingData] = useState({});
   // 일정 등록에 필요한 상태
+  
   const bringMeetingData = async (meetingId) => {
     // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
-    const token = localStorage.getItem('token');
-
+    // const token = localStorage.getItem('token');
+    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
     try {
       const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`, {
         headers: {
@@ -251,17 +272,31 @@ const TimeRegister = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('Meeting data fetched successfully', response.data);
-      setMeetingData(response.data);
+      console.log('Meeting data fetched successfully', response.data.Data);
+      setMeetingData(response.data.Data);
     } catch (error) {
       console.error('Error fetching meeting data:', error);
     }
   };
 
   useEffect(() => {
-    bringMeetingData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        // 두 비동기 함수를 동시에 호출하고 모두 완료될 때까지 기다림
+        await Promise.all([
+          bringMeetingData(meetingId),
+          // fetchMeetingData(meetingId),
+        ]);
+      } catch (error) {
+        console.error('데이터 불러오기 중 오류 발생:', error);
+      } finally {
+        console.log('데이터 불러오기 완료');
+        setLoading(false); // 모든 데이터 로딩이 완료되면 로딩 상태를 해제
+      }
+    };
 
+    fetchData();
+  }, [meetingId]); // meetingId가 변경될 때마다 fetchData 실행
 
   const [timeSlots, setTimeSlots] = useState({});
 
@@ -269,7 +304,6 @@ const TimeRegister = () => {
     console.log('필터 버튼 클릭');
   }
 
-  
   //버튼 클릭시마다 타입을 바꿔줍니다
   const onChangeMode = (type) => {
     if (type === "result") {
@@ -298,7 +332,14 @@ const TimeRegister = () => {
 
   const sendRequestAndClosePopup = async (meetingId) => {
     try {
-      const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, timeSlots);
+      const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
+      const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, timeSlots,{
+        headers: {
+          // 가져온
+          // 토큰을 'Authorization' 헤더에 'Bearer' 스키마와 함께 추가합니다.
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log('Request sent successfully', response.data);
       router.push(`/invited/timeresult?meetingId=${meetingId}`)
     } catch (error) {
@@ -334,7 +375,9 @@ const TimeRegister = () => {
     return slotData;
   };
 
-  const slotData = findDataForHoveredInfo();
+    // hoveredInfo를 기반으로 해당하는 데이터 찾기
+    const slotData = useMemo(() => findDataForHoveredInfo(), [hoveredInfo, meetingInfo]);
+
 
   useEffect(() => {
     // 필터링 및 정렬 로직
@@ -382,7 +425,7 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
-          <DraggableTimeTable meetingData={meetingData} updateTimeSlots={setTimeSlots} />
+          {!loading && <DraggableTimeTableMemo meetingData={meetingData} updateTimeSlots={setTimeSlots} />}
           <div className='m-[20px]'/>
           <LongBtn style={'primary-longBtn'} 
           onClick={onClickRegisterBtn}>등록하기</LongBtn>
@@ -394,16 +437,16 @@ const TimeRegister = () => {
         // 일정 결과 페이지
         <div className='w-[3/4] flex justify-between'>
           <div>
-          <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>
+          {!loading && <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>}
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
-                {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
+                {hoveredInfo.date && hoveredInfo.time && <HoverBoxMemo date={hoveredInfo.date} slotData={slotData} />}
                 <div className='flex justify-end'>
                     <button onClick={onClickFilterBtn} className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-gray-300">필터</button>
                 </div>
                 {
                 filteredResultData.map((slot, index) => (
-                  <ConfirmedResultBox key={index} slotData={slot} />
+                  <ConfirmedResultBoxMemo key={index} slotData={slot} />
                 ))
               }
             </div>

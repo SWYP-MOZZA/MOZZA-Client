@@ -12,8 +12,6 @@ import styled from 'styled-components';
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
-
-const totalParticipants = 12;
 function ResultTimeTable(
     { onHoverChange,resultData }
     ) {

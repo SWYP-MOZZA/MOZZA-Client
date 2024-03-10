@@ -186,10 +186,28 @@ const MypageConfirmedDetail = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
-  // 리액트 쿼리 API 호출 로직
-  // const { meetingInfo, isError, isLoading, error } = useQuery(['meetingData', meetingId], fetchMeetingData, {
-  //   // 옵션: 요청이나 캐시 관련 추가 설정이 필요한 경우 여기에 추가
-  // });
+  const fetchMeetingData = async (meetingId) => {
+    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
+    // const token = localStorage.getItem('token');
+    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
+    try {
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
+        headers: {
+          // 가져온 토큰을 'Authorization
+          // ' 헤더에 'Bearer' 스키마와 함께 추가합니다.
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Meeting data fetched successfully', response.data.Data);
+      setMeetingInfo(response.data.Data);
+    } catch (error) {
+      console.error('Error fetching meeting data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMeetingData(meetingId);
+  }, [meetingId]);
 
   useEffect(() => {
     // 필터링 및 정렬 로직

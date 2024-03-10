@@ -3,6 +3,7 @@ import React,{useState,useEffect} from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale을 직접 불러옴
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import moment from 'moment';
 
 dayjs.extend(isSameOrBefore); // isSameOrBefore 플러그인 활성화
 dayjs.locale('ko'); // locale을 한국어로 설정
@@ -23,7 +24,7 @@ function DraggableTimeTable(
 
 
     useEffect(() => {
-      const serverDates = meetingData.dates;
+      const serverDates = meetingData.date;
       const paginateDates = (dates, pageSize) => {
         const pages = [];
         for (let i = 0; i < dates.length; i += pageSize) {
@@ -31,25 +32,27 @@ function DraggableTimeTable(
         }
         return pages;
       };
-
+      const startTime = parseInt(meetingData.startTime.split(':')[0], 10) * 60 + parseInt(meetingData.startTime.split(':')[1], 10);
+      const endTime = parseInt(meetingData.endTime.split(':')[0], 10) * 60 + parseInt(meetingData.endTime.split(':')[1], 10);
       const slots = {};
-      serverDates.forEach(day => {
-        const slotCount = (meetingData.endTime - meetingData.startTime) * 2; // 30분 간격으로 타임슬롯 계산
-        slots[day] = Array.from({ length: slotCount }, (_, i) => {
-          const hour = meetingData.startTime + Math.floor(i / 2);
-          const minute = i % 2 === 0 ? '00' : '30';
-          return {
-            time: `${hour}:${minute}`,
-            isActive: false // 초기 상태는 비활성화
-          };
+        serverDates.forEach(day => {
+          const slotCount = (endTime - startTime) / 30; // 30분 간격으로 타임슬롯 계산, 2를 곱하는 대신에 30으로 나눔
+          slots[day] = Array.from({ length: slotCount }, (_, i) => {
+            const timeInMinutes = startTime + i * 30; // 시작 시간에 i * 30분을 더해 각 슬롯의 시간을 계산
+            const hour = Math.floor(timeInMinutes / 60);
+            const minute = timeInMinutes % 60 === 0 ? '00' : '30';
+            return {
+              time: `${hour}:${minute}`,
+              isActive: false // 초기 상태는 비활성화
+            };
+          });
         });
-      });
     
       setLocalTimeSlots(slots);
-      console.log('타임슬롯 : ',slots);
-      setPages(paginateDates(serverDates, pageSize))
-      updateTimeSlots(slots); // 상위 컴포넌트의 상태 업데이트
-    }, [meetingData, setLocalTimeSlots]);
+      console.log('타임슬롯 : ', slots);
+      setPages(paginateDates(serverDates, pageSize));
+    }, [meetingData, updateTimeSlots]); // setLocalTimeSlots 제거, updateTimeSlots 추가
+    
   
     // 페이지 넘김 기능
     const nextPage = () => {
@@ -102,6 +105,13 @@ function DraggableTimeTable(
         }));
       };
 
+      const convertTimeToMinutes = (time) => {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+      };
+      
+      const startTimeInMinutes = convertTimeToMinutes(meetingData.startTime);
+      const endTimeInMinutes = convertTimeToMinutes(meetingData.endTime);
   return (
     <div className='flex flex-col justify-center items-center'>
       <div className="w-full pt-[20px] flex flex-row justify-center items-start">
@@ -126,18 +136,20 @@ function DraggableTimeTable(
         </Tr>
       </thead>
       <tbody>
-        {Array.from({ length: (meetingData.endTime - meetingData.startTime) * 2 }, (_, index) => {
-          // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
-          const isHalfHour = index % 2 !== 0;
-          const hour = Math.floor(meetingData.startTime + index / 2);
-          const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
+  {Array.from({ length: (endTimeInMinutes - startTimeInMinutes) / 30 }, (_, index) => {
+    // 정각인 경우 "9시", "10시" 등으로 표시, 30분인 경우 빈 문자열로 처리
+    const isHalfHour = index % 2 !== 0;
+    const timeInMinutes = startTimeInMinutes + (index * 30);
+    const hour = Math.floor(timeInMinutes / 60);
+    const timeLabel = isHalfHour ? '' : `${hour}시`; // 30분인 경우 빈 문자열, 아니면 "시" 추가
+    return (
+      <Tr key={index}>
+        <Td>{timeLabel}</Td>
+        {pages[currentPage]?.map(day => {
+          const isActive = localTimeSlots[day][index]?.isActive; // 해당 날짜와 시간에 대한 isActive 상태
           return (
-            <Tr key={index}>
-              <Td>{timeLabel}</Td>
-              {pages[currentPage]?.map(day => {
-                const isActive = localTimeSlots[day][index].isActive; // 해당 날짜와 시간에 대한 isActive 상태
-                return (
-                  <Td
+            <Td
+         
                     key={`${day}-${index}`}
                     isActive={isActive}
                     onMouseDown={(e) => handleMouseDown(e, day, index)}
@@ -152,6 +164,7 @@ function DraggableTimeTable(
           );
         })}
       </tbody>
+
       </Table>
     </TableContainer>
     

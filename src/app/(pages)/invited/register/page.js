@@ -3,6 +3,7 @@ import React,{useState} from 'react';
 import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 const Register = () => {
     const router = useRouter();
@@ -43,7 +44,6 @@ const Register = () => {
             // 오류 처리
             console.error('Login error:', error.response || error.message);
         }
-        r
     };
 
 return (

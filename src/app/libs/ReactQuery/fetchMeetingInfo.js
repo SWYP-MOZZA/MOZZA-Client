@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const fetchMeetingData = async ({ queryKey }) => {
+export const fetchMeetingData = async ({ queryKey }) => {
   // queryKey 배열에서 meetingId 추출
   const [, meetingId] = queryKey;
   
