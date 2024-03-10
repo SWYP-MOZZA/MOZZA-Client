@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from 'react';
 import '../../styles/custom-selectBox.css';
 
 
-export default function TimeSelector({reset}){
+export default function TimeSelector({reset,setter}){
 
     const [selectedTime, setSelectedTime] = useState('00:00')
     useEffect(() => {
@@ -11,7 +11,9 @@ export default function TimeSelector({reset}){
           setSelectedTime('00:00');
         }
       }, [reset]);
-    
+    useEffect(()=>{
+        setter(selectedTime);
+    },[selectedTime])
     return (
         <div>
 

@@ -1,7 +1,29 @@
+'use client'
 import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 export default function userInfoPage(){
+    const [userId, setUserId] = useState('');
+    const [userName, setUserName]= useState('');
+    const [userEmail, setUserEmail]= useState('');
+    async function getUserInfo(){
+        const userId = sessionStorage.getItem('userId');
+        if(userId){
+            setUserId('userId');
+            console.log(userId);
+        }
+        const res = await axios.get(`${SERVER_BASE_URL}user/${userId}`);
+        console.log(res.data);
+        setUserName(res.data.name);
+        setUserEmail(res.data.email);
+    }
+
+    useEffect(()=>{
+        getUserInfo();
+    },[])
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px]'>
             <h1 className='text-subtitle1 font-medium mb-8'>회원정보</h1>
@@ -12,8 +34,8 @@ export default function userInfoPage(){
                         <div>이메일</div>
                     </div>
                     <div className='content flex flex-col  text-subtitle2 font-medium gap-y-6'>
-                        <div>박지우</div>
-                        <div>dlfnadkf@kakao.com</div>
+                        <div>{userName}</div>
+                        <div>{userEmail}</div>
                     </div>
                 </div>
             </Container>

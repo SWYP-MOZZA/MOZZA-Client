@@ -1,6 +1,6 @@
 'use client' 
 
-import {useContext, useState } from 'react';
+import {useContext, useEffect, useState } from 'react';
 import Container from '../components/common/Container';
 import LongBtn from '../components/common/LongBtn';
 import ShortBtn from '../components/common/ShortBtn';
@@ -11,23 +11,69 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../styles/custom-checkbox-style.css';
 import TimeSelector from '../components/mainPage/TimeSelector';
+import axios from 'axios';
+import { SERVER_BASE_URL } from '../constants/BaseUrl';
+import { useSelector } from 'react-redux';
 
 export default function Home() {
     const router = useRouter();
     const [isCheck, setIsCheck] = useState([false,false,false]);
     const [isOnClick, setIsOnClick] = useState(false);
+    const [meetingName, setMeetingName] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime,setEndTime] = useState('')
+    const [isOnlyDate, setIsOnlyDate] = useState(false);
+
+    const selectedDates = useSelector((state)=>state.calendar.selectedDates)
+
+
 
     function handleInputChange(input){
         console.log(input.target.value);
+        const inputVal = input.target.value;
         if(inputVal !== ''){
             const newArr = [...isCheck];
             newArr[0]=true;
             setIsCheck(newArr);
+            setMeetingName(inputVal);
         }else{
             const newArr = [...isCheck];
             newArr[0]=false;
             setIsCheck(newArr);
+            setMeetingName(inputVal);
         }
+    }
+    useEffect(()=>{
+        if(startTime!=='' && startTime !== endTime){
+            const newArr = [...isCheck];
+            newArr[2] = true;
+            setIsCheck(newArr);
+        }
+    },[startTime,endTime])
+    async function postMeetingInfo(data){
+        const res = await axios.post(`${SERVER_BASE_URL}meeting/create`,{data});
+        console.log(res);
+    }
+    function handleButtonClicked(){
+        const submitData={
+            name:meetingName,
+            date:selectedDates,
+            startTime:startTime,
+            endTime:endTime,
+            onlyDate:isOnlyDate,
+
+        }
+        console.log(submitData);
+
+        const res = postMeetingInfo(submitData);
+        console.log(res.data);
+
+        // response로 id 받아와서 그 값을 url에 넣기 
+        // const responseId = '123533sdfe34';
+        // router.push(`/${responseId}/new`)
+    }
+    function handleCheckbox(e){
+        setIsOnlyDate(e.target.checked);
     }
 
     return (
@@ -69,19 +115,19 @@ export default function Home() {
                 </div>
                 <div className='content-container flex flex-col justify-center mx-[62px] my-8 gap-y-6'>
                     <div className='flex items-end w-[402px]  justify-start gap-3'>
-                        <TimeSelector reset={isOnClick} />
+                        <TimeSelector reset={isOnClick} setter={setStartTime} />
                         <div>부터</div>
-                        <TimeSelector reset={isOnClick}/>
+                        <TimeSelector reset={isOnClick} setter={setEndTime}/>
                         <div>까지</div>
                     </div>
                     <div className='checkbox-container flex justify-start items-center'>
-                        <input type='checkbox' id='onlyDate' className='check w-8 h-8 mr-3'/>
+                        <input type='checkbox' id='onlyDate' className='check w-8 h-8 mr-3' onChange={handleCheckbox}/>
                         <label className='text-body2 font-normal cursor-pointer' htmlFor='onlyDate'>날짜만 정하면 돼요!</label>
                     </div>
                     <div className='text-center cursor-pointer underline underline-offset-4' onClick={()=>setIsOnClick(!isOnClick)}>초기화</div>
                 </div>
             </Container>
-            <LongBtn style={'primary-longBtn'} onClick={() => router.push('/[slug]')}>
+            <LongBtn style={'primary-longBtn'} onClick={handleButtonClicked}>
                 모임만들기
             </LongBtn>
         </div>

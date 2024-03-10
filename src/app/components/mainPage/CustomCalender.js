@@ -1,58 +1,71 @@
+'use client'
 import Calendar from 'react-calendar';
 import React, { useState, useEffect } from 'react';
 import '../../styles/custom-calendar.css';
+import {useDispatch, useSelector} from 'react-redux'
+import { setSelectedDates } from '@/app/redux/store';
 
 export default function CustomCalendar({setIsCheck}){
     const [isClient, setIsClient] = useState(false)
     const [value, onChange] = useState(new Date());
-    const [selectedDates, setSelectedDates] = useState([])
+
+
+    //const [selectedDates, setSelectedDates] = useState([])
     const [clickedDate, setClickedDate] = useState('');
+
+    const dispatch = useDispatch();
+    const selectedDates = useSelector((state)=>state.calendar.selectedDates)
     useEffect(() => {
         setIsClient(true);
+        console.log(selectedDates);
       }, []);
 
 
-
-    function handleDayClicked(date){
+    function formatDate(date){
         const formattedDate = date.toLocaleDateString('ko-KR', {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
           });         
-        const selectedDate = formattedDate.split('. ').join('-').replace(/\.$/, '')
-        // 중복 방지 & 선택 해제 
-        console.log(selectedDate)
-        const updatedSelectedDates = [...selectedDates]
-        if (selectedDates.includes(selectedDate)) {
-            console.log(selectedDates.includes(selectedDate),'들어있다')
-            const removeIndex = selectedDates.indexOf(selectedDate);
-            updatedSelectedDates.splice(removeIndex,1);
-            setSelectedDates(updatedSelectedDates);
-            return;
-            // return setSelectedDates((prev)=> {selectedDates.splice(removeIndex)})
-            
-        }
-
-        // 클릭한 날짜 추가
-        setSelectedDates(prevSelectedDates => {
-            const newDates = [...prevSelectedDates, selectedDate];
-            return [...new Set(newDates)]; // 중복 제거
-        });
-        
+        const selectedDate = formattedDate.split('. ').join('-').replace(/\.$/, '');
+        return selectedDate;
     }
+
+    function handleDayClicked(date) {
+        const selectedDate = formatDate(date);
+        const updatedSelectedDates = [...selectedDates];
+      
+        // 이미 선택된 날짜인 경우 선택 해제
+        if (selectedDates.includes(selectedDate)) {
+          const removeIndex = selectedDates.indexOf(selectedDate);
+          updatedSelectedDates.splice(removeIndex, 1);
+        } else {
+          // 클릭한 날짜 추가
+          updatedSelectedDates.push(selectedDate);
+        }
+      
+        dispatch(setSelectedDates(updatedSelectedDates));
+      }
     const tileClassName = ({ date }) => {
-        const formattedDate = date.toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
-        const currentDate = formattedDate.split('. ').join('-').replace(/\.$/, '');
-    
-        return selectedDates.includes(currentDate) ? 'react-calendar__tile--active' : '';
+       
+        const currentDate = formatDate(date);
+        if(selectedDates.includes(currentDate)){
+            return 'react-calendar__tile--active'
+        }
+        // return selectedDates.includes(currentDate) ? 'react-calendar__tile--active' : '';
+
+        
       };
 
+    //   const tileClassName = ({ date }) => {
+    //     const currentDate = formatDate(date);
+    //     const isActive = selectedDates.includes(currentDate);
+      
+    //     return isActive ? 'react-calendar__tile--active' : '';
+    //   };
+
     function handleResetBtn(){
-        setSelectedDates([]);
+        dispatch(setSelectedDates([]));
 
     }
 
@@ -61,20 +74,47 @@ export default function CustomCalendar({setIsCheck}){
         // newArr[1] = isCheck;
         // props.setIsCheck(newArr);
         setIsCheck((prev)=>{
-            console.log(isCheck);
+            // console.log(isCheck);
             const newArr = [...prev];
             newArr[1] = isCheck;
             return newArr;
         })
     }
     useEffect(()=>{
-        console.log('길이', selectedDates.length, selectedDates);
         if(selectedDates.length !== 0){
             setIsChecked(true);
         }else if(selectedDates.length === 0){
             setIsChecked(false)
         }
+
     },[selectedDates])
+
+    // function handleOnChange(value,event){
+    //     console.log('value',value);
+    //     const [start, end] = value;
+    //     const formattedStart = formatDate(start)
+    //     const formattedEnd = formatDate(end)
+
+    //     const rangeDates = getDatesBetween(formattedStart, formattedEnd);
+    //     setSelectedDates((prevSelectedDates) => {
+    //     const newDates = [...prevSelectedDates, ...rangeDates];
+    //     return [...new Set(newDates)]; // 중복 제거
+    //     });
+
+    // }
+    // function getDatesBetween(start, end) {
+    //     const startDate = new Date(start);
+    //     const endDate = new Date(end);
+    //     const dates = [];
+    //     let currentDate = startDate;
+      
+    //     while (currentDate <= endDate) {
+    //       dates.push(formatDate(currentDate));
+    //       currentDate.setDate(currentDate.getDate() + 1);
+    //     }
+    //     return dates;
+    //   }
+    
     return (
         <div>
             { isClient? (
@@ -82,6 +122,7 @@ export default function CustomCalendar({setIsCheck}){
                     <Calendar
                         locale='ko' 
                         onClickDay={(e)=>handleDayClicked(e)}
+                        // onChange={(value,event)=>handleOnChange(value,event)}
                         value={''}
                         next2Label={null}
                         prev2Label={null}
@@ -89,6 +130,7 @@ export default function CustomCalendar({setIsCheck}){
                         formatDay={(locale, date) =>
                             date.toLocaleString('en', { day: 'numeric' })
                         }
+                        // selectRange={true}                    
                         />
                     
                     <div className='cursor-pointer underline underline-offset-4' onClick={handleResetBtn}>초기화</div>
