@@ -6,11 +6,14 @@ import LongBtn from '../components/common/LongBtn';
 import ShortBtn from '../components/common/ShortBtn';
 import CheckNumCircle from '../components/mainPage/CheckNumCircle';
 import CustomCalendar from '../components/mainPage/CustomCalender';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import '../styles/custom-checkbox-style.css';
 import TimeSelector from '../components/mainPage/TimeSelector';
+
+const queryClient = new QueryClient();
 
 export default function Home() {
     const router = useRouter();
@@ -18,6 +21,7 @@ export default function Home() {
     const [isOnClick, setIsOnClick] = useState(false);
 
     return (
+        <QueryClientProvider client={queryClient}>
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <img src='svg/logoFull.svg' className='logo w-[200px] h-[88.24px]' />
             <h1 className='title text-h1 font-bold w-[575px] text-center'>
@@ -72,5 +76,6 @@ export default function Home() {
                 모임만들기
             </LongBtn>
         </div>
+        </QueryClientProvider>
     );
   }

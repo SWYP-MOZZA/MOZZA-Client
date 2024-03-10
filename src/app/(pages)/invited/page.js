@@ -11,7 +11,8 @@ import LinkShared from '@/app/components/popup/link-shared';
 const InvitedPage = () => {
     const router = useRouter();
     const params = useSearchParams();
-    const meetingId = params.get('meetingId');
+    // const meetingId = params.get('meetingId');
+    const meetingId = 1; // 임시로 1로 설정
 
     // 참여자 목록 토글 상태
     const [isOpen, setIsOpen] = useState(false); 
@@ -19,20 +20,22 @@ const InvitedPage = () => {
     // 모임 정보 (예시 데이터)
     // 더미데이터
     const [meetingShortInfo, setMeetingShortInfo] = useState({
-        "meetingId": 1,
-        "name": "Meeting1",
-        "startDate": "2024-03-12",
-        "endDate" : "2024-03-15",
-        "startTime": "09:00",
-        "endTime": "10:30",
-        "numberOfSubmit": 4,
-        "attendee" : ["최유정", "윤혜원", "여성찬","김성진"] 
+        // "meetingId": 1,
+        // "name": "Meeting1",
+        // "startDate": "2024-03-12",
+        // "endDate" : "2024-03-15",
+        // "startTime": "09:00",
+        // "endTime": "10:30",
+        // "numberOfSubmit": 4,
+        // "attendee" : ["최유정", "윤혜원", "여성찬","김성진"] 
     });
+
     const bringMeetingInfo = async () => {
         try {
             // 서버로부터 모임 정보를 가져옴
             const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/short`);
-            setMeetingInfo(response.data);
+            setMeetingShortInfo(response.data.Data);
+            console.log('모임 정보:', response.data);
         } catch (error) {
             console.error('error:', error.response ? error.response : error.message);
         }
