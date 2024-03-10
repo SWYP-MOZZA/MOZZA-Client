@@ -10,6 +10,7 @@ const ConfirmedCompleteMessage = (
 ) => {
     const router = useRouter();
 
+    //추가 필요
     const onClickShareBtn = () => {
         console.log('share');
         setIsConfirmedPopupComplete(false);

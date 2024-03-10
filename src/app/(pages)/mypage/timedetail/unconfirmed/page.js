@@ -240,7 +240,7 @@ const MypageConfirmedDetail = () => {
     console.log('request:', requestData);
     // try {
     //   console.log(requestData);
-    //   const reponse = axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
+    //   const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
     //     data: requestData,
     //     }, {
     //       headers: {

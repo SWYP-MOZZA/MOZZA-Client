@@ -3,17 +3,15 @@ import styled from 'styled-components';
 
 const LinkShared = (
     {
-        onConfirm,
-        onDecline
+        setIsCompleteLinkPopup
     }
 ) => {
 
     return (
         <Popup>
-            <div className='text-subtitle2 font-normal text-gray-800 leading-relaxed'>선택하신 일정이 등록되었어요!</div>
-                <div>링크가 복사되었어요!</div>
+            <div className='text-subtitle1 font-medium leading-relaxed'>링크가 복사 되었어요!</div>
             <ButtonGroup>
-                <button className="bg-green-600 text-white w-[195px] h-[64px] rounded-full px-[32px] text-main text-subtitle2 " onClick={onConfirm}>받을래요</button>
+                <button className="bg-green-600 text-white w-[195px] h-[64px] rounded-full px-[32px] text-main text-subtitle2 " onClick={()=>setIsCompleteLinkPopup(false)}>확인</button>
             </ButtonGroup>
         </Popup>
     );

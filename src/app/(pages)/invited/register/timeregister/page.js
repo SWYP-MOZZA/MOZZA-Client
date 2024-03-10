@@ -257,7 +257,7 @@ const TimeRegister = () => {
       console.error('Error fetching meeting data:', error);
     }
   };
-  
+
   useEffect(() => {
     bringMeetingData();
   }, []);
@@ -300,7 +300,7 @@ const TimeRegister = () => {
     try {
       const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, timeSlots);
       console.log('Request sent successfully', response.data);
-      router.push(`/invited/timeresult?meetingId={meetingId}`)
+      router.push(`/invited/timeresult?meetingId=${meetingId}`)
     } catch (error) {
       console.error('Error sending request:', error);
     }
