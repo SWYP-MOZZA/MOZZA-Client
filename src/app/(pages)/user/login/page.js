@@ -7,10 +7,9 @@ import Router, { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage(){
-    const REST_API_KEY = '216a4d544c4f02c9d606f62593086065'
-    const REDIRECT_URI = 'http://localhost:3000/oauth/kakao'
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}
-    `
+    
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&redirect_uri=http://localhost:3000/auth&response_type=code`
+    
     const router = useRouter();
     
     function handleKakaoBtnClicked(){

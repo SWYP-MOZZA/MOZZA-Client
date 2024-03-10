@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { FaMinus } from "react-icons/fa6";
 
+import { useRouter } from 'next/navigation';
 
 export default function memberPage(){
     const [num,setNum] = useState(0);
@@ -21,6 +22,10 @@ export default function memberPage(){
             return updatedNum;
         });
     }
+    function handleBtnClick(){
+        console.log('설정인원 체크 : ',num);
+        //!여기서 "ableNotificaton" : true,"numberOfVoter" : 6 post 요청       
+    }
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[120px]'>
             <Container type={'container-gray'} style={'py-[64px]'}>
@@ -35,7 +40,7 @@ export default function memberPage(){
                 </div>
             </Container>
             <div className='flex flex-col gap-y-[16px] justify-center items-center my-[64px]'>
-                <LongBtn style={'primary-longBtn'}>알림받기</LongBtn>
+                <LongBtn style={'primary-longBtn'} onClick={()=>handleBtnClick()}>알림받기</LongBtn>
                 <div>안 받을래요</div>
             </div>
         </div>

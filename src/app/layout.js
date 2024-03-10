@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from './(pages)/MainLayout';
+import { Providers } from './redux/provider';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +16,10 @@ export default function RootLayout({ children }) {
       
       <body className={inter.className}>
         <main className="flex min-h-screen flex-col items-center pt-[80px] bg-white">
+          <Providers>
           <MainLayout></MainLayout>
-          {children}
+            {children}
+          </Providers>
         </main>        
       </body>
     </html>

@@ -1,7 +1,11 @@
+'use client'
 import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
+import { useRouter } from 'next/navigation';
 
 export default function newPage(){
+    const router = useRouter();
+
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <div className='text-container text-center'>
@@ -24,7 +28,7 @@ export default function newPage(){
             </Container>
             <div className='btn-container flex flex-col gap-y-4'>
                 <LongBtn style={'primary-longBtn'}>모임 초대하기</LongBtn>
-                <LongBtn style={'secondary-longBtn'}>일정 등록하기</LongBtn>
+                <LongBtn style={'secondary-longBtn'} onClick={()=>{router.push('/invited')}}>일정 등록하기</LongBtn>
                 <LongBtn style={'secondary-longBtn'}>카카오 로그인하고 알림 받기</LongBtn>
             </div>
         </div>
