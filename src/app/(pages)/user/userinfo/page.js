@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
-export default function userInfoPage(){
+export default function UserInfoPage(){
     const [userId, setUserId] = useState('');
     const [userName, setUserName]= useState('');
     const [userEmail, setUserEmail]= useState('');

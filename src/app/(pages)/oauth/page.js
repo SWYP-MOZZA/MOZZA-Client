@@ -3,7 +3,7 @@ import { axios_ } from '@/app/utils/axios';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function kakaoPage(){    
+export default function KakaoPage(){    
     const searchParams = useSearchParams()
     const AUTHORIZATION_CODE = searchParams.get('code');
     const clientId = '8728eb9b1a227742d8aef92354fbb090';
