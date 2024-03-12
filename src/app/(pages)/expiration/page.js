@@ -1,3 +1,4 @@
+'use client'
 import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
 

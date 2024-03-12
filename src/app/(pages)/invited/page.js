@@ -8,6 +8,7 @@ import axios from 'axios';
 import { SERVER_BASE_URL, Client_URL } from '@/app/constants/BaseUrl';
 import LinkShared from '@/app/components/popup/link-shared';
 
+// 모임 초대 페이지
 const InvitedPage = () => {
     const router = useRouter();
     const params = useSearchParams();
@@ -40,6 +41,7 @@ const InvitedPage = () => {
             console.error('error:', error.response ? error.response : error.message);
         }
     }
+    
     useEffect(() => {
         bringMeetingInfo();
     }, []);
