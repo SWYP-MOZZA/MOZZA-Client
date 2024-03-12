@@ -15,7 +15,7 @@ export default function UserInfoPage(){
             setUserId('userId');
             console.log(userId);
         }
-        const res = await axios.get(`${SERVER_BASE_URL}user/${userId}`);
+        const res = await axios.get(`${SERVER_BASE_URL}/user/${userId}`);
         console.log(res.data);
         setUserName(res.data.name);
         setUserEmail(res.data.email);
