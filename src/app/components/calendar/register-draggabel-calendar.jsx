@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import { format, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
 import 'react-calendar/dist/Calendar.css';
+import styled from 'styled-components';
+
+// icon
+import { AiOutlineLeft } from "react-icons/ai";
+import { AiOutlineRight } from "react-icons/ai";
 
 const RegisterDraggableCalendar = () => {
     const [date, setDate] = useState(new Date());
@@ -94,49 +99,109 @@ const resetSelectedDates = () => {
   }
 
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <CalendarWrapper>
+        <div className='w-[488px] flex justify-between mb-[10px]'>
+        <button onClick={prevMonth}>
+            <AiOutlineLeft size={24} />
+        </button>
         <div> {year}년 {month}월</div>
+        <button onClick={nextMonth}>
+            <AiOutlineRight size={24} />
+        </button>
+        </div>
+        <hr />
     <table>
       <thead>
-        <tr>
-          <th>
-            <button onClick={prevMonth}>이전</button>
-          </th>
-          <th>일</th>
-          <th>월</th>
-          <th>화</th>
-          <th>수</th>
-          <th>목</th>
-          <th>금</th>
-          <th>토</th>
-          <th>
-            <button onClick={nextMonth}>다음 달</button>
-          </th>
-        </tr>
+        <Tr>
+          <Th>일</Th>
+          <Th>월</Th>
+          <Th>화</Th>
+          <Th>수</Th>
+          <Th>목</Th>
+          <Th>금</Th>
+          <Th>토</Th>
+        </Tr>
       </thead>
       <tbody>
-                    {calendarRows.map((week, index) => (
-                        <tr key={index}>
-                            <td></td>
-                            {week.map((day, idx) => (
-                                <td key={idx}
-                                    onMouseDown={(event) => onMouseDown(day, event)}
-                                    onMouseEnter={(event) => onMouseEnter(day, event)}
-                                    onMouseUp={onMouseUp}
-                                    className={`cursor-pointer ${selectedDates.includes(format(new Date(year, month, day), 'yyyy-MM-dd')) ? 'bg-green-500' : 'bg-white'}`}>
-                                    {day}
-                                </td>
-                            ))}
-                            <td></td>
-                        </tr>
-                    ))}
-                </tbody>
+      {calendarRows.map((week, index) => (
+            <Tr key={index}>
+                {week.map((day, idx) => (
+                <Td key={idx}
+                    onMouseDown={day !== '' ? (event) => onMouseDown(day, event) : undefined}
+                    onMouseEnter={day !== '' ? (event) => onMouseEnter(day, event) : undefined}
+                    onMouseUp={day !== '' ? onMouseUp : undefined}
+                    className={`${day !== '' ? 'valid ' : ''}${selectedDates.includes(format(new Date(year, month, day), 'yyyy-MM-dd')) ? 'selected' : ''}`}>
+                    {day}
+                </Td>
+                ))}
+            </Tr>
+            ))}
+    </tbody>
 
     </table>
-    <button className='mt-[10px] border-b border-gray-800 text-gray-800' onClick={resetSelectedDates}>초기화</button>
-    </div>
+    <ResetButton onClick={resetSelectedDates}>초기화</ResetButton>
+    </CalendarWrapper>
   );
 
 }
 
 export default RegisterDraggableCalendar;
+
+const CalendarWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+    background: white;
+    font-family: 'Spoqa Han Sans Neo', Helvetica, sans-serif;
+    line-height: 1.125em;
+    padding:24px 40px;
+    border-radius: 24px;
+    box-shadow: 2px 4px 16px 0px rgba(0, 0, 0, 0.10);
+    margin: 32px 50px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #4a4a4a;
+`;
+
+const Th = styled.th`
+    padding: 10px 0;
+    text-align: center;
+`;
+const Tr = styled.tr`
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+`;
+
+const Td = styled.td`
+  position: relative;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%; /* 원형 표시를 위해 */
+  
+  /* 호버 시 원형 배경색 적용 */
+  &:hover {
+    background-color: rgba(0, 128, 0, 0.1); /* green-100 같은 효과 */
+  }
+
+  /* 선택된 날짜에 대한 스타일 */
+  &.selected {
+    background-color: #48BB78; /* TailwindCSS의 green-500 */
+    color: white;
+  }
+`;
+
+// onSelectDate, onMouseDown, onMouseEnter, onMouseUp 함수 내에서
+// className에 'selected' 클래스를 조건부로 추가
+
+
+const ResetButton = styled.button`
+    width: 100px;
+    margin-top: 10px;
+    border-bottom: 1px solid #000;
+    color: #000;
+`;
