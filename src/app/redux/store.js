@@ -17,7 +17,7 @@ const calendarSlice = createSlice({
 const loginSlice = createSlice({
     name:'login',
     initialState:{
-        isLogin:false,
+        isLogin:true,
     },
     reducers:{
         setIsLogin:(state,action)=>{

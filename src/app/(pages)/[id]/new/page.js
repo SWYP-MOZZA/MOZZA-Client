@@ -3,7 +3,7 @@ import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
 import { useRouter } from 'next/navigation';
 
-export default function newPage(){
+export default function NewPage(){
     const router = useRouter();
 
     return(
