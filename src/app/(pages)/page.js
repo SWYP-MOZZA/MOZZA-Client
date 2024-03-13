@@ -14,6 +14,8 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import { useSelector } from 'react-redux';
+import MyCalendar from '../components/common/BigCalendar';
+import CalendarDrag from '../components/mainPage/CalendarDrag';
 
 export default function Home() {
     const router = useRouter();
@@ -102,8 +104,9 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <CustomCalendar setIsCheck={setIsCheck}/>
-                    
+                {/* <CustomCalendar setIsCheck={setIsCheck}/> */}
+                
+                <CalendarDrag setIsCheck={setIsCheck}/>
             </Container>
             <Container type={'container-gray'} style={' p-4 z-10'}>
                 <div className='subtitle-container flex gap-[16px]'>
@@ -130,6 +133,7 @@ export default function Home() {
             <LongBtn style={'primary-longBtn'} onClick={handleButtonClicked}>
                 모임만들기
             </LongBtn>
+            <MyCalendar/>
         </div>
     );
   }

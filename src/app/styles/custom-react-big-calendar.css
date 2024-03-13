@@ -1,0 +1,60 @@
+
+.fc-small-font-size {
+  font-size: 1em;
+}
+
+.fc-page-bg {
+  background-color: white;
+}
+
+.fc-neutral-bg {
+  background-color: rgba(208, 208, 208, 0.3);
+}
+
+.fc-neutral-text {
+  color: #808080;
+}
+
+.fc-border {
+  border-color: #ddd;
+}
+
+.fc-button {
+  color: #fff;
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.fc-button:hover {
+  background-color: #1e2b37;
+  border-color: #1a252f;
+}
+
+.fc-button:active {
+  background-color: #1a252f;
+  border-color: #151e27;
+}
+
+.fc-event {
+  background-color: #3788d8;
+  border-color: #3788d8;
+  color: #fff;
+}
+
+.fc-more {
+  background-color: #d0d0d0;
+}
+
+.fc-resizer {
+  border-color: #000;
+}
+
+
+.fc-day-sun a {
+  color: black;
+}
+
+/* 토요일 날짜: 파란색 */
+.fc-day-sat a {
+  color: black;
+}
