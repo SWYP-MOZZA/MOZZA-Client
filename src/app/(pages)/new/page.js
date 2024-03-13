@@ -1,11 +1,30 @@
 'use client'
 import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function newPage(){
     const router = useRouter();
+    const pathname = usePathname()
+    function copyToClipboard(text) {
+        // 텍스트를 복사하기 위해 임시 textarea 엘리먼트를 생성합니다.
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        
+        // textarea를 선택하여 복사합니다.
+        textarea.select();
+        document.execCommand('copy');
+      
+        // 임시 textarea 엘리먼트를 제거합니다.
+        document.body.removeChild(textarea);
+      }
 
+    function handleInviteBtnClick(){
+        console.log(pathname);
+        copyToClipboard(pathname);
+        alert('초대 링크가 복사되었습니다.',pathname);
+    }
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <div className='text-container text-center'>
@@ -27,7 +46,7 @@ export default function newPage(){
                 </div>
             </Container>
             <div className='btn-container flex flex-col gap-y-4'>
-                <LongBtn style={'primary-longBtn'}>모임 초대하기</LongBtn>
+                <LongBtn style={'primary-longBtn'} onClick={handleInviteBtnClick}>모임 초대하기</LongBtn>
                 <LongBtn style={'secondary-longBtn'} onClick={()=>{router.push('/invited')}}>일정 등록하기</LongBtn>
                 <LongBtn style={'secondary-longBtn'}>카카오 로그인하고 알림 받기</LongBtn>
             </div>

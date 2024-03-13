@@ -71,8 +71,8 @@ export default function Home() {
         console.log(res.data);
 
         // response로 id 받아와서 그 값을 url에 넣기 
-        // const responseId = '123533sdfe34';
-        // router.push(`/${responseId}/new`)
+        const responseId = '123533sdfe34';
+        router.push(`/new`)
     }
     function handleCheckbox(e){
         setIsOnlyDate(e.target.checked);
@@ -133,7 +133,6 @@ export default function Home() {
             <LongBtn style={'primary-longBtn'} onClick={handleButtonClicked}>
                 모임만들기
             </LongBtn>
-            <MyCalendar/>
         </div>
     );
   }
