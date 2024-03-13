@@ -53,8 +53,13 @@ export default function Home() {
         }
     },[startTime,endTime])
     async function postMeetingInfo(data){
-        const res = await axios.post(`${SERVER_BASE_URL}meeting/create`,{data});
-        console.log(res);
+        try{
+            const res = await axios.post(`${SERVER_BASE_URL}meeting/create`,{data});
+            console.log(res);
+
+        }catch(error){
+            console.log(error);
+        }
     }
     function handleButtonClicked(){
         const submitData={
@@ -71,8 +76,8 @@ export default function Home() {
         console.log(res.data);
 
         // response로 id 받아와서 그 값을 url에 넣기 
-        const responseId = '123533sdfe34';
-        router.push(`/new`)
+        // const responseId = '123533sdfe34';
+        // router.push(`/new`)
     }
     function handleCheckbox(e){
         setIsOnlyDate(e.target.checked);
