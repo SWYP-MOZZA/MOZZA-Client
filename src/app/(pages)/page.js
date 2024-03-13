@@ -15,6 +15,7 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import { useSelector } from 'react-redux';
+import CalendarDraggable from '../components/mainPage/CalendarDraggable';
 
 const queryClient = new QueryClient();
 
@@ -106,7 +107,7 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <CustomCalendar setIsCheck={setIsCheck}/>
+                <Calendar setIsCheck={setIsCheck}/>
                     
             </Container>
             <Container type={'container-gray'} style={' p-4 z-10'}>
