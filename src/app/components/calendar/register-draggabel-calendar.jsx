@@ -55,12 +55,12 @@ const RegisterDraggableCalendar = (
     };
         
 
-    // useEffect(() => {
-    //   // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
-    //   if (!isEqual(dateSlots, selectedDates)) {
-    //     setDateSlots(selectedDates);
-    //   }
-    // }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
+    useEffect(() => {
+      // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
+      if (!isEqual(dateSlots, selectedDates)) {
+        setDateSlots(selectedDates);
+      }
+    }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
     
     
     const year = date.getFullYear();
@@ -118,7 +118,7 @@ const resetSelectedDates = () => {
         <button onClick={prevMonth}>
             <AiOutlineLeft size={24} />
         </button>
-        <div> {year}년 {month}월</div>
+        <div> {year}년 {month+1}월</div>
         <button onClick={nextMonth}>
             <AiOutlineRight size={24} />
         </button>

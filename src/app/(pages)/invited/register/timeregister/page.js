@@ -14,21 +14,12 @@ import { useQuery } from 'react-query';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import useMeetingInfonData from '@/app/hooks/useMeetingInfonData';
 import sendRequest from '@/app/utils/apiFn';
-
-const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
-  ssr: false
-  });
-
-const DraggableTimeTable = dynamic(() => import('../../../../components/table/draggable-timetable'), {
-  ssr: false
-  }); 
+import ResultTimeTable from '@/app/components/table/result-timetable';
+import DraggableTimeTable from '@/app/components/table/draggable-timetable';
 
 const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
 
 const TimeRegister = () => {
-  const HoverBoxMemo = React.memo(HoverBox);
-  const ConfirmedResultBoxMemo = React.memo(ConfirmedResultBox);
-  const DraggableTimeTableMemo = React.memo(DraggableTimeTable);
 
   //guest 정보
   const [guestState, setGuestState] = useState({
@@ -342,6 +333,10 @@ const TimeRegister = () => {
     setFilteredResultData(filteredAndSortedData);
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
+  useEffect(() => {
+    console.log('timeSlots:', timeSlots);
+  }
+  ,[timeSlots]);
 
   
   
@@ -374,7 +369,7 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
-          {!loading && <DraggableTimeTableMemo meetingData={meetingData} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />}
+          {!loading && <DraggableTimeTable meetingData={meetingData} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />}
           <div className='m-[20px]'/>
           <LongBtn style={'primary-longBtn'} 
           onClick={onClickRegisterBtn}>등록하기</LongBtn>
@@ -389,13 +384,13 @@ const TimeRegister = () => {
           {!loading && <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>}
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
-                {hoveredInfo.date && hoveredInfo.time && <HoverBoxMemo date={hoveredInfo.date} slotData={slotData} />}
+                {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
                 <div className='flex justify-end'>
                     <button onClick={onClickFilterBtn} className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-gray-300">필터</button>
                 </div>
                 {
                 filteredResultData.map((slot, index) => (
-                  <ConfirmedResultBoxMemo key={index} slotData={slot} />
+                  <ConfirmedResultBox key={index} slotData={slot} />
                 ))
               }
             </div>

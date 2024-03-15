@@ -63,6 +63,7 @@ function DraggableTimeTable(
       if (!isEqual(timeSlots, localTimeSlots)) {
           // 차이가 있을 경우, 상위 컴포넌트의 timeSlots를 업데이트
           setTimeSlots(localTimeSlots);
+          console.log('localTimeSlots : ', localTimeSlots);
       }
   }, [localTimeSlots, timeSlots, setTimeSlots]);
 
