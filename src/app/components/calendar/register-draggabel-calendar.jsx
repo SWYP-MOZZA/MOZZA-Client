@@ -35,33 +35,32 @@ const RegisterDraggableCalendar = (
   };
   
     const onMouseDown = (day, event) => {
-        // 유효하지 않은 날짜인 경우 이벤트 처리 중단
-        if (day === '') return;
-    
-        event.preventDefault();
-        onSelectDate(day);
+      if (day === '') return;
+      
+      event.preventDefault();
+      setIsDragging(true); // 드래그 시작
+      onSelectDate(day);
     };
-    
-    const onMouseEnter = (day, event) => {
-        // 드래깅 중이 아니거나 유효하지 않은 날짜인 경우 이벤트 처리 중단
-        if (!isDragging || day === '') return;
-    
-        event.preventDefault();
-        onSelectDate(day);
-    };
-    
-    const onMouseUp = () => {
-      setIsDragging(false);
-      console.log('selectedDates : ', selectedDates);
-    };
-    
 
-    useEffect(() => {
-      // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
-      if (!isEqual(dateSlots, selectedDates)) {
-        setDateSlots(selectedDates);
-      }
-    }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
+    const onMouseEnter = (day, event) => {
+        if (!isDragging || day === '') return; // 드래그 중이 아니라면 무시
+        
+        event.preventDefault();
+        onSelectDate(day);
+    };
+
+    const onMouseUp = () => {
+        setIsDragging(false); // 드래그 종료
+        console.log('selectedDates : ', selectedDates);
+    };
+        
+
+    // useEffect(() => {
+    //   // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
+    //   if (!isEqual(dateSlots, selectedDates)) {
+    //     setDateSlots(selectedDates);
+    //   }
+    // }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
     
     
     const year = date.getFullYear();
