@@ -7,6 +7,7 @@ import { AiOutlineUp } from "react-icons/ai";
 import axios from 'axios';
 import { SERVER_BASE_URL, Client_URL } from '@/app/constants/BaseUrl';
 import LinkShared from '@/app/components/popup/link-shared';
+import { useMeetingInfo } from '@/app/hooks/useMeetingInfo';
 
 // 모임 초대 페이지
 const InvitedPage = () => {
@@ -18,8 +19,7 @@ const InvitedPage = () => {
     // 참여자 목록 토글 상태
     const [isOpen, setIsOpen] = useState(false); 
 
-    // 모임 정보 (예시 데이터)
-    // 더미데이터
+    // 모임 정보 (예시 데이터) 더미데이터
     const [meetingShortInfo, setMeetingShortInfo] = useState({
         // "meetingId": 1,
         // "name": "Meeting1",
@@ -31,20 +31,10 @@ const InvitedPage = () => {
         // "attendee" : ["최유정", "윤혜원", "여성찬","김성진"] 
     });
 
-    const bringMeetingInfo = async () => {
-        try {
-            // 서버로부터 모임 정보를 가져옴
-            const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/short`);
-            setMeetingShortInfo(response.data.Data);
-            console.log('모임 정보:', response.data);
-        } catch (error) {
-            console.error('error:', error.response ? error.response : error.message);
-        }
-    }
-    
-    useEffect(() => {
-        bringMeetingInfo();
-    }, []);
+    // const { meetingShortInfo, loading, error } = useMeetingInfo(meetingId);
+
+    // if (loading) return <div>Loading...</div>;
+    // if (error) return <div>Error: {error}</div>;
 
     const onClickRegister = (meetingId) => {
         console.log('click Register');
@@ -52,6 +42,7 @@ const InvitedPage = () => {
     }
 
     const [isCompleteLinkPopup, setIsCompleteLinkPopup] = useState(false);
+
     const onClickInvite = (meetingId) => {
       console.log('click Invite');
       navigator.clipboard.writeText(`${Client_URL}/invited?meetingId=${meetingId}`)
@@ -66,13 +57,11 @@ const InvitedPage = () => {
         });
     }
     
-
     const onClickResult = (meetingId) => {
         console.log('click Result');
         router.push(`/invited/timeresult?meetingId=${meetingId}`);
     }
     
-
   return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[80px] gap-y-6'>
       {isCompleteLinkPopup && 

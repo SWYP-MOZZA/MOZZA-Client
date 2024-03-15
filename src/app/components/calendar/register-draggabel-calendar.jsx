@@ -3,17 +3,24 @@ import Calendar from 'react-calendar';
 import { format, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
 import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
-import { setSelectedDates_ } from '@/app/redux/store';
+import isEqual from 'lodash/isEqual';
+
 // icon
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux';
 
-const RegisterDraggableCalendar = () => {
+const RegisterDraggableCalendar = (
+    {
+        meetingData,
+        dateSlots,
+        setDateSlots
+    }
+) => {
+  
     const [date, setDate] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState(null);
 
     //! main 화면에서 사용할 state 
     const dispatch = useDispatch();
@@ -26,42 +33,47 @@ const RegisterDraggableCalendar = () => {
 
 
     const onSelectDate = (day) => {
-        // 유효하지 않은 날짜인 경우 함수 실행 중단
-        if (day === '') return;
-    
-        const formattedDate = format(new Date(year, month, day), 'yyyy-MM-dd');
-        if (selectedDates.includes(formattedDate)) {
-            setSelectedDates(selectedDates.filter(date => date !== formattedDate));
-        } else {
-            setSelectedDates([...selectedDates, formattedDate]);
-        }
-    };
-    
+      if (day === '') return;
+  
+      const formattedDate = format(new Date(year, month, day), 'yyyy-MM-dd');
+      setSelectedDates(prevDates => {
+          if (prevDates.includes(formattedDate)) {
+              return prevDates.filter(date => date !== formattedDate);
+          } else {
+              return [...prevDates, formattedDate];
+          }
+      });
+  };
+  
     const onMouseDown = (day, event) => {
-        // 유효하지 않은 날짜인 경우 이벤트 처리 중단
-        if (day === '') return;
-    
-        event.preventDefault();
-        setIsDragging(true);
-        onSelectDate(day);
+      if (day === '') return;
+      
+      event.preventDefault();
+      setIsDragging(true); // 드래그 시작
+      onSelectDate(day);
     };
-    
+
     const onMouseEnter = (day, event) => {
-        // 드래깅 중이 아니거나 유효하지 않은 날짜인 경우 이벤트 처리 중단
-        if (!isDragging || day === '') return;
-    
+        if (!isDragging || day === '') return; // 드래그 중이 아니라면 무시
+        
         event.preventDefault();
         onSelectDate(day);
     };
-    
 
     const onMouseUp = () => {
-        setIsDragging(false);
+        setIsDragging(false); // 드래그 종료
         console.log('selectedDates : ', selectedDates);
     };
+        
 
-
-
+    // useEffect(() => {
+    //   // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
+    //   if (!isEqual(dateSlots, selectedDates)) {
+    //     setDateSlots(selectedDates);
+    //   }
+    // }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
+    
+    
     const year = date.getFullYear();
     // JavaScript의 getMonth()는 0부터 시작하기 때문에, 화면에 표시할 때는 +1을 해줍니다.
     const month = date.getMonth();
@@ -108,6 +120,8 @@ const resetSelectedDates = () => {
     }
     calendarRows.push(week);
   }
+
+  
 
   return (
     <CalendarWrapper>

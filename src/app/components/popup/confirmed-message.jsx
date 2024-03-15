@@ -1,39 +1,37 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ConfirmedMessage = (
-    {
-        selectedSlot,
-        onClickConfirmedDeleteBtn,
-        onClickConfirmedGoBtn
-    }
-) => {
+const ConfirmedMessage = ({
+    selectedSlot,
+    onClickConfirmedDeleteBtn,
+    onClickConfirmedGoBtn
+}) => {
     const date = selectedSlot.date;
     const [year, month, day] = date.split('-').map(num => parseInt(num, 10));
-    // Date 객체 생성
-    const meetingDate = new Date(year, month - 1, day); // 월은 0부터 시작하므로 1을 빼줍니다.
-    
-    // locale을 'ko-KR'로 설정하여 한국어로 날짜와 요일을 포맷
+    const meetingDate = new Date(year, month - 1, day);
+
     const formattedDate = meetingDate.toLocaleDateString('ko-KR', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-        weekday: 'long', // 요일 추가
+        weekday: 'long',
     });
 
-    // 시작 시간 파싱
-    const startTime = selectedSlot.time; // 예: "10:00"
-    const [hours, minutes] = startTime.split(':').map(num => parseInt(num, 10));
+    let timeString = ""; // 시간을 표현하는 문자열 초기화
+    if (selectedSlot.time) {
+        const startTime = selectedSlot.time;
+        const [hours, minutes] = startTime.split(':').map(num => parseInt(num, 10));
+        const startDate = new Date();
+        startDate.setHours(hours, minutes, 0);
 
-    // Date 객체를 사용하여 시작 시간 설정
-    const startDate = new Date();
-    startDate.setHours(hours, minutes, 0); // 현재 날짜에 시간과 분을 설정
+        const endDate = new Date(startDate.getTime() + (30 * 60 * 1000));
+        const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
+        timeString = `${startTime} - ${endTime}`;
+    }
 
-    // 끝 시간 계산 (30분 추가)
-    const endDate = new Date(startDate.getTime() + (30 * 60 * 1000)); // 30분을 밀리초로 변환하여 추가
+    const attendeeCount = selectedSlot.attendee?.length || 0; // 참석자 수 확인
+    const firstAttendee = selectedSlot.attendee?.[0] || ""; // 첫 번째 참석자 확인
 
-    // 끝 시간 포맷팅
-    const endTime = `${endDate.getHours().toString().padStart(2, '0')}:${endDate.getMinutes().toString().padStart(2, '0')}`;
     return (
         <Popup> 
             <div className='flex flex-col items-center text-subtitle1 font-normal text-gray-1000 mt-[10px]'>
@@ -41,9 +39,9 @@ const ConfirmedMessage = (
             </div>
             <div className='text-subtitle2 font-normal text-gray-800 leading-relaxed'>확정된 일정은 수정할 수 없어요</div>
             <div className="m-[20px] inline-flex w-[500px] flex-col items-center justify-center p-8 gap-4 rounded-lg bg-gray-100 text-subtitle3">
-                <div>{formattedDate}</div> {/* 수정된 부분 */}
-                <div>{`${startTime} - ${endTime}`}</div> {/* 수정된 부분 */}
-                <div>{selectedSlot.attendee[0]} 외 {selectedSlot.attendee.length-1}명</div>
+                <div>{formattedDate}</div>
+                {timeString && <div>{timeString}</div>}
+                {attendeeCount > 0 && <div>{firstAttendee} 외 {attendeeCount - 1}명</div>}
             </div>
 
             <ButtonGroup>
@@ -55,6 +53,7 @@ const ConfirmedMessage = (
 };
 
 export default ConfirmedMessage;
+
 
 const Popup = styled.div`
     position: fixed;

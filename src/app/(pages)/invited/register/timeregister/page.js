@@ -3,8 +3,8 @@ import React,{ useState,useEffect,useMemo } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
-import ConfirmedResultBox from '../../../../components/result/result-time/confirmed-resultBox';
-import HoverBox from '../../../../components/result/result-time/hoverBox';
+import ConfirmedResultBox from '../../../../components/result/confirmed-resultBox';
+import HoverBox from '../../../../components/result/hoverBox';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
@@ -12,6 +12,8 @@ import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
 import { useQuery } from 'react-query';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+import useMeetingInfonData from '@/app/hooks/useMeetingInfonData';
+import sendRequest from '@/app/utils/apiFn';
 
 const ResultTimeTable = dynamic(() => import('@/app/components/table/result-timetable'), {
   ssr: false
@@ -20,6 +22,8 @@ const ResultTimeTable = dynamic(() => import('@/app/components/table/result-time
 const DraggableTimeTable = dynamic(() => import('../../../../components/table/draggable-timetable'), {
   ssr: false
   }); 
+
+const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
 
 const TimeRegister = () => {
   const HoverBoxMemo = React.memo(HoverBox);
@@ -46,12 +50,16 @@ const TimeRegister = () => {
   const params = useSearchParams();
   // const meetingId = params.get('meetingId');
   const meetingId = 3; // 임시로 1로 설정
-  const [loading, setLoading] = useState(true); // 데이터 로딩 상태 관리
-
   //스위치 전환
   const [selected, setSelected] = useState('register');
 
-  //더미데이터
+  // 일정 등록에 필요한 상태
+  // const { meetingInfo, meetingData, loading, error } = useMeetingInfonData(meetingId);
+
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
+
+  //일정 결과에 필요한 상태
   const [meetingInfo, setMeetingInfo] = useState({
     name: "모임명1", // 추가 요청 
     "meetingId" : 1,
@@ -231,72 +239,21 @@ const TimeRegister = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
+  // 일정 등록에 필요한 상태 , 더미데이터
+  const [meetingData, setMeetingData] = useState({
+    "meetingId": 123,
+    "name": "Meeting1",
+    "date" : ["2023-10-20","2023-10-21","2023-10-25"],
+    "startTime": "09:00",
+    "endTime": "10:30"    
+  });
+  const [loading, setLoading] = useState(false);
 
-  const fetchMeetingData = async (meetingId) => {
-    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
-    // const token = localStorage.getItem('token');
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
-    try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
-        headers: {
-          // 가져온 토큰을 'Authorization
-          // ' 헤더에 'Bearer' 스키마와 함께 추가합니다.
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Meeting data fetched successfully', response.data.Data);
-      setMeetingInfo(response.data.Data);
-    } catch (error) {
-      console.error('Error fetching meeting data:', error);
-    }
-  };
-  
   // 호버한 쎌 데이터
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
   
   // 필터링된 결과 데이터 참여율 50퍼 이상인 데이터만 저장
   const [filteredResultData, setFilteredResultData] = useState([]);
-
-  // 일정 등록에 필요한 상태 , 더미데이터
-  const [meetingData, setMeetingData] = useState({});
-  // 일정 등록에 필요한 상태
-  
-  const bringMeetingData = async (meetingId) => {
-    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
-    // const token = localStorage.getItem('token');
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
-    try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`, {
-        headers: {
-          // 가져온 토큰을 'Authorization' 헤더에 'Bearer' 스키마와 함께 추가합니다.
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Meeting data fetched successfully', response.data.Data);
-      setMeetingData(response.data.Data);
-    } catch (error) {
-      console.error('Error fetching meeting data:', error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 두 비동기 함수를 동시에 호출하고 모두 완료될 때까지 기다림
-        await Promise.all([
-          bringMeetingData(meetingId),
-          // fetchMeetingData(meetingId),
-        ]);
-      } catch (error) {
-        console.error('데이터 불러오기 중 오류 발생:', error);
-      } finally {
-        console.log('데이터 불러오기 완료');
-        setLoading(false); // 모든 데이터 로딩이 완료되면 로딩 상태를 해제
-      }
-    };
-
-    fetchData();
-  }, [meetingId]); // meetingId가 변경될 때마다 fetchData 실행
 
   const [timeSlots, setTimeSlots] = useState({});
 
@@ -314,6 +271,10 @@ const TimeRegister = () => {
       console.log('selected');
     }
   };
+  // 날짜와 시간대 정보를 처리할 함수
+  const handleHoverChange = (date, time) => {
+    setHoveredInfo({ date, time });
+  };
 
   // 팝업을 관리하는 상태
   const [currentPopup, setCurrentPopup] = useState(null);
@@ -326,38 +287,23 @@ const TimeRegister = () => {
   }
 
   // "아니오" 버튼 핸들러
-  const handleNoPopup = (meetingId) => {
-    sendRequestAndClosePopup(meetingId); // request 보내고 팝업 닫기
+  const handleNoPopup = (token,meetingId) => {
+    sendRequestAndClosePopup(token,meetingId); // request 보내고 팝업 닫기
   };
 
-  const sendRequestAndClosePopup = async (meetingId) => {
+  const sendRequestAndClosePopup = async (token, meetingId) => {
     try {
-      const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
-      const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, timeSlots,{
-        headers: {
-          // 가져온
-          // 토큰을 'Authorization' 헤더에 'Bearer' 스키마와 함께 추가합니다.
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Request sent successfully', response.data);
-      router.push(`/invited/timeresult?meetingId=${meetingId}`)
+      await sendRequest(token, meetingId, timeSlots);
+      setCurrentPopup(null); // 상태 변경
+      router.push(`/invited/timeresult?meetingId=${meetingId}`); // 페이지 이동
     } catch (error) {
-      console.error('Error sending request:', error);
+      console.error('Error:', error);
     }
-    setCurrentPopup(null); // 팝업 닫기
-
-    // 닫고나서 결과 페이지로 이동 추가
   };
   
   // 등록하기 버튼 클릭시
   const onClickRegisterBtn = async () => {
     setCurrentPopup(1); // 첫 번째 팝업 열기
-  };
-
-  // 날짜와 시간대 정보를 처리할 함수
-  const handleHoverChange = (date, time) => {
-    setHoveredInfo({ date, time });
   };
 
   // hoveredInfo를 기반으로 해당하는 데이터 찾기
@@ -395,6 +341,9 @@ const TimeRegister = () => {
     // 필터링 및 정렬된 데이터를 상태에 저장
     setFilteredResultData(filteredAndSortedData);
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
+
+
+  
   
   return (
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
@@ -425,13 +374,13 @@ const TimeRegister = () => {
             <span className="text-subtitle1 font-midium">가능한 일정을</span>
             <span className="text-subtitle1 font-midium">클릭이나 드래그로 선택해주세요!</span>
           </div>
-          {!loading && <DraggableTimeTableMemo meetingData={meetingData} updateTimeSlots={setTimeSlots} />}
+          {!loading && <DraggableTimeTableMemo meetingData={meetingData} timeSlots={timeSlots} setTimeSlots={setTimeSlots} />}
           <div className='m-[20px]'/>
           <LongBtn style={'primary-longBtn'} 
           onClick={onClickRegisterBtn}>등록하기</LongBtn>
-          {currentPopup === 1 && <MeetConfirmed1 onConfirm={handleYesPopup} onDecline={()=>handleNoPopup(meetingId)} />}
-          {currentPopup === 2 && <MeetConfirmed2 onConfirm={handleKakaoLogin} onDecline={()=>handleNoPopup(meetingId)} />}
-          {currentPopup === 3 && <MeetConfirmed3 onConfirm={()=>handleNoPopup(meetingId)} />}
+          {currentPopup === 1 && <MeetConfirmed1 onConfirm={handleYesPopup} onDecline={()=>handleNoPopup(token,meetingId)} />}
+          {currentPopup === 2 && <MeetConfirmed2 onConfirm={handleKakaoLogin} onDecline={()=>handleNoPopup(token,meetingId)} />}
+          {currentPopup === 3 && <MeetConfirmed3 onConfirm={()=>handleNoPopup(token,meetingId)} />}
 
         </div> : 
         // 일정 결과 페이지

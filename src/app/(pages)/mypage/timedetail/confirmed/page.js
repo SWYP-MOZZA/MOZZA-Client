@@ -1,6 +1,6 @@
 "use client";
-import ConfirmedBox from '@/app/components/result/result-time/confirmedmeetingBox';
-import ConfirmedResultBox from '@/app/components/result/result-time/confirmed-resultBox';
+import ConfirmedBox from '@/app/components/result/confirmedmeetingBox';
+import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import React,{useState,useEffect} from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';

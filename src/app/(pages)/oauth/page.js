@@ -1,5 +1,5 @@
 'use client'
-import { axios_ } from '@/app/utils/axios';
+import { axios_ } from '@/app/utils/apiFn';
 import { useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
