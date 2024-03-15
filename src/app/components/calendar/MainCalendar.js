@@ -3,27 +3,16 @@ import Calendar from 'react-calendar';
 import { format, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
 import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
-import { setSelectedDates_ } from '@/app/redux/store';
 // icon
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux';
 
-const RegisterDraggableCalendar = () => {
+const MainCalendar = () => {
     const [date, setDate] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStart, setDragStart] = useState(null);
-
-    //! main 화면에서 사용할 state 
-    const dispatch = useDispatch();
-    const selectedDates_ = useSelector((state)=>state.calendar.selectedDates)
-    useEffect(()=>{
-      console.log(selectedDates);
-      dispatch(setSelectedDates_(selectedDates))
-    },[selectedDates])
-
-
 
     const onSelectDate = (day) => {
         // 유효하지 않은 날짜인 경우 함수 실행 중단

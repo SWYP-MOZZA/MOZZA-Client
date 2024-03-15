@@ -8,7 +8,7 @@ const calendarSlice = createSlice({
     selectedDates: [],
   },
   reducers: {
-    setSelectedDates: (state, action) => {
+    setSelectedDates_: (state, action) => {
       state.selectedDates = action.payload;
     },
   },
@@ -17,7 +17,7 @@ const calendarSlice = createSlice({
 const loginSlice = createSlice({
     name:'login',
     initialState:{
-        isLogin:true,
+        isLogin:false,
     },
     reducers:{
         setIsLogin:(state,action)=>{
@@ -27,7 +27,7 @@ const loginSlice = createSlice({
 })
 
 // 액션 및 리듀서 내보내기
-export const { setSelectedDates } = calendarSlice.actions;
+export const { setSelectedDates_ } = calendarSlice.actions;
 export const { setIsLogin } = loginSlice.actions;
 export default configureStore({
   reducer: {

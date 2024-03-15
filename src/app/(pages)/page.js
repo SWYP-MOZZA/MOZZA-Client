@@ -16,6 +16,7 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import { useSelector } from 'react-redux';
 import CalendarDraggable from '../components/mainPage/CalendarDraggable';
+import RegisterDraggableCalendar from '../components/calendar/register-draggabel-calendar';
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,20 @@ export default function Home() {
         const res = await axios.post(`${SERVER_BASE_URL}meeting/create`,{data});
         console.log(res);
     }
+
+    useEffect(()=>{
+        //! 날짜 선택 check 
+        console.log('선택된 날짜 : ',selectedDates);
+        if(selectedDates.length !== 0){
+            const newArr = [...isCheck];
+            newArr[1] = true;
+            setIsCheck(newArr);
+        }else if(selectedDates.length === 0){
+            const newArr = [...isCheck];
+            newArr[1] = false;
+            setIsCheck(newArr);
+        }
+    },[selectedDates])
     function handleButtonClicked(){
         const submitData={
             name:meetingName,
@@ -107,7 +122,8 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <Calendar setIsCheck={setIsCheck}/>
+                <MainCalendar/>
+            
                     
             </Container>
             <Container type={'container-gray'} style={' p-4 z-10'}>
