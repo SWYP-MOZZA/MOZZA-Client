@@ -8,7 +8,6 @@ import isEqual from 'lodash/isEqual';
 // icon
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
-import { useDispatch, useSelector } from 'react-redux';
 
 const RegisterDraggableCalendar = (
     {
@@ -22,15 +21,7 @@ const RegisterDraggableCalendar = (
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
 
-    //! main 화면에서 사용할 state 
-    const dispatch = useDispatch();
-    const selectedDates_ = useSelector((state)=>state.calendar.selectedDates)
-    useEffect(()=>{
-      console.log(selectedDates);
-      dispatch(setSelectedDates_(selectedDates))
-    },[selectedDates])
-
-
+    //! main 화면에서 사용할 state
 
     const onSelectDate = (day) => {
       if (day === '') return;
@@ -66,12 +57,12 @@ const RegisterDraggableCalendar = (
     };
         
 
-    // useEffect(() => {
-    //   // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
-    //   if (!isEqual(dateSlots, selectedDates)) {
-    //     setDateSlots(selectedDates);
-    //   }
-    // }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
+    useEffect(() => {
+      // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
+      if (!isEqual(dateSlots, selectedDates)) {
+        setDateSlots(selectedDates);
+      }
+    }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
     
     
     const year = date.getFullYear();
@@ -129,7 +120,7 @@ const resetSelectedDates = () => {
         <button onClick={prevMonth}>
             <AiOutlineLeft size={24} />
         </button>
-        <div> {year}년 {month}월</div>
+        <div> {year}년 {month+1}월</div>
         <button onClick={nextMonth}>
             <AiOutlineRight size={24} />
         </button>

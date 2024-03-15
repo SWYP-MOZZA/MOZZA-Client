@@ -7,7 +7,6 @@ import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox'
 import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeMessage';
 import ConfirmedMessage from '@/app/components/popup/confirmed-message';
 const MypageDateUnconfirmedDetail = () => {
-        const ResultCalendarMemo = useMemo(() => ResultCalendar, []);
       // 쿼리 파라미터
         const router = useRouter();
         const searchParams = useSearchParams()
@@ -170,7 +169,7 @@ const MypageDateUnconfirmedDetail = () => {
         )}
           <div className='w-[3/4] m-[50px] flex justify-between'>
               <div>
-                <ResultCalendarMemo onHoverChange={handleHoverChange} dateResult={meetingInfo}/>
+                <ResultCalendar onHoverChange={handleHoverChange} dateResult={meetingInfo}/>
                 </div>
                 <div className='flex flex-col gap-2.5 mt-[50px]'>
                     {hoveredInfo.date && slotData && <HoverBox date={hoveredInfo.date} slotData={slotData} />}

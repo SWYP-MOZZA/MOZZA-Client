@@ -167,6 +167,11 @@ const onClickRegisterBtn = async () => {
   setCurrentPopup(1); // 첫 번째 팝업 열기
 };
 
+useEffect(() => {
+  console.log('dateSlot : ', dateSlot);
+}
+,[dateSlot]);
+
   return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (
