@@ -4,6 +4,7 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+import handleLoginFn from '@/app/utils/apiFn';
 
 const Register = () => {
     const router = useRouter();
@@ -24,27 +25,19 @@ const Register = () => {
         console.log(guestState);
     };
 
-    const handleLogin = async (meetingId) => {
-        try {
-            // 서버로 guestState 객체를 POST 방식으로 전송
-            const response = await axios.post(`${SERVER_BASE_URL}/guest`, guestState);
-
-            // 응답에서 accessToken 추출
-            const { accessToken } = response.data;
-
-            // accessToken을 로컬 스토리지에 저장
-            localStorage.setItem('accessToken', accessToken);
-            console.log(response.data); // 응답 로그 출력
-            
-            // guestState를 localStorage에 저장
-            localStorage.setItem('guestState', JSON.stringify(guestState));
-            // 페이지 이동
-            router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
-        } catch (error) {
-            // 오류 처리
-            console.error('Login error:', error.response || error.message);
+    const onLogin = async (guestState) => {
+        const { success, accessToken, error } = await handleLoginFn(guestState);
+    
+        if (success) {
+          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('guestState', JSON.stringify(guestState));
+          // 로그인 성공 후 페이지 이동
+          router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
+        } else {
+          // 오류 처리 로직, 예: 상태 업데이트를 통한 에러 메시지 표시
+          console.error('Login failed:', error);
         }
-    };
+      };
 
 return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[180px] gap-y-6'>
@@ -76,7 +69,7 @@ return (
             </div>
         </div>
         <LongBtn style={'primary-longBtn'}
-            onClick={() => handleLogin(meetingId)}>로그인</LongBtn>
+            onClick={() => onLogin(guestState,meetingId)}>로그인</LongBtn>
         <hr className="w-full border-t border-gray-300 my-2 " /> {/* 가로선 */}
         <div className='flex flex-col justify-center items-center'>
             <span className="text-body1 font-bold">카카오로 로그인하고</span>

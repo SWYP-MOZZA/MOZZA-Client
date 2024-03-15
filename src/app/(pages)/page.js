@@ -107,7 +107,7 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <Calendar setIsCheck={setIsCheck}/>
+                {/* <Calendar setIsCheck={setIsCheck}/> */}
                     
             </Container>
             <Container type={'container-gray'} style={' p-4 z-10'}>

@@ -2,8 +2,8 @@
 import ConfirmedMessage from '@/app/components/popup/confirmed-message';
 import axios from 'axios';
 import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeMessage';
-import HoverBox from '@/app/components/result/result-time/hoverBox';
-import UnconfirmedResultBox from '@/app/components/result/result-time/unconfirmed-resultBox';
+import HoverBox from '@/app/components/result/hoverBox';
+import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import React,{useState,useEffect} from 'react';
 import { useRouter,useSearchParams} from 'next/navigation';

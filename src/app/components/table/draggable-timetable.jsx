@@ -3,7 +3,7 @@ import React,{useState,useEffect} from 'react';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko'; // 한국어 locale을 직접 불러옴
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import moment from 'moment';
+import isEqual from 'lodash/isEqual';
 
 dayjs.extend(isSameOrBefore); // isSameOrBefore 플러그인 활성화
 dayjs.locale('ko'); // locale을 한국어로 설정
@@ -14,7 +14,11 @@ import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 
 function DraggableTimeTable(
-  { meetingData, updateTimeSlots }
+  { 
+    meetingData,
+    timeSlots,
+    setTimeSlots
+     }
   ) {
     const [localTimeSlots, setLocalTimeSlots] = useState({}); // 이름 변경
     const [isDragging, setIsDragging] = useState(false);
@@ -51,9 +55,17 @@ function DraggableTimeTable(
       setLocalTimeSlots(slots);
       console.log('타임슬롯 : ', slots);
       setPages(paginateDates(serverDates, pageSize));
-    }, [meetingData, updateTimeSlots]); // setLocalTimeSlots 제거, updateTimeSlots 추가
-    
-  
+    }, [meetingData]); // setLocalTimeSlots 제거, setTimeSlots 추가
+ 
+     
+    useEffect(() => {
+      // localTimeSlots와 상위 컴포넌트의 timeSlots가 실제로 다른지 비교
+      if (!isEqual(timeSlots, localTimeSlots)) {
+          // 차이가 있을 경우, 상위 컴포넌트의 timeSlots를 업데이트
+          setTimeSlots(localTimeSlots);
+      }
+  }, [localTimeSlots, timeSlots, setTimeSlots]);
+
     // 페이지 넘김 기능
     const nextPage = () => {
       if (currentPage < pages.length - 1) {

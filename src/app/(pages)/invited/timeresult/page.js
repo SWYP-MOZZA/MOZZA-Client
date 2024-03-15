@@ -1,10 +1,9 @@
 "use client";
 import React,{useState,useEffect} from 'react';
-import ConfiremdResultBox from '@/app/components/result/result-time/confirmed-resultBox';
-import HoverBox from '@/app/components/result/result-time/hoverBox';
+import ConfiremdResultBox from '@/app/components/result/confirmed-resultBox';
+import HoverBox from '@/app/components/result/hoverBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useQuery } from 'react-query';
 import axios from 'axios';
 
 const ResultPage = () => {
@@ -195,28 +194,10 @@ const ResultPage = () => {
         { "time":"14:30", "attendee" : ["조승우", "배두나"] }
       ]}]});
   
-  const fetchMeetingData = async (meetingId) => {
-    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
-    // const token = localStorage.getItem('token');
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
-    try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
-        headers: {
-          // 가져온 토큰을 'Authorization
-          // ' 헤더에 'Bearer' 스키마와 함께 추가합니다.
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Meeting data fetched successfully', response.data.Data);
-      setMeetingInfo(response.data.Data);
-    } catch (error) {
-      console.error('Error fetching meeting data:', error);
-    }
-  };
+  // const { meetingInfo, loading, error } = useFetchMeetingData(meetingId);
 
-  useEffect(() => {
-    fetchMeetingData(meetingId);
-  }, [meetingId]);
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error loading meeting details</p>;
   
 
   //resultBox 생성
@@ -273,6 +254,7 @@ const ResultPage = () => {
   
     // 필터링 및 정렬된 데이터를 상태에 저장
     setFilteredResultData(filteredAndSortedData);
+    console.log('Sorted by ratio:', filteredAndSortedData);
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
   return (
