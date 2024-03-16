@@ -7,7 +7,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
 
 const MypageDateConfirmedDetail = () => {
-        const ResultCalendarMemo = useMemo(() => ResultCalendar, []);
       // 쿼리 파라미터
         const router = useRouter();
         const searchParams = useSearchParams()
@@ -69,7 +68,7 @@ const MypageDateConfirmedDetail = () => {
           </div>
           <div className='w-[3/4] flex justify-between'>
               <div>
-                <ResultCalendarMemo onHoverChange={()=>{}} dateResult={meetingInfo}/>
+                <ResultCalendar onHoverChange={()=>{}} dateResult={meetingInfo}/>
                 </div>
                 <div className='flex flex-col gap-2.5 mt-[50px]'>
                     {
