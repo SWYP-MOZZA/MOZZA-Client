@@ -32,12 +32,12 @@ const HoverTimeBox = ({
                     
                 </div>
                 <div className='flex items-center'>
-                <span className='font-main text-body1 font-normal'>{slotData.data[0].length}명</span>
+                <span className='font-main text-body1 font-normal'>{slotData.data[0].attendee.length}명</span>
                 </div>
             </div>
 
                 <div className='w-full pt-4 flex flex-wrap justify-between gap-y-2'>
-                {slotData.data[0].map((participant, index) => (
+                {slotData.data[0].attendee.map((participant, index) => (
                   <div key={index} className='w-[18%] p-1 flex justify-center items-center rounded-resultName bg-gray-100'>{participant}</div>
                 ))}
               </div>

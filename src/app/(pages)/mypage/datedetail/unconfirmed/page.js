@@ -88,25 +88,25 @@ const MypageDateUnconfirmedDetail = () => {
             console.log(date);
         };
          // hoveredInfo를 기반으로 해당하는 데이터 찾기
-          const findDataForHoveredInfo = () => {
-            if (!hoveredInfo || !hoveredInfo.date) {
-                return null;
-            }
-            const formattedDate = hoveredInfo.date;
-
-            // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
-            // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
-            const dayDataArray = meetingInfo.data[0][formattedDate];
-            if (!dayDataArray) {
-                return null;
-            }
-
-            // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
-            return {
-                date: formattedDate,
-                data: dayDataArray,
-            };
-        };
+         const findDataForHoveredInfo = () => {
+          if (!hoveredInfo || !hoveredInfo.date) {
+              return null;
+          }
+          const formattedDate = hoveredInfo.date;
+      
+          // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
+          // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
+          const dayDataArray = meetingInfo.data[0][formattedDate];
+          if (!dayDataArray) {
+              return null;
+          }
+      
+          // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
+          return {
+              date: formattedDate,
+              data: dayDataArray,
+          };
+      };
     
         // hoveredInfo를 기반으로 해당하는 데이터 찾기
         const slotData = findDataForHoveredInfo();

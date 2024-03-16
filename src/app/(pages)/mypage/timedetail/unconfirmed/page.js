@@ -5,7 +5,7 @@ import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeM
 import HoverBox from '@/app/components/result/hoverBox';
 import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useMemo} from 'react';
 import { useRouter,useSearchParams} from 'next/navigation';
 const MypageConfirmedDetail = () => {
   const router = useRouter();
@@ -293,30 +293,35 @@ const MypageConfirmedDetail = () => {
   };
 
   // hoveredInfo를 기반으로 해당하는 데이터 찾기
+  // hoveredInfo를 기반으로 해당하는 데이터 찾기
   const findDataForHoveredInfo = () => {
     if (!hoveredInfo.date || !hoveredInfo.time) {
       return null;
     }
-  
+
     const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
     if (!dayData) {
       return null;
     }
-  
+
     const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
-    if (!slotData) {
-      return null;
-    }
-  
-    // 여기서 date와 time을 포함한 새로운 객체를 반환
     return {
       date: hoveredInfo.date,
       time: hoveredInfo.time,
-      data: [slotData.attendee] // 이전의 slotData는 attendee 정보를 포함하고 있습니다.
+      data: [{
+        attendee : slotData.attendee,
+      }
+      ]
     };
   };
 
-  const slotData = findDataForHoveredInfo();
+  // hoveredInfo를 기반으로 해당하는 데이터 찾기
+  const slotData = useMemo(() => findDataForHoveredInfo(), [hoveredInfo, meetingInfo]);
+  useEffect(() => {
+    console.log('slotData : ', slotData);
+    console.log('hoveredInfo.date : ', hoveredInfo.date);
+}
+,[slotData,hoveredInfo.date]);
 
   useEffect(() => {
     // 필터링 및 정렬 로직

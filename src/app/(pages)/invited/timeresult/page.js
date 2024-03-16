@@ -234,7 +234,14 @@ const ResultPage = () => {
     }
 
     const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
-    return slotData;
+    return {
+      date: hoveredInfo.date,
+      time: hoveredInfo.time,
+      data: [{
+        attendee : slotData.attendee,
+      }
+      ]
+    };
   };
 
   const slotData = findDataForHoveredInfo();
