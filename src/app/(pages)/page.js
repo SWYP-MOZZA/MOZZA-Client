@@ -5,7 +5,7 @@ import Container from '../components/common/Container';
 import LongBtn from '../components/common/LongBtn';
 import CheckNumCircle from '../components/mainPage/CheckNumCircle';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
+import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import '../styles/custom-checkbox-style.css';
 import TimeSelector from '../components/mainPage/TimeSelector';
@@ -51,13 +51,27 @@ export default function Home() {
 
     const postMeetingInfo = async(data)=>{
         const res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data);
-        console.log(res);
+        console.log(res.data.MeetingId);
+        const meetingId = res.data.MeetingId;
+        router.push(`/new?meetingId=${meetingId}`);
+        sessionStorage.setItem('meetingId', meetingId);
+
+
     
     }   
     const [dateSlots, setDateSlots] = useState({});
 
     useEffect(()=>{
         console.log('dateSlots:', dateSlots);
+        if(dateSlots.length !== 0){
+            const newArr = [...isCheck];
+            newArr[1] = true;
+            setIsCheck(newArr);
+        }else if(dateSlots.length === 0){
+            const newArr = [...isCheck];
+            newArr[1] = false;
+            setIsCheck(newArr);
+        }
     },[dateSlots]);
 
     function handleButtonClicked(){

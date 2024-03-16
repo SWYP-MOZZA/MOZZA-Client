@@ -14,7 +14,7 @@ export default function KakaoPage(){
     const dispatch = useDispatch();
  
     async function sendLoginInfo(){
-        const res = await axios.get(`${SERVER_BASE_URL}oauth?code=${AUTHORIZATION_CODE}`);
+        const res = await axios.get(`${SERVER_BASE_URL}/oauth?code=${AUTHORIZATION_CODE}`);
 
         console.log('응답확인',res.data);
         const userToken = res.data.accessToken;
@@ -40,7 +40,7 @@ useEffect(() => {
     }
 }, [AUTHORIZATION_CODE, hasBeenCalled]);
     return(
-        <div>로그인 완료!</div>
+        <div>로그인중입니다.</div>
         
     )
 }
