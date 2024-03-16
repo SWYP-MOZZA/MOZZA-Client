@@ -38,7 +38,7 @@ useEffect(() => {
         sendLoginInfo();
         setHasBeenCalled(true);
     }
-}, [AUTHORIZATION_CODE, hasBeenCalled]);
+}, [AUTHORIZATION_CODE]);
     return(
         <div>로그인중입니다.</div>
         
