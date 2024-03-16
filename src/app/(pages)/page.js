@@ -15,8 +15,7 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import { useSelector } from 'react-redux';
-import CalendarDraggable from '../components/mainPage/CalendarDraggable';
-import RegisterDraggableCalendar from '../components/calendar/register-draggabel-calendar';
+import MainCalendar from '../components/calendar/MainCalendar';
 
 const queryClient = new QueryClient();
 
@@ -62,7 +61,7 @@ export default function Home() {
 
     useEffect(()=>{
         //! 날짜 선택 check 
-        console.log('선택된 날짜 : ',selectedDates);
+        console.log('선택된 날짜 : ',selectedDates,selectedDates.length);
         if(selectedDates.length !== 0){
             const newArr = [...isCheck];
             newArr[1] = true;
