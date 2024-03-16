@@ -8,7 +8,7 @@ import isEqual from 'lodash/isEqual';
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux';
-
+import { setSelectedDates_ } from '@/app/redux/store';
 const MainCalendar = ({
   dateSlots,
   setDateSlots,
@@ -16,7 +16,11 @@ const MainCalendar = ({
     const [date, setDate] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
+    const dispatch=useDispatch();
 
+    useEffect(()=>{
+      setSelectedDates_(selectedDates);
+    },[selectedDates])
     const onSelectDate = (day) => {
         // 유효하지 않은 날짜인 경우 함수 실행 중단
         if (day === '') return;
