@@ -146,18 +146,26 @@ const resetSelectedDates = () => {
       </thead>
       <tbody>
       {calendarRows.map((week, index) => (
-            <Tr key={index}>
-                {week.map((day, idx) => (
-                <Td key={idx}
-                    onMouseDown={day !== '' ? (event) => onMouseDown(day, event) : undefined}
-                    onMouseEnter={day !== '' ? (event) => onMouseEnter(day, event) : undefined}
-                    onMouseUp={day !== '' ? onMouseUp : undefined}
-                    className={`${day !== '' ? 'valid ' : ''}${selectedDates.includes(format(new Date(year, month, day), 'yyyy-MM-dd')) ? 'selected' : ''}`}>
-                    {day}
-                </Td>
-                ))}
-            </Tr>
-            ))}
+        <Tr key={index}>
+          {week.map((day, idx) => {
+            const formattedDate = formatDate(new Date(year, month, day));
+            const isAllowed = meetingData.date.includes(formattedDate);
+            const isSelected = selectedDates.includes(formattedDate);
+            return (
+              <Td
+                key={idx}
+                isAllowed={isAllowed}
+                isSelected={isSelected}
+                onMouseDown={day !== '' && isAllowed ? (event) => onMouseDown(day, event) : undefined}
+                onMouseEnter={day !== '' && isAllowed ? (event) => onMouseEnter(day, event) : undefined}
+                onMouseUp={day !== '' && isAllowed ? onMouseUp : undefined}
+              >
+                {day}
+              </Td>
+            );
+          })}
+        </Tr>
+      ))}
     </tbody>
 
     </table>
@@ -203,11 +211,12 @@ const Td = styled.td`
   line-height: 40px;
   text-align: center;
   cursor: pointer;
-  border-radius: 50%; /* 원형 표시를 위해 */
-  
-  /* 호버 시 원형 배경색 적용 */
+  border-radius: 50%;
+  color: ${(props) => (props.isAllowed ? '#000' : 'gray')}; /* 조건부 텍스트 색상 */
+  background-color: ${(props) => (props.isSelected ? '#48BB78' : 'transparent')};
+
   &:hover {
-    background-color: rgba(0, 128, 0, 0.1); /* green-100 같은 효과 */
+    background-color: rgba(0, 128, 0, 0.1);
   }
 
   /* 선택된 날짜에 대한 스타일 */

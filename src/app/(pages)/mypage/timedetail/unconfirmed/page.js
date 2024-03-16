@@ -297,14 +297,23 @@ const MypageConfirmedDetail = () => {
     if (!hoveredInfo.date || !hoveredInfo.time) {
       return null;
     }
-
+  
     const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
     if (!dayData) {
       return null;
     }
-
+  
     const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
-    return slotData;
+    if (!slotData) {
+      return null;
+    }
+  
+    // 여기서 date와 time을 포함한 새로운 객체를 반환
+    return {
+      date: hoveredInfo.date,
+      time: hoveredInfo.time,
+      data: [slotData.attendee] // 이전의 slotData는 attendee 정보를 포함하고 있습니다.
+    };
   };
 
   const slotData = findDataForHoveredInfo();

@@ -49,7 +49,13 @@ const InvitedPage = () => {
     
     const onClickResult = (meetingId) => {
         console.log('click Result');
-        router.push(`/invited/timeresult?meetingId=${meetingId}`);
+        if (meetingShortInfo.startTime ==="00:00" && meetingShortInfo.endTime === "00:00") {
+          router.push(`/invited/dateresult?meetingId=${meetingId}`);
+      }
+      else {
+      // 로그인 성공 후 페이지 이동
+      router.push(`/invited/timeresult?meetingId=${meetingId}`);
+      }
     }
     
   return (

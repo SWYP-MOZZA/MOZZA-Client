@@ -86,6 +86,7 @@ export default function Home() {
 
         postMeetingInfo(submitData);
     }
+    
     function handleCheckbox(e){
         setIsOnlyDate(e.target.checked);
     }

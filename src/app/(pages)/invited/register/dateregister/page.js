@@ -31,8 +31,69 @@ const DateRegister = () => {
     password: '',
   });
   const [loading, setLoading] = useState(false);
-  const [meetingInfo, setMeetingInfo] = useState({});
-  const [meetingData, setMeetingData] = useState({});
+  const [meetingInfo, setMeetingInfo] = useState({
+    "numberOfSubmit" : 6,
+    "data": [
+    {
+      "2024-03-12": [
+        {
+          "attendee": ["박지우", "최유정", "오승준"],
+          "ratio": 0.5
+        }
+      ],
+      "2024-03-13": [
+        {
+          "attendee": ["박지우", "최유정", "오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-14": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 1.0
+        }
+      ],
+      "2024-03-15": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-16": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-17": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-18": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-19": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+      "2024-03-20": [
+        {
+          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+          "ratio": 0.9
+        }
+      ],
+    }]
+  });
+  const [meetingData, setMeetingData] = useState({
+    date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
+  });
 
   useEffect(() => {
     // 페이지 로드 시 localStorage에서 guestState를 불러옴
@@ -54,13 +115,13 @@ const DateRegister = () => {
     }
   };
   
-  useEffect(() => {
-    // 토큰 상태 변수가 업데이트되었을 때 API 호출
-    if (token) {
-      bringMeetingInfo(token); // 토큰을 매개변수로 전달하여 API 호출
-      bringMeetingData(); // 필요한 경우 Meeting Data도 같은 방식으로 호출
-    }
-  }, [token]); // 토큰 상태 변수를 의존성 배열에 추가
+  // useEffect(() => {
+  //   // 토큰 상태 변수가 업데이트되었을 때 API 호출
+  //   if (token) {
+  //     bringMeetingInfo(token); // 토큰을 매개변수로 전달하여 API 호출
+  //     bringMeetingData(); // 필요한 경우 Meeting Data도 같은 방식으로 호출
+  //   }
+  // }, [token]); // 토큰 상태 변수를 의존성 배열에 추가
   
   // API 호출 함수는 토큰을 매개변수로 받아 사용합니다.
   const bringMeetingInfo = async (token) => {

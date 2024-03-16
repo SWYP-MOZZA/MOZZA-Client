@@ -10,30 +10,69 @@ const ResultPage = () => {
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
-    const [meetingInfo, setMeetingInfo] = useState(({
-        "numberOfSubmit" : 6,
-        "data": [
-        {
-          "2024-03-12": [
-            {
-              "attendee": ["박지우", "최유정", "오승준"],
-              "ratio": 0.5
-            }
-          ],
-          "2024-03-13": [
-            {
-              "attendee": ["박지우", "최유정", "오승준"],
-              "ratio": 0.9
-            }
-          ],
-          "2024-03-14": [
-            {
-              "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-              "ratio": 1.0
-            }
-          ]
-        }]
-      }));
+    const [meetingInfo, setMeetingInfo] = useState({
+      "numberOfSubmit" : 6,
+      "data": [
+      {
+        "2024-03-12": [
+          {
+            "attendee": ["박지우", "최유정", "오승준"],
+            "ratio": 0.5
+          }
+        ],
+        "2024-03-13": [
+          {
+            "attendee": ["박지우", "최유정", "오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-14": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 1.0
+          }
+        ],
+        "2024-03-15": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-16": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-17": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-18": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-19": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+        "2024-03-20": [
+          {
+            "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+            "ratio": 0.9
+          }
+        ],
+      }]
+    });
+    const [meetingData, setMeetingData] = useState({
+      date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
+    });
 
     //resultBox 생성
     const [filteredResultData, setFilteredResultData] = useState([]);
@@ -116,7 +155,7 @@ const ResultPage = () => {
         
           const onClickRegisterBtn = (meetingId) => {
             console.log('등록하기 버튼 클릭');
-            router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
+            router.push(`/invited/register/dateregister?meetingId=${meetingId}`);
           }
     return (
         <div className='w-[3/4] m-[50px] flex justify-between'>

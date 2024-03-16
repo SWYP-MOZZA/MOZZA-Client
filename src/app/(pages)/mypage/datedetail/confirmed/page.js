@@ -13,8 +13,10 @@ const MypageDateConfirmedDetail = () => {
         const meetingId = searchParams.get('meetingId');
 
         const [filteredResultData, setFilteredResultData] = useState([]);
-        const [meetingInfo, setMeetingInfo] = useState(({
+        const [meetingInfo, setMeetingInfo] = useState({
           "numberOfSubmit" : 6,
+          "confirmedDate" : "2023-03-12",
+          "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
           "data": [
           {
             "2024-03-12": [
@@ -34,9 +36,48 @@ const MypageDateConfirmedDetail = () => {
                 "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
                 "ratio": 1.0
               }
-            ]
+            ],
+            "2024-03-15": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-16": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-17": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-18": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-19": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-20": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 0.9
+              }
+            ],
           }]
-        }));
+        });
+        const [meetingData, setMeetingData] = useState({
+          date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
+        });
 
         useEffect(() => {
           const sortDataByRatio = () => {
@@ -64,7 +105,7 @@ const MypageDateConfirmedDetail = () => {
       return (
         <div>
           <div className='flex items-center justify-center m-[50px]'>
-            <ConfirmedBox confirmedMeetingData={()=>console.log()} />
+            <ConfirmedBox slotData={meetingInfo} />
           </div>
           <div className='w-[3/4] flex justify-between'>
               <div>

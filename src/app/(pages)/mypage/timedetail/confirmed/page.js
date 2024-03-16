@@ -16,6 +16,9 @@ const MypageConfirmedDetail = () => {
   const [filteredResultData, setFilteredResultData] = useState([]);
   const [meetingInfo, setMeetingInfo] = useState({
     "numberOfSubmit":6,
+    "confirmedDate" : "2023-03-12",
+    "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
+    "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
     "data":[
     {
       '2023-03-12': [
@@ -235,7 +238,7 @@ const MypageConfirmedDetail = () => {
   return (
     <div>
       <div className='flex items-center justify-center m-[50px]'>
-        <ConfirmedBox confirmedMeetingData={()=>console.log()} />
+        <ConfirmedBox slotData={meetingInfo} />
       </div>
       <div className='w-[3/4] flex justify-between'>
           <div>
