@@ -30,10 +30,18 @@ module.exports = {
         'medium': 500,   
         'bold': 700,   
       },
+      borderRadius: {
+        'resultBox': '24px',
+        'resultName': '16px',
+      },
+      lineHeight: {
+        resultBox: '1.4', // 140%에 해당하는 값을 추가
+      },
     },
 
     colors:{
       'green-100' : '#CCF2E1',
+      'green-300' : '#66D19E',
       'green-500':'#00BC67',
       'green-600':'#009652',
       'green-700':'#00713E',

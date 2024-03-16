@@ -1,7 +1,8 @@
+'use client'
 import Container from '@/app/components/common/Container';
 import LongBtn from '@/app/components/common/LongBtn';
 
-export default function expirationPage(){
+export default function ExpirationPage(){
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[154px]'>
             <Container type={'container-gray'} style={'px-[80px] py-[40px] flex flex-col justify-center items-center my-[60px]'}>

@@ -7,7 +7,7 @@ import { FaMinus } from "react-icons/fa6";
 
 import { useRouter } from 'next/navigation';
 
-export default function memberPage(){
+export default function MemberPage(){
     const [num,setNum] = useState(0);
     function handleSetNum(action) {
         setNum((prevNum) => {

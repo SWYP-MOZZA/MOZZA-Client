@@ -40,7 +40,9 @@ body {
   src: url("/font/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo-Medium.ttf") format("truetype");
 }
 
-
+  .kakao-longBtn {
+    @apply w-[588px] h-16 px-16 bg-yellow-400 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-yellow-400 text-black
+  }
   .primary-longBtn {
     @apply w-[588px] h-16 px-16 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white
   }
@@ -63,10 +65,17 @@ body {
 .secondary-shortBtn[disabled] {
   @apply bg-gray-300 border-gray-500 text-gray-500;
 }
-
+.container-basic {
+  @apply w-[588px] bg-white font-main;
+}
 .container-gray{
   @apply w-[588px] bg-gray-100 rounded-3xl font-main font-medium;
 }
 .container-stroked{
   @apply w-[588px] bg-white rounded-3xl border-2 border-green-600 font-main;
+}
+
+@keyframes slide {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(10px); }
 }

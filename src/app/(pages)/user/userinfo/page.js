@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
-export default function userInfoPage(){
+export default function UserInfoPage(){
     const [userId, setUserId] = useState('');
     const [userName, setUserName]= useState('');
     const [userEmail, setUserEmail]= useState('');
@@ -15,7 +15,7 @@ export default function userInfoPage(){
             setUserId('userId');
             console.log(userId);
         }
-        const res = await axios.get(`${SERVER_BASE_URL}user/${userId}`);
+        const res = await axios.get(`${SERVER_BASE_URL}/user/${userId}`);
         console.log(res.data);
         setUserName(res.data.name);
         setUserEmail(res.data.email);
