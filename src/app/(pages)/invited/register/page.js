@@ -6,7 +6,7 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import { handleLoginFn } from '@/app/utils/apiFn';
 import { useMeetingShortInfo } from '@/app/hooks/useMeetingShortInfo';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setToken } from '../../../redux/store';
 
 const Register = () => {
@@ -49,6 +49,20 @@ const Register = () => {
             }
         };
 
+    //! 로그인 여부 확인 
+    const isLogin = useSelector((state)=>state.login.isLogin);
+    
+    //! 카카오 로그인 페이지 이동 및 현재주소 저장  
+    function handleKakaoBtnClick(){
+        sessionStorage.setItem('currentLink',`${window.location.href}`);
+        console.log(window.location.href);
+        if(isLogin){
+            alert('이미 로그인 된 사용자입니다');
+        }else{
+            router.push('/user/login')
+        }
+    }
+
 return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[180px] gap-y-6'>
         <div className="w-full pt-[20px] flex flex-col items-center">
@@ -85,7 +99,7 @@ return (
             <span className="text-body1 font-bold">카카오로 로그인하고</span>
             <span className="text-body1 font-bold pb-[20px]">간편하고 쉽게 모임 일정을 관리해요!</span>
             <LongBtn style={'kakao-longBtn'} >
-                <div className='flex justify-center items-center gap-x-2' >
+                <div className='flex justify-center items-center gap-x-2'onClick={handleKakaoBtnClick} >
                     <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fillRule="evenodd" clipRule="evenodd" d="M14.5001 0.933594C6.76763 0.933594 0.5 5.77599 0.5 11.7483C0.5 15.4626 2.92419 18.7369 6.61573 20.6845L5.06251 26.3585C4.92528 26.8598 5.49866 27.2594 5.93897 26.9689L12.7475 22.4753C13.322 22.5308 13.9059 22.5631 14.5001 22.5631C22.2319 22.5631 28.5 17.7209 28.5 11.7483C28.5 5.77599 22.2319 0.933594 14.5001 0.933594Z" fill="#070707" />
                     </svg>

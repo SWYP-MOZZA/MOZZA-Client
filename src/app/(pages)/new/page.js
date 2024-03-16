@@ -5,6 +5,7 @@ import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import axios from 'axios';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function NewPage(){
     const router = useRouter();
@@ -13,10 +14,12 @@ export default function NewPage(){
     // const [meetingId, setMeetingId] = useState('');
     const params = useSearchParams();
     const id = params.get('meetingId');
+
     useEffect(()=>{
         // const id = sessionStorage.getItem('meetingId');
         // setMeetingId(id);
         getMeetingInfo(id)
+        console.log('현재 주소',pathname);
 
     },[])
     
@@ -67,14 +70,26 @@ export default function NewPage(){
 
     function handleInviteBtnClick(){
         console.log(pathname);
-        const invitedLink = `${window.location.origin}/new/${id}`;
+        const invitedLink = `${window.location.origin}/new?meetingId=${id}`;
         copyToClipboard(invitedLink);
         alert('초대 링크가 복사되었습니다.',invitedLink);
+    }
+
+    const isLogin = useSelector((state)=>state.login.isLogin);
+    
+    function handleKakaoBtnClick(){
+        sessionStorage.setItem('currentLink',`${window.location.href}`);
+        if(isLogin){
+            alert('이미 로그인 된 사용자입니다');
+        }else{
+            router.push('/user/login')
+        }
     }
 
     if (!meetingInfo) {
         return <div>Loading...</div>; // 데이터를 가져오는 동안 로딩 상태 표시
     }
+    
     return(
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <div className='text-container text-center'>
@@ -98,7 +113,7 @@ export default function NewPage(){
             <div className='btn-container flex flex-col gap-y-4'>
                 <LongBtn style={'primary-longBtn'} onClick={handleInviteBtnClick}>모임 초대하기</LongBtn>
                 <LongBtn style={'secondary-longBtn'} onClick={()=>{router.push(`/invited?meetingId=${id}`)}}>일정 등록하기</LongBtn>
-                <LongBtn style={'secondary-longBtn'}>카카오 로그인하고 알림 받기</LongBtn>
+                <LongBtn style={'secondary-longBtn'} onClick={handleKakaoBtnClick}>카카오 로그인하고 알림 받기</LongBtn>
             </div>
         </div>
     )

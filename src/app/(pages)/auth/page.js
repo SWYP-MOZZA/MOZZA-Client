@@ -3,6 +3,7 @@ import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import { setIsLogin } from '@/app/redux/store';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect,useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -13,6 +14,7 @@ export default function KakaoPage(){
     const redirectUri= 'http://localhost:3000/auth'
     const dispatch = useDispatch();
  
+    const router = useRouter();
     async function sendLoginInfo(){
         const res = await axios.get(`${SERVER_BASE_URL}/oauth?code=${AUTHORIZATION_CODE}`);
 
@@ -26,6 +28,12 @@ export default function KakaoPage(){
 
         if(userToken !==null || userToken !== undefined){
             dispatch(setIsLogin(true));
+            const prevLink = sessionStorage.getItem('currentLink');
+            if(prevLink){
+                router.push(prevLink);
+            }else{
+                router.push('/mypage');
+            }
         }
         
 

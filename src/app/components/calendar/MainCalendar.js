@@ -199,7 +199,7 @@ const Td = styled.td`
 
   /* 선택된 날짜에 대한 스타일 */
   &.selected {
-    background-color: #48BB78; /* TailwindCSS의 green-500 */
+    background-color: #00BC67; /* TailwindCSS의 green-500 */
     color: white;
   }
 `;
