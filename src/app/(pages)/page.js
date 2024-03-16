@@ -12,7 +12,7 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import MainCalendar from '../components/calendar/MainCalendar';
-import { data } from 'autoprefixer';
+
 
 const queryClient = new QueryClient();
 
