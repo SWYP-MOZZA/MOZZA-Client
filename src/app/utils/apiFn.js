@@ -23,12 +23,11 @@ export const sendRequest = async (token, meetingId, data) => {
 
 // API 호출용 유틸리티 함수 수정
 // ${SERVER_BASE_URL}/guest
-export const handleLogin = async (guestState) => {
+export const handleLoginFn = async (guestState) => {
   try {
     const response = await axios.post(`${SERVER_BASE_URL}/guest`, guestState);
-    const { accessToken } = response.data;
-    console.log(response.data); // 응답 로그 출력
-
+    const accessToken = response.data.AccessToken;
+    console.log(accessToken); // 응답 로그 출력
     // 로그인 성공 정보와 accessToken 반환
     return { success: true, accessToken, guestState };
   } catch (error) {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 
-export const useMeetingInfo = (meetingId) => {
+export const useMeetingShortInfo = (meetingId) => {
     const [meetingShortInfo, setMeetingShortInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

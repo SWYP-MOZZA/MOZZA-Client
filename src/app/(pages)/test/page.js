@@ -1,38 +1,13 @@
 "use client";
 import React,{useEffect,useMemo, useState}from 'react';
-import dynamic from 'next/dynamic';
-const RegisterDraggableCalendar = dynamic(() => import('../../components/calendar/register-draggabel-calendar'), {
-    ssr: false
-    });
-
-
-
+import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&`
 export default function Test(){
-    const RegisterDraggableCalendarMemo = React.memo(RegisterDraggableCalendar);
-    const [dateSlots, setDateSlots] = useState([]);
-    const [meetingData, setMeetingData] = useState(
-        {
-          "meetingId": 123,
-          "name": "Meeting1",
-          "date" : ["2023-10-20","2023-10-21","2023-10-25"],
-          "startTime": "09:00",
-          "endTime": "18:00",   
-        }
+    const handleKakaoLogin = () => {
+        window.location.href = KAKAO_AUTH_URL;
+      };
+    
+      return (
+        <MeetConfirmed2 handleKakaoLogin={handleKakaoLogin} onDecline={() => console.log('Declined')} />
       );
-
-    useEffect(() => {
-        console.log('dateSlots : ', dateSlots);
-    }
-    ,[dateSlots]);
-
-
-        
-
-    return (
-        <div className='w-[3/4] flex justify-between'>
-            <div>
-            <RegisterDraggableCalendarMemo  meetingData={meetingData} dateSlots={dateSlots} setDateSlots={setDateSlots}/>
-            </div>
-        </div>
-    )
-}
+    };

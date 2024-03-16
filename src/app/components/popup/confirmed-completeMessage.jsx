@@ -24,7 +24,7 @@ const ConfirmedCompleteMessage = (
                 <StyledButton className="bg-yellow-400 w-[393px] h-[64px] rounded-full px-[64px] flex items-center justify-center gap-2 text-main text-subtitle2 font-normal" 
                 onClick={onClickShareBtn}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.0001 0.933594C6.26763 0.933594 0 5.77599 0 11.7483C0 15.4626 2.42419 18.7369 6.11573 20.6845L4.56251 26.3585C4.42528 26.8598 4.99866 27.2594 5.43897 26.9689L12.2475 22.4753C12.822 22.5308 13.4059 22.5631 14.0001 22.5631C21.7319 22.5631 28 17.7209 28 11.7483C28 5.77599 21.7319 0.933594 14.0001 0.933594Z" fill="#070707"/>
+                        <path fillRule="evenodd" clipRule="evenodd" d="M14.0001 0.933594C6.26763 0.933594 0 5.77599 0 11.7483C0 15.4626 2.42419 18.7369 6.11573 20.6845L4.56251 26.3585C4.42528 26.8598 4.99866 27.2594 5.43897 26.9689L12.2475 22.4753C12.822 22.5308 13.4059 22.5631 14.0001 22.5631C21.7319 22.5631 28 17.7209 28 11.7483C28 5.77599 21.7319 0.933594 14.0001 0.933594Z" fill="#070707"/>
                     </svg>
                     카카오톡으로 공유하기
                 </StyledButton>

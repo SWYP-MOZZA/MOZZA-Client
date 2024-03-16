@@ -4,9 +4,13 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
-import handleLoginFn from '@/app/utils/apiFn';
+import { handleLoginFn } from '@/app/utils/apiFn';
+import { useMeetingShortInfo } from '@/app/hooks/useMeetingShortInfo';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../../../redux/store';
 
 const Register = () => {
+    const dispatch = useDispatch();
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
@@ -24,20 +28,26 @@ const Register = () => {
         }));
         console.log(guestState);
     };
+    const {meetingShortInfo, loading, error} = useMeetingShortInfo(meetingId);
 
     const onLogin = async (guestState) => {
         const { success, accessToken, error } = await handleLoginFn(guestState);
     
         if (success) {
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('guestState', JSON.stringify(guestState));
-          // 로그인 성공 후 페이지 이동
-          router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
-        } else {
-          // 오류 처리 로직, 예: 상태 업데이트를 통한 에러 메시지 표시
-          console.error('Login failed:', error);
-        }
-      };
+            dispatch(setToken(accessToken));
+            console.log('Login success:', accessToken);
+            if (meetingShortInfo.startTime ==="00:00" && meetingShortInfo.endTime === "00:00") {
+                router.push(`/invited/register/dateregister?meetingId=${meetingId}`);
+            }
+            else {
+            // 로그인 성공 후 페이지 이동
+            router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
+            }
+            } else {
+            // 오류 처리 로직, 예: 상태 업데이트를 통한 에러 메시지 표시
+            console.error('Login failed:', error);
+            }
+        };
 
 return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[180px] gap-y-6'>

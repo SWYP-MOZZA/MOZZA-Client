@@ -13,52 +13,52 @@ const MypageDateConfirmedDetail = () => {
         const meetingId = searchParams.get('meetingId');
 
         const [filteredResultData, setFilteredResultData] = useState([]);
-        const [meetingInfo, setMeetingInfo] = useState({
-            "numberOfSubmit" : 6,
-            "data": {
-              "2024-03-12": [
-                {
-                  "attendee": ["박지우", "최유정", "오승준"],
-                  "ratio": 0.5
-                }
-              ],
-              "2024-03-13": [
-                {
-                  "attendee": ["박지우", "최유정", "오승준"],
-                  "ratio": 0.9
-                }
-              ],
-              "2024-03-14": [
-                {
-                  "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                  "ratio": 1.0
-                }
-              ]
-            }
-          });
+        const [meetingInfo, setMeetingInfo] = useState(({
+          "numberOfSubmit" : 6,
+          "data": [
+          {
+            "2024-03-12": [
+              {
+                "attendee": ["박지우", "최유정", "오승준"],
+                "ratio": 0.5
+              }
+            ],
+            "2024-03-13": [
+              {
+                "attendee": ["박지우", "최유정", "오승준"],
+                "ratio": 0.9
+              }
+            ],
+            "2024-03-14": [
+              {
+                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
+                "ratio": 1.0
+              }
+            ]
+          }]
+        }));
 
         useEffect(() => {
-            // meetingInfo.data를 기반으로 날짜 정보를 포함하는 새로운 배열 생성 및 정렬
-            const sortDataByRatio = (meetingInfo) => {
-                // meetingInfo.data의 각 항목에 대해 날짜 정보를 추가하고 하나의 배열로 결합
-                const combinedData = Object.entries(meetingInfo.data).flatMap(([date, attendees]) => 
-                    attendees.map(attendee => ({ 
-                        date, 
-                        ...attendee 
-                    }))
-                );
-        
-                // combinedData를 ratio에 따라 정렬
-                const sortedData = combinedData.sort((a, b) => b.ratio - a.ratio);
-        
-                return sortedData;
-            };
-        
-            // 정렬된 데이터를 filteredResultData 상태에 저장
-            const filteredResultData = sortDataByRatio(meetingInfo);
-            setFilteredResultData(filteredResultData);
-            console.log('Sorted by ratio:', filteredResultData);
-        }, [meetingInfo]); // meetingInfo가 변경될 때마다 정렬 로직 실행
+          const sortDataByRatio = () => {
+              // 객체의 배열을 단일 객체로 가정하는 현재 구조에 맞게 접근 수정 필요
+              // 날짜별 데이터를 모두 포함하는 새로운 배열 생성
+              const allData = Object.entries(meetingInfo.data[0]).flatMap(([date, data]) => {
+                  return data.map(entry => ({
+                      date,
+                      ...entry
+                  }));
+              });
+      
+              // 생성된 배열을 ratio에 따라 정렬
+              const sortedData = allData.sort((a, b) => b.ratio - a.ratio);
+      
+              return sortedData;
+          };
+      
+          const filteredResultData = sortDataByRatio();
+          setFilteredResultData(filteredResultData);
+          console.log('Sorted by ratio:', filteredResultData);
+      }, [meetingInfo]);
 
 
       return (

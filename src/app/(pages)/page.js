@@ -3,20 +3,16 @@
 import {useContext, useEffect, useState } from 'react';
 import Container from '../components/common/Container';
 import LongBtn from '../components/common/LongBtn';
-import ShortBtn from '../components/common/ShortBtn';
 import CheckNumCircle from '../components/mainPage/CheckNumCircle';
-import CustomCalendar from '../components/mainPage/CustomCalender';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import '../styles/custom-checkbox-style.css';
 import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
-import { useSelector } from 'react-redux';
-import CalendarDraggable from '../components/mainPage/CalendarDraggable';
-import RegisterDraggableCalendar from '../components/calendar/register-draggabel-calendar';
+import MainCalendar from '../components/calendar/MainCalendar';
+import { data } from 'autoprefixer';
 
 const queryClient = new QueryClient();
 
@@ -28,9 +24,6 @@ export default function Home() {
     const [startTime, setStartTime] = useState('');
     const [endTime,setEndTime] = useState('')
     const [isOnlyDate, setIsOnlyDate] = useState(false);
-
-    const selectedDates = useSelector((state)=>state.calendar.selectedDates)
-
 
 
     function handleInputChange(input){
@@ -55,41 +48,29 @@ export default function Home() {
             setIsCheck(newArr);
         }
     },[startTime,endTime])
-    async function postMeetingInfo(data){
-        const res = await axios.post(`${SERVER_BASE_URL}meeting/create`,{data});
+
+    const postMeetingInfo = async(data)=>{
+        const res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data);
         console.log(res);
-    }
+    
+    }   
+    const [dateSlots, setDateSlots] = useState({});
 
     useEffect(()=>{
-        //! 날짜 선택 check 
-        console.log('선택된 날짜 : ',selectedDates);
-        if(selectedDates.length !== 0){
-            const newArr = [...isCheck];
-            newArr[1] = true;
-            setIsCheck(newArr);
-        }else if(selectedDates.length === 0){
-            const newArr = [...isCheck];
-            newArr[1] = false;
-            setIsCheck(newArr);
-        }
-    },[selectedDates])
+        console.log('dateSlots:', dateSlots);
+    },[dateSlots]);
+
     function handleButtonClicked(){
         const submitData={
             name:meetingName,
-            date:selectedDates,
+            date:dateSlots,
             startTime:startTime,
             endTime:endTime,
             onlyDate:isOnlyDate,
-
         }
         console.log(submitData);
 
-        const res = postMeetingInfo(submitData);
-        console.log(res.data);
-
-        // response로 id 받아와서 그 값을 url에 넣기 
-        // const responseId = '123533sdfe34';
-        // router.push(`/${responseId}/new`)
+        postMeetingInfo(submitData);
     }
     function handleCheckbox(e){
         setIsOnlyDate(e.target.checked);
@@ -122,7 +103,7 @@ export default function Home() {
                         <div className='text-body3 font-normal text-black'>모임 가능한 날짜를 클릭이나 드래그로 선택해주세요</div>
                     </div>
                 </div>
-                <MainCalendar/>
+                <MainCalendar dateSlot={dateSlots} setDateSlots={setDateSlots}/>
             
                     
             </Container>

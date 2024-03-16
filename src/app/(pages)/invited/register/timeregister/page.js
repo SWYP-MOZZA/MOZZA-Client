@@ -1,5 +1,6 @@
+// TimeRegister 컴포넌트
 "use client";
-import React,{ useState,useEffect,useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
@@ -12,241 +13,83 @@ import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
 import { useQuery } from 'react-query';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
-import useMeetingInfonData from '@/app/hooks/useMeetingInfonData';
-import sendRequest from '@/app/utils/apiFn';
+import { useMeetingInfonData } from '@/app/hooks/useMeetingInfonData';
+import { sendRequest } from '@/app/utils/apiFn';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import DraggableTimeTable from '@/app/components/table/draggable-timetable';
+import { useSelector } from 'react-redux';
 
-const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
+
+// 이제 `token`을 사용할 수 있습니다.
 
 const TimeRegister = () => {
-
-  //guest 정보
-  const [guestState, setGuestState] = useState({
-    name: '',
-    password: '',
-  });
-
-  useEffect(() => {
-    // 페이지 로드 시 localStorage에서 guestState를 불러옴
-    const storedGuestState = localStorage.getItem('guestState');
-    if (storedGuestState) {
-        setGuestState(JSON.parse(storedGuestState));
-    }
-    console.log(JSON.parse(storedGuestState));
-  }, []);
-
-  //라우터
   const router = useRouter();
   const params = useSearchParams();
-  // const meetingId = params.get('meetingId');
-  const meetingId = 3; // 임시로 1로 설정
+  const meetingId = params.get('meetingId');
+  const token = useSelector((state) => state.token.token);
+
+
+  const [guestState, setGuestState] = useState({ name: '', password: '' });
+  const [currentPopup, setCurrentPopup] = useState(null);
+  const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
+  const [filteredResultData, setFilteredResultData] = useState([]);
+  const [timeSlots, setTimeSlots] = useState({});
+
+  useEffect(() => {
+    const storedGuestState = localStorage.getItem('guestState');
+    if (storedGuestState) setGuestState(JSON.parse(storedGuestState));
+
+  }, []);
+
+  const {meetingInfo, meetingData, loading, error} = useMeetingInfonData(token,meetingId);
+  useEffect(() => {
+    if (!meetingInfo) return;
+    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject =>
+      Object.entries(dayObject).flatMap(([date, slots]) =>
+        slots.map(slot => ({
+          ...slot,
+          date,
+          ratio: slot.attendee.length / meetingInfo.numberOfSubmit,
+        })).filter(slot => slot.ratio >= 0.5)
+      )
+    ).sort((a, b) => b.ratio - a.ratio);
+
+    setFilteredResultData(filteredAndSortedData);
+  }, [meetingInfo]);
+  
+
+  useEffect(() => {
+    console.log('timeSlots:', timeSlots);
+  }
+  ,[timeSlots]);
+
   //스위치 전환
   const [selected, setSelected] = useState('register');
 
+  // 날짜와 시간대 정보를 처리할 함수
+  const handleHoverChange = (date, time) => {
+    setHoveredInfo({ date, time });
+  };
+
+  // hoveredInfo를 기반으로 해당하는 데이터 찾기
+  const findDataForHoveredInfo = () => {
+    if (!hoveredInfo.date || !hoveredInfo.time) {
+      return null;
+    }
+
+    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
+    if (!dayData) {
+      return null;
+    }
+
+    const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
+    return slotData;
+  };
+
+  // hoveredInfo를 기반으로 해당하는 데이터 찾기
+  const slotData = useMemo(() => findDataForHoveredInfo(), [hoveredInfo, meetingInfo]);
   // 일정 등록에 필요한 상태
-  // const { meetingInfo, meetingData, loading, error } = useMeetingInfonData(meetingId);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-
-  //일정 결과에 필요한 상태
-  const [meetingInfo, setMeetingInfo] = useState({
-    name: "모임명1", // 추가 요청 
-    "meetingId" : 1,
-    "createdAt" : "2024-03-02T23:33",
-    "numberOfSubmit":6,
-    "confirmedDate" : "2023-03-12",
-    "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
-    "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
-    "attendee" : ["박지우","최유정","오승준","윤혜원","김태연","정수정"], // 추가 요청
-    "data":[
-    {
-      '2023-03-12': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-      ],
-    '2023-03-13': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-15': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-17': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-20': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-22': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-23': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-24': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-25': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-26': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-27': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ],
-    '2023-03-28': [
-      { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-      { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-      { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-      { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-      { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-      { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-      { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-      { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-      { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-      { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-      { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-      { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-    ]}]});
-  // 일정 등록에 필요한 상태 , 더미데이터
-  const [meetingData, setMeetingData] = useState({
-    "meetingId": 123,
-    "name": "Meeting1",
-    "date" : ["2023-10-20","2023-10-21","2023-10-25"],
-    "startTime": "09:00",
-    "endTime": "10:30"    
-  });
-  const [loading, setLoading] = useState(false);
-
-  // 호버한 쎌 데이터
-  const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
   
-  // 필터링된 결과 데이터 참여율 50퍼 이상인 데이터만 저장
-  const [filteredResultData, setFilteredResultData] = useState([]);
-
-  const [timeSlots, setTimeSlots] = useState({});
 
   const onClickFilterBtn = () => {
     console.log('필터 버튼 클릭');
@@ -262,13 +105,6 @@ const TimeRegister = () => {
       console.log('selected');
     }
   };
-  // 날짜와 시간대 정보를 처리할 함수
-  const handleHoverChange = (date, time) => {
-    setHoveredInfo({ date, time });
-  };
-
-  // 팝업을 관리하는 상태
-  const [currentPopup, setCurrentPopup] = useState(null);
   
   // "예" 버튼 핸들러
   const handleYesPopup = () => setCurrentPopup(currentPopup+1); 
@@ -297,49 +133,6 @@ const TimeRegister = () => {
     setCurrentPopup(1); // 첫 번째 팝업 열기
   };
 
-  // hoveredInfo를 기반으로 해당하는 데이터 찾기
-  const findDataForHoveredInfo = () => {
-    if (!hoveredInfo.date || !hoveredInfo.time) {
-      return null;
-    }
-
-    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
-    if (!dayData) {
-      return null;
-    }
-
-    const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
-    return slotData;
-  };
-
-    // hoveredInfo를 기반으로 해당하는 데이터 찾기
-    const slotData = useMemo(() => findDataForHoveredInfo(), [hoveredInfo, meetingInfo]);
-
-
-  useEffect(() => {
-    // 필터링 및 정렬 로직
-    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
-      Object.entries(dayObject).flatMap(([date, slots]) => 
-        slots.map(slot => ({
-          ...slot,
-          date,
-          ratio: slot.attendee.length / meetingInfo.numberOfSubmit
-        }))
-        .filter(slot => slot.ratio >= 0.5)
-      )
-    ).sort((a, b) => b.ratio - a.ratio); // 비율이 높은 순으로 정렬
-  
-    // 필터링 및 정렬된 데이터를 상태에 저장
-    setFilteredResultData(filteredAndSortedData);
-  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
-
-  useEffect(() => {
-    console.log('timeSlots:', timeSlots);
-  }
-  ,[timeSlots]);
-
-  
-  
   return (
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (

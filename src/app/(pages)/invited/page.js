@@ -7,41 +7,31 @@ import { AiOutlineUp } from "react-icons/ai";
 import axios from 'axios';
 import { SERVER_BASE_URL, Client_URL } from '@/app/constants/BaseUrl';
 import LinkShared from '@/app/components/popup/link-shared';
-import { useMeetingInfo } from '@/app/hooks/useMeetingInfo';
+import {useMeetingShortInfo} from '@/app/hooks/useMeetingShortInfo';
 
 // 모임 초대 페이지
 const InvitedPage = () => {
     const router = useRouter();
     const params = useSearchParams();
-    // const meetingId = params.get('meetingId');
-    const meetingId = 1; // 임시로 1로 설정
+    const meetingId = params.get('meetingId');
+    // const meetingId = 1; // 임시로 1로 설정
 
     // 참여자 목록 토글 상태
     const [isOpen, setIsOpen] = useState(false); 
 
-    // 모임 정보 (예시 데이터) 더미데이터
-    const [meetingShortInfo, setMeetingShortInfo] = useState({
-        // "meetingId": 1,
-        // "name": "Meeting1",
-        // "startDate": "2024-03-12",
-        // "endDate" : "2024-03-15",
-        // "startTime": "09:00",
-        // "endTime": "10:30",
-        // "numberOfSubmit": 4,
-        // "attendee" : ["최유정", "윤혜원", "여성찬","김성진"] 
-    });
+    const [isCompleteLinkPopup, setIsCompleteLinkPopup] = useState(false);
 
-    // const { meetingShortInfo, loading, error } = useMeetingInfo(meetingId);
+    const { meetingShortInfo, loading, error } = useMeetingShortInfo(meetingId);
 
-    // if (loading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error}</div>;
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     const onClickRegister = (meetingId) => {
         console.log('click Register');
         router.push(`/invited/register?meetingId=${meetingId}`);
     }
 
-    const [isCompleteLinkPopup, setIsCompleteLinkPopup] = useState(false);
+    
 
     const onClickInvite = (meetingId) => {
       console.log('click Invite');
@@ -74,9 +64,12 @@ const InvitedPage = () => {
         <div className="w-full pt-[20px]">
             <span className="w-[100px] inline-block">모임날짜</span> <span>{meetingShortInfo.startDate} ~ {meetingShortInfo.endDate}</span>
         </div>
-        <div className="w-full pt-[20px] pb-[20px]">
-            <span className="w-[100px] inline-block">시간대</span> <span>{meetingShortInfo.startTime} ~ {meetingShortInfo.endTime}</span>
-        </div>
+        {/* 시간대 정보가 있는 경우에만 렌더링 */}
+        {(meetingShortInfo.startTime !=="" && meetingShortInfo.endTime !=="") && (
+            <div className="w-full pt-[20px] pb-[20px]">
+                <span className="w-[100px] inline-block">시간대</span> <span>{meetingShortInfo.startTime} ~ {meetingShortInfo.endTime}</span>
+            </div>
+        )}
         <hr className="w-full border-t border-gray-300 my-2 " /> {/* 가로선 */}
         <div className='w-full flex justify-between items-center pt-[20px]'>
             <div className='flex items-center gap-[10px]'> {/* 내부 컨테이너 추가 */}

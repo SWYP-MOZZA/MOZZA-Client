@@ -21,15 +21,24 @@ const RegisterDraggableCalendar = (
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
 
+    const year = date.getFullYear();
+    const month = date.getMonth();
     //! main 화면에서 사용할 state
+    // Helper function to format date to 'yyyy-MM-dd'
+    const formatDate = (date) => format(date, 'yyyy-MM-dd');
+
+    // Check if a date is allowed based on meetingData
+    const isDateAllowed = (formattedDate) => {
+        return meetingData.date.includes(formattedDate);
+    };
 
     const onSelectDate = (day) => {
-      if (day === '') return;
-  
-      const formattedDate = format(new Date(year, month, day), 'yyyy-MM-dd');
-      setSelectedDates(prevDates => {
+      const formattedDate = formatDate(new Date(year, month, day));
+      if (!isDateAllowed(formattedDate)) return;
+
+      setSelectedDates((prevDates) => {
           if (prevDates.includes(formattedDate)) {
-              return prevDates.filter(date => date !== formattedDate);
+              return prevDates.filter((date) => date !== formattedDate);
           } else {
               return [...prevDates, formattedDate];
           }
@@ -37,12 +46,13 @@ const RegisterDraggableCalendar = (
   };
   
     const onMouseDown = (day, event) => {
-      if (day === '') return;
+      const formattedDate = formatDate(new Date(year, month, day));
+      if (!isDateAllowed(formattedDate)) return;
       
       event.preventDefault();
-      setIsDragging(true); // 드래그 시작
+      setIsDragging(true);
       onSelectDate(day);
-    };
+  };
 
     const onMouseEnter = (day, event) => {
         if (!isDragging || day === '') return; // 드래그 중이 아니라면 무시
@@ -64,10 +74,6 @@ const RegisterDraggableCalendar = (
       }
     }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
     
-    
-    const year = date.getFullYear();
-    // JavaScript의 getMonth()는 0부터 시작하기 때문에, 화면에 표시할 때는 +1을 해줍니다.
-    const month = date.getMonth();
   
     // 이전 달로 이동하는 함수
     const prevMonth = () => {
@@ -209,6 +215,10 @@ const Td = styled.td`
     background-color: #48BB78; /* TailwindCSS의 green-500 */
     color: white;
   }
+  &.disabled {
+    font-color: gray;
+    pointer-events: none; /* 이벤트 비활성화 */
+}
 `;
 
 // onSelectDate, onMouseDown, onMouseEnter, onMouseUp 함수 내에서

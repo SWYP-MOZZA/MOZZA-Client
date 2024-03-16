@@ -11,14 +11,28 @@ import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
+import { useMeetingInfonData } from '@/app/hooks/useMeetingInfonData';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+import axios from 'axios';
+import { set } from 'lodash';
+import { useSelector } from 'react-redux';
 
-const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&`
 const DateRegister = () => {
+  //라우터
+  const router = useRouter();
+  const params = useSearchParams();
+  const meetingId = params.get('meetingId');
+  const token = useSelector((state) => state.token.token);
+
     //guest 정보
   const [guestState, setGuestState] = useState({
     name: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
+  const [meetingInfo, setMeetingInfo] = useState({});
+  const [meetingData, setMeetingData] = useState({});
 
   useEffect(() => {
     // 페이지 로드 시 localStorage에서 guestState를 불러옴
@@ -28,53 +42,42 @@ const DateRegister = () => {
     }
     console.log(JSON.parse(storedGuestState));
   }, []);
-
-  //라우터
-  const router = useRouter();
-  const params = useSearchParams();
-  // const meetingId = params.get('meetingId');
-  const meetingId = 3; // 임시로 1로 설정
-  const ResultCalendarMemo = useMemo(() => ResultCalendar, []);
+  
+  const bringMeetingData = async () => {
+    try {
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`);
+      console.log('response : ', response);
+      setMeetingData(response.data);
+    }
+    catch (error) {
+      console.error('Error : ', error);
+    }
+  };
+  
+  useEffect(() => {
+    // 토큰 상태 변수가 업데이트되었을 때 API 호출
+    if (token) {
+      bringMeetingInfo(token); // 토큰을 매개변수로 전달하여 API 호출
+      bringMeetingData(); // 필요한 경우 Meeting Data도 같은 방식으로 호출
+    }
+  }, [token]); // 토큰 상태 변수를 의존성 배열에 추가
+  
+  // API 호출 함수는 토큰을 매개변수로 받아 사용합니다.
+  const bringMeetingInfo = async (token) => {
+    try {
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
+        headers: {
+          Authorization: `${token}` // 매개변수로 받은 토큰을 사용
+        }
+      });
+      console.log('response : ', response);
+      setMeetingInfo(response.data);
+    } catch (error) {
+      console.error('Error : ', error);
+    }
+  };
+  
   const [selected, setSelected] = useState('register');
-
-  // 일정 등록에 필요한 상태
-  // const { meetingInfo, meetingData, loading, error } = useMeetingInfonData(meetingId);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-
-  //일정 결과에 필요한 상태
-  const [meetingInfo, setMeetingInfo] = useState({
-    "numberOfSubmit" : 6,
-    "data": {
-      "2024-03-12": [
-        {
-          "attendee": ["박지우", "최유정", "오승준"],
-          "ratio": 0.5
-        }
-      ],
-      "2024-03-13": [
-        {
-          "attendee": ["박지우", "최유정", "오승준"],
-          "ratio": 0.9
-        }
-      ],
-      "2024-03-14": [
-        {
-          "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-          "ratio": 1.0
-        }
-      ]
-    }
-  });
-  const [meetingData, setMeetingData] = useState(
-    {
-      "meetingId": 123,
-      "name": "Meeting1",
-      "date" : ["2023-10-20","2023-10-21","2023-10-25"]   
-    }
-  );
-  const [loading, setLoading] = useState(false);
 
   // 호버한 쎌 데이터
   const [hoveredInfo, setHoveredInfo] = useState({ date: null});
@@ -108,16 +111,19 @@ const DateRegister = () => {
     if (!hoveredInfo || !hoveredInfo.date) {
         return null;
     }
-    // dateSlots.data 객체에서 hoveredInfo.date에 해당하는 키로 직접 접근
     const formattedDate = hoveredInfo.date;
-    const dayData = meetingInfo.data[formattedDate];
-    if (!dayData) {
+
+    // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
+    // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
+    const dayDataArray = meetingInfo.data[0][formattedDate];
+    if (!dayDataArray) {
         return null;
     }
-    // dayData에 날짜 정보를 추가하여 반환
+
+    // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
     return {
-        date: formattedDate, // 형식이 조정된 날짜
-        data: dayData, // 해당 날짜의 데이터
+        date: formattedDate,
+        data: dayDataArray,
     };
 };
 
@@ -125,52 +131,103 @@ const DateRegister = () => {
     const slotData = findDataForHoveredInfo();
 
 
-  useEffect(() => {
-    // meetingInfo.data를 기반으로 날짜 정보를 포함하는 새로운 배열 생성 및 정렬
-    const sortDataByRatio = (meetingInfo) => {
-        // meetingInfo.data의 각 항목에 대해 날짜 정보를 추가하고 하나의 배열로 결합
-        const combinedData = Object.entries(meetingInfo.data).flatMap(([date, attendees]) => 
-            attendees.map(attendee => ({ 
-                date, 
-                ...attendee 
-            }))
-        );
-
-        // combinedData를 ratio에 따라 정렬
-        const sortedData = combinedData.sort((a, b) => b.ratio - a.ratio);
-
-        return sortedData;
-    };
-
-    // 정렬된 데이터를 filteredResultData 상태에 저장
-    const filteredResultData = sortDataByRatio(meetingInfo);
-    setFilteredResultData(filteredResultData);
-    console.log('Sorted by ratio:', filteredResultData);
-}, [meetingInfo]); // meetingInfo가 변경될 때마다 정렬 로직 실행
-
-
-// 팝업을 관리하는 상태
-const [currentPopup, setCurrentPopup] = useState(null);
+    useEffect(() => {
+      const sortDataByRatio = () => {
+          // 객체의 배열을 단일 객체로 가정하는 현재 구조에 맞게 접근 수정 필요
+          // 날짜별 데이터를 모두 포함하는 새로운 배열 생성
+          const allData = Object.entries(meetingInfo.data[0]).flatMap(([date, data]) => {
+              return data.map(entry => ({
+                  date,
+                  ...entry
+              }));
+          });
   
-// "예" 버튼 핸들러
-const handleYesPopup = () => setCurrentPopup(currentPopup+1); 
-const handleKakaoLogin = () => {
-  console.log('카카오 로그인');
-  setCurrentPopup(currentPopup+1)
-}
-// "아니오" 버튼 핸들러
-const handleNoPopup = (token,meetingId) => {
-  sendRequestAndClosePopup(token,meetingId); // request 보내고 팝업 닫기
-};
-// 등록하기 버튼 클릭시
-const onClickRegisterBtn = async () => {
-  setCurrentPopup(1); // 첫 번째 팝업 열기
-};
+          // 생성된 배열을 ratio에 따라 정렬
+          const sortedData = allData.sort((a, b) => b.ratio - a.ratio);
+  
+          return sortedData;
+      };
+  
+      const filteredResultData = sortDataByRatio();
+      setFilteredResultData(filteredResultData);
+      console.log('Sorted by ratio:', filteredResultData);
+  }, [meetingInfo]);
 
-useEffect(() => {
-  console.log('dateSlot : ', dateSlot);
-}
-,[dateSlot]);
+
+  // 팝업을 관리하는 상태
+  const [currentPopup, setCurrentPopup] = useState(null);
+    
+  // "예" 버튼 핸들러
+  const handleYesPopup = () => setCurrentPopup(currentPopup+1); 
+
+  // "아니오" 버튼 핸들러
+  const handleNoPopup = (token,meetingId) => {
+    sendRequestAndClosePopup(token,meetingId); // request 보내고 팝업 닫기
+  };
+  // 등록하기 버튼 클릭시
+  const onClickRegisterBtn = async () => {
+    setCurrentPopup(1); // 첫 번째 팝업 열기
+  };
+
+  useEffect(() => {
+    console.log('dateSlot : ', dateSlot);
+  }
+  ,[dateSlot]);
+
+  const handleKakaoLogin = () => {
+    console.log('카카오 로그인 시작');
+    // 카카오 로그인이 성공한 후 돌아올 URL 설정
+    const returnUrl = `${window.location.origin}${window.location.pathname}?popup=meetConfirmed3`;
+  
+    // 현재 상태를 로컬 스토리지에 저장
+    localStorage.setItem('postLoginState', JSON.stringify({ popup: 'meetConfirmed3' }));
+  
+    // 수정된 부분: KAKAO_AUTH_URL 변수를 사용하여 카카오 로그인 페이지로 리다이렉트
+    const loginUrl = `${KAKAO_AUTH_URL}&redirect_uri=${encodeURIComponent(returnUrl)}`;
+    window.location.href = loginUrl;
+  };
+  
+
+  useEffect(() => {
+    // 페이지 로드 시 URL 파라미터 확인
+    const searchParams = new URLSearchParams(window.location.search);
+    const popupState = searchParams.get('popup');
+  
+    // 로컬 스토리지에서 postLoginState 가져오기
+    const postLoginState = JSON.parse(localStorage.getItem('postLoginState'));
+  
+    // URL 파라미터 또는 로컬 스토리지 상태에 따라 팝업 상태 설정
+    if (popupState === 'meetConfirmed3' || postLoginState?.popup === 'meetConfirmed3') {
+      setCurrentPopup(3); // MeetConfirmed3 팝업 표시
+      localStorage.removeItem('postLoginState'); // 사용 후 상태 제거
+    }
+  }, []);
+
+  const sendRequestAndClosePopup = (token,meetingId) => {
+    const submitRequest = async () => {
+      const requestBody = meetingData.date.map(date => {
+        return {
+          date: date,
+          isActive: dateSlot.includes(date)
+        };
+      });
+      console.log('requestBody : ', requestBody);
+      try {
+        const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, requestBody, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log('response : ', response);
+      }
+      catch (error) {
+        console.error('Error : ', error);
+      }
+    };
+    submitRequest();
+    setCurrentPopup(null);
+  }
+
 
   return (
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
@@ -214,7 +271,7 @@ useEffect(() => {
         // 일정 결과 페이지
         <div className='w-[3/4] flex justify-between'>
           <div>
-            { !loading && <ResultCalendarMemo onHoverChange={handleHoverChange}  dateResult={meetingInfo}/>}
+            { !loading && <ResultCalendar onHoverChange={handleHoverChange}  dateResult={meetingInfo}/>}
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
                 {hoveredInfo.date && slotData && <HoverBox date={hoveredInfo.date} slotData={slotData} />}

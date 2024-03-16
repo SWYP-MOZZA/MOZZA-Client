@@ -19,17 +19,21 @@ const ResultCalendar = ({
 
     const getBackgroundColorClass = (day) => {
       const dayFormatted = format(new Date(year, month, day), 'yyyy-MM-dd');
-      if (!dateResult.data || !dateResult.data[dayFormatted]) return 'bg-gray-300 text-gray-500'; // 데이터가 없을 경우
-      
-      const ratio = dateResult.data[dayFormatted][0].ratio * 100; // 첫 번째 배열 요소의 비율
-      
+      const dayData = dateResult.data[0][dayFormatted];
+
+      console.log(dayData);
+      if (!dayData) return 'bg-gray-300 text-gray-500'; 
+
+      const ratio = dayData[0].ratio * 100; // Adjusted to access ratio correctly
+      console.log(ratio);
+      // Conditional styling based on ratio
       if (ratio <= 20) return 'bg-white text-gray-700';
       if (ratio <= 40) return 'bg-green-100 text-white';
       if (ratio <= 60) return 'bg-green-300 text-white';
       if (ratio <= 80) return 'bg-green-500 text-white';
-      if (ratio < 100) return 'bg-green-700 text-white';
-      return 'bg-green-700 text-white border-2 border-black'; // 100%일 때 테두리 추가
-    };
+      return 'bg-green-700 text-white'; // Covers >80 and 100% cases
+  };
+    
 
     const year = date.getFullYear();
     // JavaScript의 getMonth()는 0부터 시작하기 때문에, 화면에 표시할 때는 +1을 해줍니다.
@@ -93,58 +97,56 @@ const ResultCalendar = ({
   return (
     <>
     <div className='flex justify-between items-center'>
-                <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">{dateResult.numberOfSubmit}명 참여</span>
-            </div>
+        <span className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-green-100 ml-[72px]">
+                    {dateResult.numberOfSubmit}명 참여
+            </span>
+
+    </div>
     <CalendarWrapper>
-      
-        <div className='w-[488px] flex justify-between mb-[10px]'>
+      <div className='w-[488px] flex justify-between mb-[10px]'>
         <button onClick={prevMonth}>
-            <AiOutlineLeft size={24} />
+          <AiOutlineLeft size={24} />
         </button>
         <div> {year}년 {month+1}월</div>
         <button onClick={nextMonth}>
-            <AiOutlineRight size={24} />
+          <AiOutlineRight size={24} />
         </button>
-        </div>
-        <hr />
-    <table>
-      <thead>
-        <Tr>
-          <Th>일</Th>
-          <Th>월</Th>
-          <Th>화</Th>
-          <Th>수</Th>
-          <Th>목</Th>
-          <Th>금</Th>
-          <Th>토</Th>
-        </Tr>
-      </thead>
-      <tbody>
-      {calendarRows.map((week, index) => (
-        <Tr key={index}>
-          {week.map((day, idx) => {
-            const dayFormatted = format(new Date(year, month, day), 'yyyy-MM-dd');
-            const ratioValue = dateResult.data[dayFormatted] ? dateResult.data[dayFormatted][0].ratio * 100 : 0;
-            
-            return (
-              <Td 
-              key={idx} 
-              ratio={ratioValue} 
-              className={`${getBackgroundColorClass(day)}`}
-              onMouseEnter={() => handleMouseEnter(dayFormatted)}
-              onMouseLeave={handleMouseLeave}
-              >
-                {day}
-              </Td>
-            );
-          })}
-        </Tr>
-      ))}
-    </tbody>
-
-    </table>
+      </div>
+      <hr />
+      <table>
+        <thead>
+          <Tr>
+            <Th>일</Th>
+            <Th>월</Th>
+            <Th>화</Th>
+            <Th>수</Th>
+            <Th>목</Th>
+            <Th>금</Th>
+            <Th>토</Th>
+          </Tr>
+        </thead>
+        <tbody>
+        {calendarRows.map((week, index) => (
+          <Tr key={index}>
+            {week.map((day, idx) => {
+              const dayFormatted = format(new Date(year, month, day), 'yyyy-MM-dd');
+              return (
+                <Td 
+                key={idx}
+                className={getBackgroundColorClass(day)}
+                onMouseEnter={() => handleMouseEnter(dayFormatted)}
+                onMouseLeave={handleMouseLeave}>
+                  {day}
+                </Td>
+              );
+            })}
+          </Tr>
+        ))}
+      </tbody>
+      </table>
     </CalendarWrapper>
-    </>
+  </>
+
   );
 
 }

@@ -3,16 +3,19 @@ import Calendar from 'react-calendar';
 import { format, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
 import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
+import isEqual from 'lodash/isEqual';
 // icon
 import { AiOutlineLeft } from "react-icons/ai";
 import { AiOutlineRight } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux';
 
-const MainCalendar = () => {
+const MainCalendar = ({
+  dateSlots,
+  setDateSlots,
+}) => {
     const [date, setDate] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
-    const [dragStart, setDragStart] = useState(null);
 
     const onSelectDate = (day) => {
         // 유효하지 않은 날짜인 경우 함수 실행 중단
@@ -49,8 +52,6 @@ const MainCalendar = () => {
         console.log('selectedDates : ', selectedDates);
     };
 
-
-
     const year = date.getFullYear();
     // JavaScript의 getMonth()는 0부터 시작하기 때문에, 화면에 표시할 때는 +1을 해줍니다.
     const month = date.getMonth();
@@ -70,6 +71,13 @@ const resetSelectedDates = () => {
       // 업데이트된 객체로 resetdDates 상태를 설정
       setSelectedDates([]);
     };
+
+    useEffect(() => {
+      // selectedDates가 변경되었을 때만 dateSlots 업데이트 실행
+      if (!isEqual(dateSlots, selectedDates)) {
+        setDateSlots(selectedDates);
+      }
+    }, [selectedDates]); // dateSlots를 의존성 배열에서 제거
     
   // 해당 월의 첫 날과 마지막 날
   const firstDayOfMonth = new Date(year, month, 1);
@@ -145,7 +153,7 @@ const resetSelectedDates = () => {
 
 }
 
-export default RegisterDraggableCalendar;
+export default MainCalendar;
 
 const CalendarWrapper = styled.div`
     display: flex;

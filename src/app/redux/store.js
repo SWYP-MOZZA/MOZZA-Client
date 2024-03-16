@@ -26,12 +26,27 @@ const loginSlice = createSlice({
     },
 })
 
+const tokenSlice = createSlice({
+  name: 'token',
+  initialState: {
+    token: null,
+  },
+  reducers: {
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+  },
+});
+
 // 액션 및 리듀서 내보내기
 export const { setSelectedDates_ } = calendarSlice.actions;
 export const { setIsLogin } = loginSlice.actions;
+export const { setToken } = tokenSlice.actions;
+
 export default configureStore({
   reducer: {
     calendar: calendarSlice.reducer,
-    login : loginSlice.reducer
+    login : loginSlice.reducer,
+    token: tokenSlice.reducer,
   },
 });
