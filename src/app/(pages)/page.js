@@ -51,8 +51,8 @@ export default function Home() {
 
     const postMeetingInfo = async(data)=>{
         const res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data);
-        console.log(res.data.MeetingId);
-        const meetingId = res.data.MeetingId;
+        console.log(res);
+        const meetingId = res.data.meetingId;
         router.push(`/new?meetingId=${meetingId}`);
         sessionStorage.setItem('meetingId', meetingId);
 

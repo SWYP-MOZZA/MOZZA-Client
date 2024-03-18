@@ -21,7 +21,7 @@ const InvitedPage = () => {
 
     const [isCompleteLinkPopup, setIsCompleteLinkPopup] = useState(false);
 
-    const { meetingShortInfo, loading, error } = useMeetingShortInfo(meetingId);
+    const { meetingShortInfo, isOnlyDate, loading, error } = useMeetingShortInfo(meetingId);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -71,7 +71,7 @@ const InvitedPage = () => {
             <span className="w-[100px] inline-block">모임날짜</span> <span>{meetingShortInfo.startDate} ~ {meetingShortInfo.endDate}</span>
         </div>
         {/* 시간대 정보가 있는 경우에만 렌더링 */}
-        {(meetingShortInfo.startTime !=="" && meetingShortInfo.endTime !=="") && (
+        {isOnlyDate && (
             <div className="w-full pt-[20px] pb-[20px]">
                 <span className="w-[100px] inline-block">시간대</span> <span>{meetingShortInfo.startTime} ~ {meetingShortInfo.endTime}</span>
             </div>
@@ -80,7 +80,7 @@ const InvitedPage = () => {
         <div className='w-full flex justify-between items-center pt-[20px]'>
             <div className='flex items-center gap-[10px]'> {/* 내부 컨테이너 추가 */}
                 <span className="w-[100px] inline-block">참여자</span>
-                <span>총 {meetingShortInfo.numberOfSubmit} 명</span>
+                <span>총 {meetingShortInfo.numberOfVoter} 명</span>
             </div>
             <button onClick={() => setIsOpen(!isOpen)} className='bg-blue-500 text-black p-2 rounded-md'>
                 {isOpen ? <AiOutlineUp size={24}/> : <AiOutlineDown size={24} />}

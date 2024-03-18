@@ -4,6 +4,7 @@ import { SERVER_BASE_URL } from '../constants/BaseUrl';
 
 export const useMeetingShortInfo = (meetingId) => {
     const [meetingShortInfo, setMeetingShortInfo] = useState(null);
+    const [isOnlyDate, setIsOnlyDate] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -15,6 +16,9 @@ export const useMeetingShortInfo = (meetingId) => {
                 setMeetingShortInfo(response.data.Data);
                 setLoading(false);
                 console.log('모임 정보:', response.data);
+                if (response.data.Data.startTime === response.data.Data.endTime) {
+                    setIsOnlyDate(true);
+                }
             } catch (error) {
                 console.error('error:', error.response ? error.response : error.message);
                 setError(error.response ? error.response : error.message);
@@ -23,6 +27,7 @@ export const useMeetingShortInfo = (meetingId) => {
         };
 
         bringMeetingInfo();
+        
     }, [meetingId]); // meetingId가 변경될 때마다 훅을 다시 실행
 
     return { meetingShortInfo, loading, error };

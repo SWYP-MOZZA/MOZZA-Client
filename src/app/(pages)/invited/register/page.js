@@ -28,7 +28,7 @@ const Register = () => {
         }));
         console.log(guestState);
     };
-    const {meetingShortInfo, loading, error} = useMeetingShortInfo(meetingId);
+    const {meetingShortInfo,isOnlyDate, loading, error} = useMeetingShortInfo(meetingId);
 
     const onLogin = async (guestState) => {
         const { success, accessToken, error } = await handleLoginFn(guestState);

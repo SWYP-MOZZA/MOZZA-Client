@@ -3,7 +3,7 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 
 
-const useFetchMeetingData = (token,meetingId) => {
+export const useFetchMeetingData = (token,meetingId) => {
   const [meetingInfo, setMeetingInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ const useFetchMeetingData = (token,meetingId) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setMeetingInfo(response.data.Data);
+        setMeetingInfo(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching meeting data:', error);
