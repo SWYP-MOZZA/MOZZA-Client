@@ -19,20 +19,24 @@ const ResultCalendar = ({
 
     const getBackgroundColorClass = (day) => {
       const dayFormatted = format(new Date(year, month, day), 'yyyy-MM-dd');
-      const dayData = dateResult.data[0][dayFormatted];
-
-      console.log(dayData);
-      if (!dayData) return 'bg-gray-300 text-gray-500'; 
-
-      const ratio = dayData[0].ratio * 100; // Adjusted to access ratio correctly
-      console.log(ratio);
+      
+      // Find the day data in the array
+      const dayData = dateResult.data.find(data => data[dayFormatted]);
+      
+      // If day data does not exist, return default class
+      if (!dayData) return 'bg-gray-300 text-gray-500';
+      
+      // Assuming dayData[dayFormatted] is an array and we take the first item
+      const ratio = dayData[dayFormatted][0].ratio * 100; // Adjust ratio
+      
       // Conditional styling based on ratio
       if (ratio <= 20) return 'bg-white text-gray-700';
       if (ratio <= 40) return 'bg-green-100 text-white';
       if (ratio <= 60) return 'bg-green-300 text-white';
       if (ratio <= 80) return 'bg-green-500 text-white';
       return 'bg-green-700 text-white'; // Covers >80 and 100% cases
-  };
+    };
+    
     
 
     const year = date.getFullYear();

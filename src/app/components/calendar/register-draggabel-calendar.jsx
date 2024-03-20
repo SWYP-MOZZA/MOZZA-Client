@@ -145,20 +145,23 @@ const resetSelectedDates = () => {
         </Tr>
       </thead>
       <tbody>
-      {calendarRows.map((week, index) => (
-        <Tr key={index}>
-          {week.map((day, idx) => {
-            const formattedDate = formatDate(new Date(year, month, day));
-            const isAllowed = meetingData.date.includes(formattedDate);
-            const isSelected = selectedDates.includes(formattedDate);
+      {calendarRows.map((week, weekIdx) => (
+        <Tr key={weekIdx}>
+          {week.map((day, dayIdx) => {
+            // day가 비어있지 않은 경우에만 날짜 포맷을 생성
+            const formattedDate = day !== '' ? formatDate(new Date(year, month, day)) : '';
+            const isAllowed = day !== '' && meetingData.date.includes(formattedDate); // 선택 가능 여부 확인
+            const isSelected = day !== '' && selectedDates.includes(formattedDate); // 선택 상태 여부 확인
+
             return (
               <Td
-                key={idx}
+                key={dayIdx}
                 isAllowed={isAllowed}
                 isSelected={isSelected}
-                onMouseDown={day !== '' && isAllowed ? (event) => onMouseDown(day, event) : undefined}
-                onMouseEnter={day !== '' && isAllowed ? (event) => onMouseEnter(day, event) : undefined}
-                onMouseUp={day !== '' && isAllowed ? onMouseUp : undefined}
+                // 마우스 이벤트 핸들러에서는 day가 비어있지 않고, 선택 가능한 경우에만 이벤트 핸들러를 할당
+                onMouseDown={isAllowed ? (event) => onMouseDown(day, event) : undefined}
+                onMouseEnter={isAllowed ? (event) => onMouseEnter(day, event) : undefined}
+                onMouseUp={isAllowed ? onMouseUp : undefined}
               >
                 {day}
               </Td>
@@ -166,6 +169,7 @@ const resetSelectedDates = () => {
           })}
         </Tr>
       ))}
+
     </tbody>
 
     </table>

@@ -4,81 +4,16 @@ import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultCalendar from '@/app/components/calendar/result-calender';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useFetchMeetingData } from '@/app/hooks/useMeetingResult';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 const ResultPage = () => {
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
-    const token = useSelector((state) => state.token.token);
-    // const [meetingInfo, setMeetingInfo] = useState({
-    //   "numberOfSubmit" : 6,
-    //   "data": [
-    //   {
-    //     "2024-03-12": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준"],
-    //         "ratio": 0.5
-    //       }
-    //     ],
-    //     "2024-03-13": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-14": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 1.0
-    //       }
-    //     ],
-    //     "2024-03-15": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-16": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-17": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-18": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-19": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //     "2024-03-20": [
-    //       {
-    //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-    //         "ratio": 0.9
-    //       }
-    //     ],
-    //   }]
-    // });
-    // const [meetingData, setMeetingData] = useState({
-    //   date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
-    // });
-    const {meetingInfo,loading,error} = useFetchMeetingData(token,meetingId);
-    console.log('meetingInfo:', meetingInfo);
-    console.log('loading:', loading);
-    console.log('error:', error);
+    const [meetingInfo, setMeetingInfo] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     //resultBox 생성
     const [filteredResultData, setFilteredResultData] = useState([]);
@@ -87,6 +22,52 @@ const ResultPage = () => {
     const [hoveredInfo, setHoveredInfo] = useState({
         date:null
     });
+
+    useEffect(() => {
+      const fetchMeetingInfo = async () => {
+        try {
+          const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`);
+          console.log('모임 정보:', response.data);
+          
+          // 상태 업데이트를 비동기적으로 받아온 데이터로 진행
+          setMeetingInfo(response.data);
+          setLoading(false);
+    
+          // 데이터를 성공적으로 불러온 후에 데이터 정렬 함수 호출
+          const sortedData = sortDataByRatio(response.data.data); // 변경된 부분
+          setFilteredResultData(sortedData); // 상태 업데이트
+          console.log('Sorted by ratio:', sortedData);
+        } catch (error) {
+          console.error('Error fetching meeting data:', error);
+          setError(error);
+          setLoading(false);
+        }
+      };
+    
+      // sortDataByRatio 함수 수정
+      // 이 함수가 이제 인자로 데이터를 받도록 함
+      const sortDataByRatio = (data) => {
+        const allData = data.flatMap(item => {
+          const date = Object.keys(item)[0];
+          return item[date].map(entry => ({
+            date,
+            ...entry,
+            ratio: parseFloat(entry.ratio)
+          }));
+        });
+    
+        const sortedData = allData.sort((a, b) => {
+          if (isNaN(a.ratio)) return 1;
+          if (isNaN(b.ratio)) return -1;
+          return b.ratio - a.ratio;
+        });
+    
+        return sortedData;
+      };
+    
+      fetchMeetingInfo();
+    }, [meetingId]);
+    
 
     // 날짜와 시간대 정보를 처리할 함수
     const handleHoverChange = (date) => {
@@ -101,22 +82,20 @@ const ResultPage = () => {
       }
       const formattedDate = hoveredInfo.date;
   
-      // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
-      // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
-      const dayDataArray = meetingInfo.data[0][formattedDate];
-      if (!dayDataArray) {
+      // meetingInfo.data 배열을 순회하여 해당 날짜에 대한 데이터를 찾습니다.
+      const dataEntry = meetingInfo.data.find(data => data.hasOwnProperty(formattedDate));
+      if (!dataEntry) {
           return null;
       }
   
       // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
       return {
           date: formattedDate,
-          data: dayDataArray,
+          data: dataEntry[formattedDate],
       };
   };
   
-    
-    
+
         // hoveredInfo를 기반으로 해당하는 데이터 찾기
         const slotData = findDataForHoveredInfo();
 
@@ -125,30 +104,6 @@ const ResultPage = () => {
             console.log('hoveredInfo.date : ', hoveredInfo.date);
         }
         ,[slotData,hoveredInfo.date]);
-
-        useEffect(() => {
-          const sortDataByRatio = () => {
-              // 객체의 배열을 단일 객체로 가정하는 현재 구조에 맞게 접근 수정 필요
-              // 날짜별 데이터를 모두 포함하는 새로운 배열 생성
-              const allData = Object.entries(meetingInfo.data[0]).flatMap(([date, data]) => {
-                  return data.map(entry => ({
-                      date,
-                      ...entry
-                  }));
-              });
-      
-              // 생성된 배열을 ratio에 따라 정렬
-              const sortedData = allData.sort((a, b) => b.ratio - a.ratio);
-      
-              return sortedData;
-          };
-      
-          const filteredResultData = sortDataByRatio();
-          setFilteredResultData(filteredResultData);
-          console.log('Sorted by ratio:', filteredResultData);
-      }, [meetingInfo]);
-      
-        
         
         const onClickFilterBtn = () => {
             console.log('필터 버튼 클릭');
@@ -161,12 +116,17 @@ const ResultPage = () => {
         
           const onClickRegisterBtn = (meetingId) => {
             console.log('등록하기 버튼 클릭');
-            router.push(`/invited/register/dateregister?meetingId=${meetingId}`);
+            router.push(`/invited/register?meetingId=${meetingId}`);
           }
+          // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
+    if (loading) return <div>Loading...</div>;
+
+    // 에러가 발생했을 때 에러 메시지를 보여줍니다.
+    if (error) return <div>Error loading meeting data!</div>;
     return (
         <div className='w-[3/4] m-[50px] flex justify-between'>
             <div>
-            <ResultCalendar onHoverChange={handleHoverChange} dateResult={meetingInfo}/>
+            {!loading &&<ResultCalendar onHoverChange={handleHoverChange} dateResult={meetingInfo}/>}
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
             {hoveredInfo.date && slotData && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
@@ -185,7 +145,7 @@ const ResultPage = () => {
                 >이전</button>
                 <button className="flex w-[282px] h-[64px] px-16 justify-center items-center rounded-full bg-green-600 text-white"
                   onClick={()=>onClickRegisterBtn(meetingId)}
-                >등록하기</button>
+            >등록하기</button>
             </div>
         </div>
     )
