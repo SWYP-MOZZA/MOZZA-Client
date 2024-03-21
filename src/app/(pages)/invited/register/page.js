@@ -1,5 +1,5 @@
 "use client";
-import React,{useState} from 'react';
+import React,{useState,Suspense} from 'react';
 import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -63,7 +63,10 @@ const Register = () => {
         }
     }
 
+
 return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[180px] gap-y-6'>
         <div className="w-full pt-[20px] flex flex-col items-center">
             <span className="text-h1 font-bold">이름을 입력해주세요</span>
@@ -108,6 +111,7 @@ return (
             </LongBtn>
         </div>
     </div>
+    </Suspense>
 );
 };
 

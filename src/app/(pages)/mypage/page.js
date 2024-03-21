@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,Suspense} from 'react';
 import styled from 'styled-components';
 import MypageResultBox from '@/app/components/mypage/mypage-resultBox';
 import axios from 'axios';
@@ -11,35 +11,8 @@ import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 export default function MyPage(){
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-
-//     useEffect(() => {
-//       // 로컬 스토리지에서 로그인 상태를 확인
-//       const loginState = localStorage.getItem('isLoggedIn');
-      
-//       // 로그인 상태 업데이트
-//       setIsLoggedIn(loginState === 'true');
-//     }, []);
-//     if (!isLoggedIn) {
-//       // 로그인 상태가 false일 때 로그인이 필요하다는 페이지 렌더링
-//       return (
-//         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[180px] gap-y-6'>
-//           <div className="w-full pt-[20px] flex flex-col items-center"></div>
-//             <div className='flex flex-col justify-center items-center'>
-//               <span className="text-body1 font-bold">카카오로 로그인하고</span>
-//               <span className="text-body1 font-bold pb-[20px]">간편하고 쉽게 모임 일정을 관리해요!</span>
-//               <LongBtn style={'kakao-longBtn'} >
-//                   <div className='flex justify-center items-center gap-x-2'>
-//                       <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-//                           <path fillRule="evenodd" clipRule="evenodd" d="M14.5001 0.933594C6.76763 0.933594 0.5 5.77599 0.5 11.7483C0.5 15.4626 2.92419 18.7369 6.61573 20.6845L5.06251 26.3585C4.92528 26.8598 5.49866 27.2594 5.93897 26.9689L12.7475 22.4753C13.322 22.5308 13.9059 22.5631 14.5001 22.5631C22.2319 22.5631 28.5 17.7209 28.5 11.7483C28.5 5.77599 22.2319 0.933594 14.5001 0.933594Z" fill="#070707" />
-//                       </svg>
-//                       카카오로 로그인하기
-//                   </div>
-//               </LongBtn>
-//           </div>
-//           </div>
-//           );
-// }
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const [selected, setSelected] = useState('unconfirmed');
     const [isLatest, setIsLatest] = useState(false);
@@ -136,37 +109,37 @@ export default function MyPage(){
       }
 
       };
-      useEffect(() => {
-        // 비동기 작업을 수행하는 별도의 함수 선언
-        const fetchData = async () => {
-          try {
-            // 서버에서 데이터 받아오기
-            const response = await axios.get(`${SERVER_BASE_URL}/all-meeting`, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-              },
-            });
-            console.log(response.data);
+      // useEffect(() => {
+      //   // 비동기 작업을 수행하는 별도의 함수 선언
+      //   const fetchData = async () => {
+      //     try {
+      //       // 서버에서 데이터 받아오기
+      //       const response = await axios.get(`${SERVER_BASE_URL}/all-meeting`, {
+      //         headers: {
+      //           Authorization: `Bearer ${localStorage.getItem('token')}`,
+      //         },
+      //       });
+      //       console.log(response.data);
             
-            // 받아온 데이터를 createdAt 날짜 기준으로 오름차순 정렬
-            const sortedConfirmedMeetings = response.data.ConfirmedMeeting.sort((a, b) => 
-            new Date(a.createdAt) - new Date(b.createdAt)
-            );
-            const sortedUnconfirmedMeetings = response.data.Inprogress.sort((a, b) => 
-              new Date(a.createdAt) - new Date(b.createdAt)
-            );
+      //       // 받아온 데이터를 createdAt 날짜 기준으로 오름차순 정렬
+      //       const sortedConfirmedMeetings = response.data.ConfirmedMeeting.sort((a, b) => 
+      //       new Date(a.createdAt) - new Date(b.createdAt)
+      //       );
+      //       const sortedUnconfirmedMeetings = response.data.Inprogress.sort((a, b) => 
+      //         new Date(a.createdAt) - new Date(b.createdAt)
+      //       );
 
-            // 정렬된 데이터를 상태에 저장
-            setConfirmedMeetingList(sortedConfirmedMeetings); 
-            setUnconfirmedMeetingList(sortedUnconfirmedMeetings);
-          } catch (error) {
-            // error.response가 있는지 확인하고, 없다면 error.message를 로깅
-            console.error('error:', error.response ? error.response : error.message);
-          }
-        };
+      //       // 정렬된 데이터를 상태에 저장
+      //       setConfirmedMeetingList(sortedConfirmedMeetings); 
+      //       setUnconfirmedMeetingList(sortedUnconfirmedMeetings);
+      //     } catch (error) {
+      //       // error.response가 있는지 확인하고, 없다면 error.message를 로깅
+      //       console.error('error:', error.response ? error.response : error.message);
+      //     }
+      //   };
       
-        fetchData(); // 정의한 비동기 함수 호출
-      }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트 마운트 시 1회 실행
+      //   fetchData(); // 정의한 비동기 함수 호출
+      // }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트 마운트 시 1회 실행
       
       //!비로그인시 로그인페이지로 이동 
       const isLogin = useSelector((state)=>state.login.isLogin);
@@ -177,6 +150,10 @@ export default function MyPage(){
         }
     },[isLogin])
 
+    // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading meeting data: {error}</div>;
+    if (!myConfirmedMeetingList && !myUnconfirmedMeetingList) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
     return (
       <>
       {isLogin && (

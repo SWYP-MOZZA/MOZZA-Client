@@ -1,7 +1,7 @@
 'use client'
-import { axios_ } from '@/app/utils/apiFn';
+import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import React,{ Suspense,useEffect } from 'react';
 
 export default function KakaoPage(){    
     const searchParams = useSearchParams()
@@ -10,7 +10,7 @@ export default function KakaoPage(){
     const redirectUri= 'http://localhost:3000/auth'
      
     async function sendLoginInfo(){
-        await axios_.get('/oauth',{
+        await axios.get('/oauth',{
             client_id: clientId,
             redirect_uri : redirectUri
         });
@@ -20,7 +20,10 @@ export default function KakaoPage(){
         sendLoginInfo();
     },[])
     return(
-        <div>{AUTHORIZATION_CODE} - 이 코드를 백엔드한테 보내주기 </div>
+        <Suspense fallback={<div>Loading...</div>}> 
+
+            <div>{AUTHORIZATION_CODE} - 이 코드를 백엔드한테 보내주기 </div>
+        </Suspense>
         
     )
 }

@@ -1,6 +1,6 @@
 'use client' 
 
-import {useContext, useEffect, useState } from 'react';
+import {useContext, useEffect, useState,Suspense } from 'react';
 import Container from '../components/common/Container';
 import LongBtn from '../components/common/LongBtn';
 import CheckNumCircle from '../components/mainPage/CheckNumCircle';

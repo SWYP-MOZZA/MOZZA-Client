@@ -4,7 +4,7 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import axios from 'axios';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function NewPage(){
@@ -70,7 +70,7 @@ export default function NewPage(){
 
     function handleInviteBtnClick(){
         console.log(pathname);
-        const invitedLink = `${window.location.origin}/new?meetingId=${id}`;
+        const invitedLink = `${window.location.origin}/invited?meetingId=${id}`;
         copyToClipboard(invitedLink);
         alert('초대 링크가 복사되었습니다.',invitedLink);
     }
@@ -91,6 +91,8 @@ export default function NewPage(){
     }
     
     return(
+        <Suspense fallback={<div>Loading...</div>}> 
+
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <div className='text-container text-center'>
                 <h1 className='title text-h1 font-bold text-center'>모임 만들기 완료!</h1>
@@ -116,5 +118,6 @@ export default function NewPage(){
                 <LongBtn style={'secondary-longBtn'} onClick={handleKakaoBtnClick}>카카오 로그인하고 알림 받기</LongBtn>
             </div>
         </div>
+        </Suspense>
     )
 }

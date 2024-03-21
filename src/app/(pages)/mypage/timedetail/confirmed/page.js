@@ -2,7 +2,7 @@
 import ConfirmedBox from '@/app/components/result/confirmedmeetingBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,Suspense} from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 
@@ -13,6 +13,8 @@ const MypageConfirmedDetail = () => {
   const searchParams = useSearchParams()
   const meetingId = searchParams.get('meetingId');
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filteredResultData, setFilteredResultData] = useState([]);
   const [meetingInfo, setMeetingInfo] = useState({
     "numberOfSubmit":6,
@@ -189,53 +191,50 @@ const MypageConfirmedDetail = () => {
       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
     ]}]});
-  const fetchMeetingData = async (meetingId) => {
-    // 로컬 스토리지에서 'token' 키로 저장된 JWT 토큰을 가져옵니다.
-    // const token = localStorage.getItem('token');
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiVVNFUiIsInVzZXJuYW1lIjoi7ISx7LCsIiwiaWF0IjoxNzEwMDY5NTU2LCJleHAiOjE3MTEwNjk1NTZ9.ZfhZsnQMKutejEKD4XaHHqHktIRpjK7oFemCDN-zkvcsXHEMe_hNMPhI5Et5pTFM1G9lowkdr_ksBUFMkF3VXg'
-    try {
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`, {
-        headers: {
-          // 가져온 토큰을 'Authorization
-          // ' 헤더에 'Bearer' 스키마와 함께 추가합니다.
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Meeting data fetched successfully', response.data.Data);
-      setMeetingInfo(response.data.Data);
-    } catch (error) {
-      console.error('Error fetching meeting data:', error);
+
+  useEffect(() => {
+    const fetchMeetingInfo = async () => {
+      try {
+        const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`);
+        console.log('모임 정보:', response.data);
+          
+        // 상태 업데이트를 비동기적으로 받아온 데이터로 진행
+        setMeetingInfo(response.data);
+        setLoading(false);
+
+        // 데이터를 성공적으로 불러온 후에 데이터 정렬 함수 호출
+        const sortedData = sortDataByRatio(response.data.data); // 변경된 부분
+        setFilteredResultData(sortedData); // 상태 업데이트
+        console.log('Sorted by ratio:', sortedData);
+      } catch (error) {
+        setError(error);
+      }
     }
-  };
 
-  useEffect(() => {
-    fetchMeetingData(meetingId);
-  }, [meetingId]);
-
-  useEffect(() => {
-    // 필터링 및 정렬 로직
-    const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
-      Object.entries(dayObject).flatMap(([date, slots]) => 
-        slots.map(slot => ({
-          ...slot,
+    const sortDataByRatio = (data) => {
+      const allData = data.flatMap(item => {
+        const date = Object.keys(item)[0];
+        return item[date].map(entry => ({
           date,
-          ratio: slot.attendee.length / meetingInfo.numberOfSubmit
-        }))
-        .filter(slot => slot.ratio >= 0.5)
-      )
-    ).sort((a, b) => b.ratio - a.ratio); // 비율이 높은 순으로 정렬
-  
-    // 필터링 및 정렬된 데이터를 상태에 저장
-    setFilteredResultData(filteredAndSortedData);
+          ...entry,
+          ratio: entry.attendee.length / meetingInfo.numberOfSubmit
+        }));
+      });
+
+      const sortedData = allData.sort((a, b) => b.ratio - a.ratio);
+      return sortedData;
+    }
+    fetchMeetingInfo();
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
-  useEffect(() => {
-    console.log(meetingId);
-  }
-  , [meetingId]);
-
-
+  // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading meeting data: {error}</div>;
+  if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
+  
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div>
       <div className='flex items-center justify-center m-[50px]'>
         <ConfirmedBox slotData={meetingInfo} />
@@ -263,6 +262,7 @@ const MypageConfirmedDetail = () => {
             </div>
           </div>
     </div>
+    </Suspense>
   );
 };
 
