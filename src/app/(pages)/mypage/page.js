@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,Suspense} from 'react';
 import styled from 'styled-components';
 import MypageResultBox from '@/app/components/mypage/mypage-resultBox';
 import axios from 'axios';

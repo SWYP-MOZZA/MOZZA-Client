@@ -1,6 +1,6 @@
 "use client";
 import HoverBox from '@/app/components/result/hoverBox';
-import React,{useState,useEffect,useMemo} from 'react';
+import React,{useState,useEffect,useMemo,Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
 import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';

@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import { React,useEffect } from 'react';
+import React,{ Suspense,useEffect } from 'react';
 
 export default function KakaoPage(){    
     const searchParams = useSearchParams()

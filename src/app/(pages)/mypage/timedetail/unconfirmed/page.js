@@ -5,7 +5,7 @@ import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeM
 import HoverBox from '@/app/components/result/hoverBox';
 import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
-import React,{useState,useEffect,useMemo} from 'react';
+import React,{useState,useEffect,useMemo,Suspense} from 'react';
 import { useRouter,useSearchParams} from 'next/navigation';
 const MypageConfirmedDetail = () => {
   const router = useRouter();

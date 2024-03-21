@@ -1,5 +1,5 @@
 "use client";
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,Suspense} from 'react';
 import ConfiremdResultBox from '@/app/components/result/confirmed-resultBox';
 import HoverBox from '@/app/components/result/hoverBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';

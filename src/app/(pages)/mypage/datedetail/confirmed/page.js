@@ -2,7 +2,7 @@
 import ConfirmedBox from '@/app/components/result/confirmedmeetingBox';
 import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
-import React,{useState,useEffect,useMemo} from 'react';
+import React,{useState,useEffect,useMemo,Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
 

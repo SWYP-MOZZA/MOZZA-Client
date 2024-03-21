@@ -1,5 +1,5 @@
 "use client";
-import React,{useState} from 'react';
+import React,{useState,Suspense} from 'react';
 import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';

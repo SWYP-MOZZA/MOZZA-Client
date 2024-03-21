@@ -1,6 +1,6 @@
 // TimeRegister 컴포넌트
 "use client";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo ,Suspense} from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
