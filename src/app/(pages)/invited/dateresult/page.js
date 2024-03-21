@@ -140,12 +140,8 @@ const ResultPage = () => {
               }
             </div>
             <div className='fixed bottom-[24px] left-1/2 transform -translate-x-1/2 flex gap-2 font-main font-normal text-subtitle2'>
-                <button className="flex w-[282px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
-                  onClick={onClickBackBtn}
-                >이전</button>
-                <button className="flex w-[282px] h-[64px] px-16 justify-center items-center rounded-full bg-green-600 text-white"
-                  onClick={()=>onClickRegisterBtn(meetingId)}
-            >등록하기</button>
+            <button className="flex w-[588px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
+                      onClick={()=> {router.back();}}>이전</button>
             </div>
         </div>
     )

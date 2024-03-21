@@ -113,7 +113,7 @@ const resetSelectedDates = () => {
         <button onClick={prevMonth}>
             <AiOutlineLeft size={24} />
         </button>
-        <div> {year}년 {month}월</div>
+        <div> {year}년 {month+1}월</div>
         <button onClick={nextMonth}>
             <AiOutlineRight size={24} />
         </button>

@@ -30,7 +30,7 @@ const ResultCalendar = ({
       const ratio = dayData[dayFormatted][0].ratio * 100; // Adjust ratio
       
       // Conditional styling based on ratio
-      if (ratio <= 20) return 'bg-white text-gray-700';
+      if (isNaN(ratio) || ratio <= 20) return 'bg-white text-gray-700';
       if (ratio <= 40) return 'bg-green-100 text-white';
       if (ratio <= 60) return 'bg-green-300 text-white';
       if (ratio <= 80) return 'bg-green-500 text-white';

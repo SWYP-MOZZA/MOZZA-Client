@@ -70,7 +70,7 @@ export default function NewPage(){
 
     function handleInviteBtnClick(){
         console.log(pathname);
-        const invitedLink = `${window.location.origin}/new?meetingId=${id}`;
+        const invitedLink = `${window.location.origin}/invited?meetingId=${id}`;
         copyToClipboard(invitedLink);
         alert('초대 링크가 복사되었습니다.',invitedLink);
     }

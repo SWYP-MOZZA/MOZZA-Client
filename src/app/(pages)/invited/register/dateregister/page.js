@@ -36,70 +36,6 @@ const DateRegister = () => {
   const [meetingInfo, setMeetingInfo] = useState(null);
   const [meetingData, setMeetingData] = useState(null);
 
-  // const [meetingInfo, setMeetingInfo] = useState({
-  //   "numberOfSubmit" : 6,
-  //   "data": [
-  //   {
-  //     "2024-03-12": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준"],
-  //         "ratio": 0.5
-  //       }
-  //     ],
-  //     "2024-03-13": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-14": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 1.0
-  //       }
-  //     ],
-  //     "2024-03-15": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-16": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-17": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-18": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-19": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //     "2024-03-20": [
-  //       {
-  //         "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-  //         "ratio": 0.9
-  //       }
-  //     ],
-  //   }]
-  // });
-  // const [meetingData, setMeetingData] = useState({
-  //   date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
-  // });
-
   useEffect(() => {
     // 페이지 로드 시 localStorage에서 guestState를 불러옴
     const storedGuestState = localStorage.getItem('guestState');
@@ -146,7 +82,7 @@ const DateRegister = () => {
 
     // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
     // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
-    const dayDataArray = meetingInfo.data[0][formattedDate];
+    const dayDataArray = meetingInfo.data.find(data => data.hasOwnProperty(formattedDate));
     if (!dayDataArray) {
         return null;
     }
@@ -154,7 +90,7 @@ const DateRegister = () => {
     // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
     return {
         date: formattedDate,
-        data: dayDataArray,
+        data: dayDataArray[formattedDate],
     };
 };
 
@@ -163,15 +99,6 @@ const DateRegister = () => {
 
   // 일정 등록을 위한 useEffect
   useEffect(() => {
-    // const fetchMeetingData = async () => {
-    //   try {
-    //     const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`);
-    //     return { date : response.data.Data.date};
-    //   } catch (error) {
-    //     console.error('Error fetching meeting choice data:', error);
-    //     throw error; // 오류 발생 시 catch 블록에서 오류를 다시 던짐
-    //   }
-    // };
     const fetchMeetingData = async () => {
       try {
         const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/choice`);
@@ -305,10 +232,10 @@ const DateRegister = () => {
     setCurrentPopup(null);
     setConfirmedPopup(true);
   }
-  const handleConfirmedRegisterMessage = () => {
+  const handleConfirmedRegisterMessage = (meetingId) => {
     console.log('확인 버튼 클릭');
     setConfirmedPopup(false);
-    router.push('/');
+    router.push(`/invited/dateresult?meetingId=${meetingId}`);
   }
 
 
@@ -353,7 +280,7 @@ const DateRegister = () => {
           {currentPopup === 1 && <MeetConfirmed1 onConfirm={handleYesPopup} onDecline={()=>handleNoPopup(token,meetingId)} />}
           {currentPopup === 2 && <MeetConfirmed2 onConfirm={handleKakaoLogin} onDecline={()=>handleNoPopup(token,meetingId)} />}
           {currentPopup === 3 && <MeetConfirmed3 onConfirm={()=>handleNoPopup(token,meetingId)} />}
-          {confirmedPopup && <ConfirmedRegisterMessage onConfrim={handleConfirmedRegisterMessage}/>}
+          {confirmedPopup && <ConfirmedRegisterMessage onConfrim={()=>handleConfirmedRegisterMessage(meetingId)}/>}
         </div> : 
         // 일정 결과 페이지
         <div className='w-[3/4] flex justify-between'>
