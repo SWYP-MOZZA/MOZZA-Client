@@ -75,31 +75,53 @@ const MypageDateConfirmedDetail = () => {
             ],
           }]
         });
-        const [meetingData, setMeetingData] = useState({
-          date: ["2024-03-12","2024-03-13","2024-03-14","2024-03-15","2024-03-16","2024-03-17","2024-03-18","2024-03-19","2024-03-20"]
-        });
+        // details 데이터
+        // const [meetingInfo, setMeetingInfo] = useState([]);
 
         useEffect(() => {
-          const sortDataByRatio = () => {
-              // 객체의 배열을 단일 객체로 가정하는 현재 구조에 맞게 접근 수정 필요
-              // 날짜별 데이터를 모두 포함하는 새로운 배열 생성
-              const allData = Object.entries(meetingInfo.data[0]).flatMap(([date, data]) => {
-                  return data.map(entry => ({
-                      date,
-                      ...entry
-                  }));
-              });
-      
-              // 생성된 배열을 ratio에 따라 정렬
-              const sortedData = allData.sort((a, b) => b.ratio - a.ratio);
-      
-              return sortedData;
+          const fetchMeetingInfo = async () => {
+            try {
+              const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/details`);
+              console.log('모임 정보:', response.data);
+              
+              // 상태 업데이트를 비동기적으로 받아온 데이터로 진행
+              setMeetingInfo(response.data);
+              setLoading(false);
+        
+              // 데이터를 성공적으로 불러온 후에 데이터 정렬 함수 호출
+              const sortedData = sortDataByRatio(response.data.data); // 변경된 부분
+              setFilteredResultData(sortedData); // 상태 업데이트
+              console.log('Sorted by ratio:', sortedData);
+            } catch (error) {
+              console.error('Error fetching meeting data:', error);
+              setError(error);
+              setLoading(false);
+            }
           };
-      
-          const filteredResultData = sortDataByRatio();
-          setFilteredResultData(filteredResultData);
-          console.log('Sorted by ratio:', filteredResultData);
-      }, [meetingInfo]);
+        
+          // sortDataByRatio 함수 수정
+          // 이 함수가 이제 인자로 데이터를 받도록 함
+          const sortDataByRatio = (data) => {
+            const allData = data.flatMap(item => {
+              const date = Object.keys(item)[0];
+              return item[date].map(entry => ({
+                date,
+                ...entry,
+                ratio: parseFloat(entry.ratio)
+              }));
+            });
+        
+            const sortedData = allData.sort((a, b) => {
+              if (isNaN(a.ratio)) return 1;
+              if (isNaN(b.ratio)) return -1;
+              return b.ratio - a.ratio;
+            });
+        
+            return sortedData;
+          };
+        
+          fetchMeetingInfo();
+        }, [meetingId]);
 
 
       return (

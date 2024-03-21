@@ -33,8 +33,13 @@ const DateRegister = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [meetingInfo, setMeetingInfo] = useState(null);
-  const [meetingData, setMeetingData] = useState(null);
+  // choice 데이터
+  const [meetingData, setMeetingData] = useState({
+    "date": [],
+  });
+  // details 데이터
+  const [meetingInfo, setMeetingInfo] = useState([]);
+  
 
   useEffect(() => {
     // 페이지 로드 시 localStorage에서 guestState를 불러옴

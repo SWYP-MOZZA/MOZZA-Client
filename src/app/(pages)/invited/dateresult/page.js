@@ -1,5 +1,5 @@
 "use client";
-import React,{useState,useEffect,useMemo} from 'react';
+import React,{useState,useEffect} from 'react';
 import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultCalendar from '@/app/components/calendar/result-calender';
@@ -11,7 +11,8 @@ const ResultPage = () => {
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
-    const [meetingInfo, setMeetingInfo] = useState(null);
+    // details 데이터
+    const [meetingInfo, setMeetingInfo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -108,16 +109,6 @@ const ResultPage = () => {
         const onClickFilterBtn = () => {
             console.log('필터 버튼 클릭');
           }
-
-        const onClickBackBtn = () => {
-            console.log('이전 버튼 클릭');
-            router.back();
-          }
-        
-          const onClickRegisterBtn = (meetingId) => {
-            console.log('등록하기 버튼 클릭');
-            router.push(`/invited/register?meetingId=${meetingId}`);
-          }
           // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
     if (loading) return <div>Loading...</div>;
 
@@ -140,8 +131,8 @@ const ResultPage = () => {
               }
             </div>
             <div className='fixed bottom-[24px] left-1/2 transform -translate-x-1/2 flex gap-2 font-main font-normal text-subtitle2'>
-            <button className="flex w-[588px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
-                      onClick={()=> {router.back();}}>이전</button>
+              <button className="flex w-[588px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
+                        onClick={()=> {router.back();}}>이전</button>
             </div>
         </div>
     )

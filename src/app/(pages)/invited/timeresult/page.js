@@ -205,16 +205,6 @@ const ResultPage = () => {
     console.log('필터 버튼 클릭');
   }
 
-  const onClickBackBtn = () => {
-    console.log('이전 버튼 클릭');
-    router.back();
-  }
-
-  const onClickRegisterBtn = (meetingId) => {
-    console.log('등록하기 버튼 클릭');
-    router.push(`/invited/register/timeregister?meetingId=${meetingId}`);
-  }
-
   // 날짜와 시간대 정보를 처리할 함수
   const handleHoverChange = (date, time) => {
     setHoveredInfo({ date, time });
@@ -312,12 +302,8 @@ const ResultPage = () => {
               }
             </div>
             <div className='fixed bottom-[24px] left-1/2 transform -translate-x-1/2 flex gap-2 font-main font-normal text-subtitle2'>
-                <button className="flex w-[282px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
-                  onClick={onClickBackBtn}
-                >이전</button>
-                <button className="flex w-[282px] h-[64px] px-16 justify-center items-center rounded-full bg-green-600 text-white"
-                  onClick={()=>onClickRegisterBtn(meetingId)}
-                >등록하기</button>
+              <button className="flex w-[588px] h-[64px] px-16 justify-center items-center rounded-full bg-green-100"
+                        onClick={()=> {router.back();}}>이전</button>
             </div>
           </div>
   );
