@@ -14,186 +14,6 @@ const ResultPage = () => {
 
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
 
-  //더미데이터
-  // const [meetingInfo, setMeetingInfo] = useState({
-  //     name: "모임명1", // 추가 요청 
-  //     "meetingId" : 1,
-  //     "createdAt" : "2024-03-02T23:33",
-  //     "numberOfSubmit":6,
-  //     "confirmedDate" : "2023-03-12",
-  //     "confirmedTime" : {"startTime" : "09:30", "endTime" : "10:30"},
-  //     "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
-  //     "attendee" : ["박지우","최유정","오승준","윤혜원","김태연","정수정"], // 추가 요청
-  //     "data":[
-  //     {
-  //       '2023-03-12': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //       ],
-  //     '2023-03-13': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-15': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-17': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-20': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-22': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-23': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-24': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-25': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-26': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-27': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ],
-  //     '2023-03-28': [
-  //       { "time":"09:00", "attendee" : ["박지우", "오승준", "최유정"] },
-  //       { "time":"09:30", "attendee" : ["김태연", "정수정"] },
-  //       { "time":"10:00", "attendee" : ["이병헌", "김태리", "유아인", "송강호"] },
-  //       { "time":"10:30", "attendee" : ["조인성", "정우성"] },
-  //       { "time":"11:00", "attendee" : ["김소현", "남주혁"] },
-  //       { "time":"11:30", "attendee" : ["한지민", "남궁민"] },
-  //       { "time":"12:00", "attendee" : ["송중기", "송혜교"] },
-  //       { "time":"12:30", "attendee" : ["박서준", "박보영"] },
-  //       { "time":"13:00", "attendee" : ["이민호", "김고은"] },
-  //       { "time":"13:30", "attendee" : ["정해인", "김서형"] },
-  //       { "time":"14:00", "attendee" : ["류준열", "전도연"] },
-  //       { "time":"14:30", "attendee" : ["조승우", "배두나"] }
-  //     ]}]});
   const [meetingInfo, setMeetingInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -201,8 +21,6 @@ const ResultPage = () => {
   //resultBox 생성
   const [filteredResultData, setFilteredResultData] = useState([]);
   
-  const slotData = findDataForHoveredInfo();
-
   useEffect(() => {
     const fetchMeetingInfo = async () => {
       try {
@@ -218,17 +36,19 @@ const ResultPage = () => {
         setFilteredResultData(sortedData); // 상태 업데이트
         console.log('Sorted by ratio:', sortedData);
       } catch (error) {
+        console.error('Error fetching meeting data:', error);
         setError(error);
+        setLoading(false);
       }
-    }
+    } 
 
-    const sortDataByRatio = (data) => {
+      const sortDataByRatio = (data) => {
       const allData = data.flatMap(item => {
-        const date = Object.keys(item)[0];
+      const date = Object.keys(item)[0];
         return item[date].map(entry => ({
           date,
           ...entry,
-          ratio: entry.attendee.length / meetingInfo.numberOfSubmit
+          ratio: parseFloat(entry.ratio)
         }));
       });
 
@@ -236,7 +56,7 @@ const ResultPage = () => {
       return sortedData;
     }
     fetchMeetingInfo();
-  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
+  }, []); // 의존성 배열에 meetingInfo 추가
 
   const onClickFilterBtn = () => {
     console.log('필터 버튼 클릭');
@@ -270,11 +90,11 @@ const ResultPage = () => {
     };
   };
 
-
+  const slotData = findDataForHoveredInfo();
 
   // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error loading meeting data: {error}</div>;
+  if (error) return <div>{error ? error.toString() : 'No errors'}</div>;
   if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
   return (
     <Suspense fallback={<div>Loading...</div>}> 
@@ -284,8 +104,7 @@ const ResultPage = () => {
                 {!loading && <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>}
             </div>
             <div className='flex flex-col gap-2.5 mt-[50px]'>
-              {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />
-}
+              {hoveredInfo.date && hoveredInfo.time && <HoverBox date={hoveredInfo.date} slotData={slotData} />}
                 <div className='flex justify-end'>
                     <button onClick={onClickFilterBtn} className="inline-flex px-6 py-2 justify-center items-center gap-2 rounded-full bg-gray-300">필터</button>
                 </div>

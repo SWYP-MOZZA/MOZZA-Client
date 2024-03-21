@@ -28,7 +28,7 @@ function DraggableTimeTable(
 
 
     useEffect(() => {
-      const serverDates = meetingData.date;
+      const serverDates = [...meetingData.date].sort((a, b) => new Date(a) - new Date(b));
       const paginateDates = (dates, pageSize) => {
         const pages = [];
         for (let i = 0; i < dates.length; i += pageSize) {

@@ -52,7 +52,7 @@ export default function MyPage(){
     ]);
     const [myUnconfirmedMeetingList, setUnconfirmedMeetingList] = useState([
       {
-        "meetingId" : 5,
+        "meetingId" : 31,
         "meetingName" : "모임명5",
         "confirmedDate" : null,
         "confirmedTime" : null,

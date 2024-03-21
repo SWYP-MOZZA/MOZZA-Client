@@ -66,7 +66,6 @@ const ResultPage = () => {
     
         return sortedData;
       };
-    
       fetchMeetingInfo();
     }, [meetingId]);
     
@@ -100,12 +99,6 @@ const ResultPage = () => {
 
         // hoveredInfo를 기반으로 해당하는 데이터 찾기
         const slotData = findDataForHoveredInfo();
-
-        useEffect(() => {
-            console.log('slotData : ', slotData);
-            console.log('hoveredInfo.date : ', hoveredInfo.date);
-        }
-        ,[slotData,hoveredInfo.date]);
         
         const onClickFilterBtn = () => {
             console.log('필터 버튼 클릭');

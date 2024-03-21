@@ -1,4 +1,6 @@
-'use client'
+"use client"
+export const dynamic = "force-dynamic";
+
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import { setIsLogin } from '@/app/redux/store';
 import axios from 'axios';

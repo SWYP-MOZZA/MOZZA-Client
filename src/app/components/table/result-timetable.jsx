@@ -71,16 +71,15 @@ function ResultTimeTable(
     // 배경색 적용을 위한 함수 수정
     // 주의: 실제 CSS 배경색 적용을 위해 className 대신 style 객체를 사용
     const getBackgroundColorStyle = (member) => {
-        const percentage = (member / resultData.numberOfSubmit) * 100;
-        let color;
-        if (percentage <= 20) color = '#FFFFFF'; // white
-        else if (percentage <= 40) color = '#CCF2E1'; // green-100
-        else if (percentage <= 60) color = '#66D19E'; // green-300
-        else if (percentage <= 80) color = '#32B67A'; // green-500
-        else color = '#008248'; // green-700
+        const ratio = member * 100;
 
-        return { backgroundColor: color };
+        if (isNaN(ratio) || ratio <= 20) return 'bg-white text-gray-700';
+        if (ratio <= 40) return 'bg-green-100 text-white';
+        if (ratio <= 60) return 'bg-green-300 text-white';
+        if (ratio <= 80) return 'bg-green-500 text-white';
+        return 'bg-green-700 text-white'; // Covers >80 and 100% cases
     };
+    
       return (
        <div className='flex flex-col'>
             <div className='flex justify-between items-center'>
@@ -122,13 +121,12 @@ function ResultTimeTable(
                                         slot = obj[date].find(slotItem => slotItem.time === time);
                                     }
                                 });
-                                const style = getBackgroundColorStyle(slot ? slot.attendee.length : 0); // 스타일 적용
                                 return (
                                     <Td 
                                     key={`${date}-${time}`} 
+                                    className={getBackgroundColorStyle(slot.ratio)}
                                     onMouseEnter={() => handleMouseEnter(date, time)}
-                                    onMouseLeave={handleMouseLeave}
-                                    style={style}>
+                                    onMouseLeave={handleMouseLeave}>
                                         {slot ? slot.attendee.length : ''}
                                     </Td>
                                 );
