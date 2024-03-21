@@ -12,6 +12,8 @@ const MypageDateUnconfirmedDetail = () => {
         const searchParams = useSearchParams()
         const meetingId = searchParams.get('meetingId');
 
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
         const [filteredResultData, setFilteredResultData] = useState([]);
         const [meetingInfo, setMeetingInfo] = useState({
           "numberOfSubmit" : 6,
@@ -224,6 +226,11 @@ const MypageDateUnconfirmedDetail = () => {
           //   }
             onPopupConfirmedComplete();
           }
+
+          // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
+          if (loading) return <div>Loading...</div>;
+          if (error) return <div>Error loading meeting data: {error}</div>;
+          if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
       return (
         <Suspense fallback={<div>Loading...</div>}> 
 

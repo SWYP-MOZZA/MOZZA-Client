@@ -11,18 +11,19 @@ const ResultPage = () => {
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
+
+    // 호버한 쎌 데이터
+    const [hoveredInfo, setHoveredInfo] = useState({
+      date:null
+  });
+
     // details 데이터
-    const [meetingInfo, setMeetingInfo] = useState([]);
+    const [meetingInfo, setMeetingInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     //resultBox 생성
     const [filteredResultData, setFilteredResultData] = useState([]);
-
-    // 호버한 쎌 데이터
-    const [hoveredInfo, setHoveredInfo] = useState({
-        date:null
-    });
 
     useEffect(() => {
       const fetchMeetingInfo = async () => {
@@ -110,10 +111,9 @@ const ResultPage = () => {
             console.log('필터 버튼 클릭');
           }
           // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
-    if (loading) return <div>Loading...</div>;
-
-    // 에러가 발생했을 때 에러 메시지를 보여줍니다.
-    if (error) return <div>Error loading meeting data!</div>;
+          if (loading) return <div>Loading...</div>;
+          if (error) return <div>Error loading meeting data: {error}</div>;
+          if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
     return (
       <Suspense fallback={<div>Loading...</div>}> 
         <div className='w-[3/4] m-[50px] flex justify-between'>

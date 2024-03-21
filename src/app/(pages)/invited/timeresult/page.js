@@ -201,37 +201,6 @@ const ResultPage = () => {
   //resultBox 생성
   const [filteredResultData, setFilteredResultData] = useState([]);
   
-  const onClickFilterBtn = () => {
-    console.log('필터 버튼 클릭');
-  }
-
-  // 날짜와 시간대 정보를 처리할 함수
-  const handleHoverChange = (date, time) => {
-    setHoveredInfo({ date, time });
-  };
-
-  // hoveredInfo를 기반으로 해당하는 데이터 찾기
-  const findDataForHoveredInfo = () => {
-    if (!hoveredInfo.date || !hoveredInfo.time) {
-      return null;
-    }
-
-    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
-    if (!dayData) {
-      return null;
-    }
-
-    const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
-    return {
-      date: hoveredInfo.date,
-      time: hoveredInfo.time,
-      data: [{
-        attendee : slotData.attendee,
-      }
-      ]
-    };
-  };
-
   const slotData = findDataForHoveredInfo();
 
   useEffect(() => {
@@ -267,23 +236,46 @@ const ResultPage = () => {
       return sortedData;
     }
     fetchMeetingInfo();
-    // 필터링 및 정렬 로직
-    // const filteredAndSortedData = meetingInfo.data.flatMap(dayObject => 
-    //   Object.entries(dayObject).flatMap(([date, slots]) => 
-    //     slots.map(slot => ({
-    //       ...slot,
-    //       date,
-    //       ratio: slot.attendee.length / meetingInfo.numberOfSubmit
-    //     }))
-    //     .filter(slot => slot.ratio >= 0.5)
-    //   )
-    // ).sort((a, b) => b.ratio - a.ratio); // 비율이 높은 순으로 정렬
-  
-    // // 필터링 및 정렬된 데이터를 상태에 저장
-    // setFilteredResultData(filteredAndSortedData);
-    // console.log('Sorted by ratio:', filteredAndSortedData);
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
+  const onClickFilterBtn = () => {
+    console.log('필터 버튼 클릭');
+  }
+
+  // 날짜와 시간대 정보를 처리할 함수
+  const handleHoverChange = (date, time) => {
+    setHoveredInfo({ date, time });
+    console.log(date,time);
+  };
+
+  // hoveredInfo를 기반으로 해당하는 데이터 찾기
+  const findDataForHoveredInfo = () => {
+    if (!hoveredInfo.date || !hoveredInfo.time) {
+      return null;
+    }
+
+    const dayData = meetingInfo.data.find(dayObject => dayObject.hasOwnProperty(hoveredInfo.date));
+    if (!dayData) {
+      return null;
+    }
+
+    const slotData = dayData[hoveredInfo.date].find(slot => slot.time === hoveredInfo.time);
+    return {
+      date: hoveredInfo.date,
+      time: hoveredInfo.time,
+      data: [{
+        attendee : slotData.attendee,
+      }
+      ]
+    };
+  };
+
+
+
+  // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error loading meeting data: {error}</div>;
+  if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
   return (
     <Suspense fallback={<div>Loading...</div>}> 
 

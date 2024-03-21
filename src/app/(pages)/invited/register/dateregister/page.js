@@ -32,11 +32,9 @@ const DateRegister = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // choice 데이터
-  const [meetingData, setMeetingData] = useState({
-    "date": [],
-  });
+  const [meetingData, setMeetingData] = useState(null);
   // details 데이터
-  const [meetingInfo, setMeetingInfo] = useState([]);
+  const [meetingInfo, setMeetingInfo] = useState(null);
   
 
   useEffect(() => {
@@ -241,6 +239,22 @@ const DateRegister = () => {
     router.push(`/invited/dateresult?meetingId=${meetingId}`);
   }
 
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 상태 UI
+  }
+
+  if (error) {
+    return <div>Error loading data: {error.message}</div>; // 에러 상태 UI
+  }
+
+  // 데이터가 없는 경우도 고려하여 UI 제공
+  if (!meetingData || Object.keys(meetingInfo).length === 0) {
+    return <div>No meeting data available.</div>;
+  }
+
+  if (!meetingInfo.data || meetingInfo.data.length === 0) {
+    return <div>No meeting details available.</div>;
+  }
 
   return (
     <Suspense fallback={<div>Loading...</div>}> 

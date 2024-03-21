@@ -3,7 +3,17 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 
 export const useMeetingShortInfo = (meetingId) => {
-    const [meetingShortInfo, setMeetingShortInfo] = useState(null);
+    const [meetingShortInfo, setMeetingShortInfo] = useState({
+        "meetingId":null,
+        "name": null,
+        "startDate": null,
+        "endDate": null,
+        "startTime": null,
+        "endTime": null,
+        "numberOfVoter": 0,
+        "attendee": [
+        ]
+      });
     const [isOnlyDate, setIsOnlyDate] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
