@@ -285,6 +285,8 @@ const ResultPage = () => {
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
       <div className='m-[50px] w-[3/4] flex justify-between'>
           <div>
                 {!loading && <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>}
@@ -306,6 +308,7 @@ const ResultPage = () => {
                         onClick={()=> {router.back();}}>이전</button>
             </div>
           </div>
+    </Suspense>
   );
 };
 

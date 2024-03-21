@@ -91,6 +91,8 @@ export default function NewPage(){
     }
     
     return(
+        <Suspense fallback={<div>Loading...</div>}> 
+
         <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] gap-y-6'>
             <div className='text-container text-center'>
                 <h1 className='title text-h1 font-bold text-center'>모임 만들기 완료!</h1>
@@ -116,5 +118,6 @@ export default function NewPage(){
                 <LongBtn style={'secondary-longBtn'} onClick={handleKakaoBtnClick}>카카오 로그인하고 알림 받기</LongBtn>
             </div>
         </div>
+        </Suspense>
     )
 }

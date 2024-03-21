@@ -59,6 +59,8 @@ const InvitedPage = () => {
     }
     
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[80px] gap-y-6'>
       {isCompleteLinkPopup && 
             <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>}
@@ -100,6 +102,7 @@ const InvitedPage = () => {
         <LongBtn style={'secondary-longBtn'} onClick={()=> onClickResult(meetingShortInfo.meetingId)}>결과 확인하기</LongBtn>
         {isCompleteLinkPopup && <LinkShared setIsCompleteLinkPopup={setIsCompleteLinkPopup} />}
     </div>
+    </Suspense>
   );
 };
 

@@ -13,7 +13,6 @@ import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
 import { useQuery } from 'react-query';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
-import { useMeetingInfonData } from '@/app/hooks/useMeetingInfonData';
 import { sendRequest } from '@/app/utils/apiFn';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import DraggableTimeTable from '@/app/components/table/draggable-timetable';
@@ -328,6 +327,8 @@ const TimeRegister = () => {
   };
 
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -383,6 +384,7 @@ const TimeRegister = () => {
             </div>
           </div>}
     </div>
+    </Suspense>
   );
 }
 

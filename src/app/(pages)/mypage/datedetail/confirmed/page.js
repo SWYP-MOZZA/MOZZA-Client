@@ -125,6 +125,8 @@ const MypageDateConfirmedDetail = () => {
 
 
       return (
+        <Suspense fallback={<div>Loading...</div>}> 
+
         <div>
           <div className='flex items-center justify-center m-[50px]'>
             <ConfirmedBox slotData={meetingInfo} />
@@ -149,6 +151,7 @@ const MypageDateConfirmedDetail = () => {
                 </div>
               </div>
         </div>
+        </Suspense>
       );
     };
     

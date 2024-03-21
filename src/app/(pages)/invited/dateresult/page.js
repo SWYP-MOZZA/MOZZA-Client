@@ -1,5 +1,5 @@
 "use client";
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, Suspense} from 'react';
 import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultCalendar from '@/app/components/calendar/result-calender';
@@ -115,6 +115,7 @@ const ResultPage = () => {
     // 에러가 발생했을 때 에러 메시지를 보여줍니다.
     if (error) return <div>Error loading meeting data!</div>;
     return (
+      <Suspense fallback={<div>Loading...</div>}> 
         <div className='w-[3/4] m-[50px] flex justify-between'>
             <div>
             {!loading &&<ResultCalendar onHoverChange={handleHoverChange} dateResult={meetingInfo}/>}
@@ -135,6 +136,7 @@ const ResultPage = () => {
                         onClick={()=> {router.back();}}>이전</button>
             </div>
         </div>
+      </Suspense>
     )
 }
 export default ResultPage;

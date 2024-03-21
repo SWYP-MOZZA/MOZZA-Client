@@ -12,10 +12,8 @@ import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
 import ConfirmedRegisterMessage from '@/app/components/popup/confirmed-register';
-import { useMeetingInfonData } from '@/app/hooks/useMeetingInfonData';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import axios from 'axios';
-import { set } from 'lodash';
 import { useSelector } from 'react-redux';
 
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&`
@@ -245,6 +243,8 @@ const DateRegister = () => {
 
 
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -306,6 +306,7 @@ const DateRegister = () => {
           </div>}
           
     </div>
+    </Suspense>
   );
 }
 

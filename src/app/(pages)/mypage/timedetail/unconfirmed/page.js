@@ -341,6 +341,8 @@ const MypageConfirmedDetail = () => {
   }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
 
   return (
+    <Suspense fallback={<div>Loading...</div>}> 
+
     <div>
       { (isConfirmedPopup || isConfirmedPopupComplete) && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -376,6 +378,7 @@ const MypageConfirmedDetail = () => {
           {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
           {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
     </div>
+    </Suspense>
   );
 };
 

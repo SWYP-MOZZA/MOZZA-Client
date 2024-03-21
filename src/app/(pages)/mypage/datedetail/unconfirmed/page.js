@@ -225,6 +225,8 @@ const MypageDateUnconfirmedDetail = () => {
             onPopupConfirmedComplete();
           }
       return (
+        <Suspense fallback={<div>Loading...</div>}> 
+
         <div>
           { (isConfirmedPopup || isConfirmedPopupComplete) && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -263,6 +265,7 @@ const MypageDateUnconfirmedDetail = () => {
               {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
           {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
         </div>
+        </Suspense>
       );
     };
     
