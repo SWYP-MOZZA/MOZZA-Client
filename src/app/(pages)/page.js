@@ -11,6 +11,7 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import MainCalendar from '../components/calendar/MainCalendar';
 
+
 export default function Home() {
     const router = useRouter();
     const [isCheck, setIsCheck] = useState([false,false,false]);
@@ -20,6 +21,7 @@ export default function Home() {
     const [endTime,setEndTime] = useState('')
     const [isOnlyDate, setIsOnlyDate] = useState(false);
 
+    const isLogin = useSelector((state)=>state.login.isLogin);
 
     function handleInputChange(input){
         console.log(input.target.value);
@@ -45,13 +47,28 @@ export default function Home() {
     },[startTime,endTime])
 
     const postMeetingInfo = async(data)=>{
-        const res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data);
-        console.log(res);
+
+        let res='';
+        //!로그인 여부 확인 
+        if (isLogin) {
+            // 세션 스토리지에서 사용자 토큰 가져오기
+            const userToken = sessionStorage.getItem('userToken');
+            // 헤더에 토큰 추가
+            const config = {
+                headers: {
+                    'Authorization': `${userToken}`
+                }
+            };
+
+            res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data,config);
+            
+        }else{
+            res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data,config);
+
+        }
         const meetingId = res.data.meetingId;
-        router.push(`/new?meetingId=${meetingId}`);
-        sessionStorage.setItem('meetingId', meetingId);
-
-
+            router.push(`/new?meetingId=${meetingId}`);
+            sessionStorage.setItem('meetingId', meetingId);
     
     }   
     const [dateSlots, setDateSlots] = useState({});
@@ -70,13 +87,21 @@ export default function Home() {
     },[dateSlots]);
 
     function handleButtonClicked(){
-        const submitData={
-            name:meetingName,
-            date:dateSlots,
-            startTime:startTime,
-            endTime:endTime,
-            onlyDate:isOnlyDate,
-        }
+        // const submitData={
+        //     name:meetingName,
+        //     date:dateSlots,
+        //     startTime:startTime,
+        //     endTime:endTime,
+        //     onlyDate:isOnlyDate,
+        // }
+        const submitData = {
+            "name" : meetingName,
+            "date" : dateSlots,
+            "startTime" : startTime,
+            "endTime": endTime,
+            "onlyDate" : isOnlyDate
+            }
+        
         console.log(submitData);
 
         postMeetingInfo(submitData);
