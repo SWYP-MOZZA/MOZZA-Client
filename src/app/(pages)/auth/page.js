@@ -4,7 +4,7 @@ import { setIsLogin } from '@/app/redux/store';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useEffect,useState } from 'react';
+import { useEffect,useState,Suspense } from 'react';
 import { useDispatch } from 'react-redux';
 
 export default function KakaoPage(){    
@@ -48,7 +48,8 @@ useEffect(() => {
     }
 }, [AUTHORIZATION_CODE]);
     return(
-        <div>로그인중입니다.</div>
-        
+        <Suspense fallback={<div>Loading...</div>}> 
+            <div>로그인중입니다.</div>
+        </Suspense>
     )
 }
