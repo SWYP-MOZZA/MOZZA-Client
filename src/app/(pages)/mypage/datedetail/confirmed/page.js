@@ -5,7 +5,6 @@ import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import React,{useState,useEffect,useMemo,Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
-import { co } from '@fullcalendar/core/internal-common';
 
 const MypageDateConfirmedDetail = () => {
       // 쿼리 파라미터
@@ -14,6 +13,7 @@ const MypageDateConfirmedDetail = () => {
         const meetingId = searchParams.get('meetingId');
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
+
         const [filteredResultData, setFilteredResultData] = useState([]);
         const [meetingInfo, setMeetingInfo] = useState({
           "numberOfSubmit" : 6,
