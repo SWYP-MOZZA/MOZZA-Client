@@ -4,7 +4,7 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import axios from 'axios';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function NewPage(){
