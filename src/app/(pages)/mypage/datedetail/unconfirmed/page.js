@@ -142,19 +142,14 @@ const MypageDateUnconfirmedDetail = () => {
 
         const onClickConfirmedGoBtn = (meetingId) => {
           const requestData = {
-            "meeting id" : meetingInfo.meetingId,
-            "createdAt" : meetingInfo.createdAt,
-            "numberOfSubmit" : meetingInfo.numberOfSubmit,
+            "confirmedStartDate" : selectedSlot.date,
             "confirmedDate" : selectedSlot.date,
-            "confirmedTime" : {"startTime" : selectedSlot.time , "endTime" :"10:00" },
-            "confirmedAttendee" : selectedSlot.attendee
           }
           console.log('request:', requestData);
           try {
             console.log(requestData);
-            const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
-              data: requestData,
-              }, {
+            const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/date/confirm`, requestData,
+              {
                 headers: {
                   Authorization: token,
                 },

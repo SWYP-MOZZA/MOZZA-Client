@@ -11,7 +11,7 @@ import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 export default function LoginPage(){
     
-    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&redirect_uri=http://localhost:3000/auth&response_type=code`
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb9b1a227742d8aef92354fbb090&redirect_uri=${process.env.NEXT_PUBLIC_CLIENT_URL}/auth&response_type=code`
     
     const router = useRouter();
     const isLogin = useSelector((state)=>state.login.isLogin);

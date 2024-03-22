@@ -107,9 +107,9 @@ const MypageConfirmedDetail = () => {
     console.log('request:', requestData);
     try {
       console.log(requestData);
-      const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm?id=${meetingId}`, {
-        data: requestData,
-        }, {
+      const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`,
+        requestData
+        , {
           headers: {
             Authorization: token,
           },
