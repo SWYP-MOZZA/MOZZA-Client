@@ -7,7 +7,7 @@ export const sendRequest = async (token, meetingId, data) => {
     try {
       const response = await axios.post(`${SERVER_BASE_URL}/meeting/${meetingId}/submit`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`,
         },
       });
       console.log('Request sent successfully', response.data);

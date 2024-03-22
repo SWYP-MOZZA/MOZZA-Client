@@ -5,6 +5,7 @@ import 'dayjs/locale/ko'; // 한국어 locale을 직접 불러옴
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import isEqual from 'lodash/isEqual';
 
+
 dayjs.extend(isSameOrBefore); // isSameOrBefore 플러그인 활성화
 dayjs.locale('ko'); // locale을 한국어로 설정
 import styled from 'styled-components';

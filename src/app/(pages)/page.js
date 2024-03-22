@@ -10,7 +10,7 @@ import TimeSelector from '../components/mainPage/TimeSelector';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '../constants/BaseUrl';
 import MainCalendar from '../components/calendar/MainCalendar';
-
+import { useSelector } from 'react-redux';
 
 export default function Home() {
     const router = useRouter();
@@ -63,7 +63,7 @@ export default function Home() {
             res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data,config);
             
         }else{
-            res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data,config);
+            res = await axios.post(`${SERVER_BASE_URL}/meeting/create`,data);
 
         }
         const meetingId = res.data.meetingId;
