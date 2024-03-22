@@ -7,7 +7,7 @@ export default function KakaoPage(){
     const searchParams = useSearchParams()
     const AUTHORIZATION_CODE = searchParams.get('code');
     const clientId = '8728eb9b1a227742d8aef92354fbb090';
-    const redirectUri= 'http://localhost:3000/auth'
+    const redirectUri = process.env.NEXT_PUBLIC_REDIRECT_URI;
      
     async function sendLoginInfo(){
         await axios.get('/oauth',{

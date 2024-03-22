@@ -4,7 +4,6 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { AiOutlineDown } from "react-icons/ai";
 import { AiOutlineUp } from "react-icons/ai";
-import { Client_URL } from '@/app/constants/BaseUrl';
 import LinkShared from '@/app/components/popup/link-shared';
 import {useMeetingShortInfo} from '@/app/hooks/useMeetingShortInfo';
 
@@ -45,19 +44,23 @@ const InvitedPage = () => {
     }
 
     
-
+    function copyToClipboard(text) {
+      // 텍스트를 복사하기 위해 임시 textarea 엘리먼트를 생성합니다.
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      
+      // textarea를 선택하여 복사합니다.
+      textarea.select();
+      document.execCommand('copy');
+    
+      // 임시 textarea 엘리먼트를 제거합니다.
+      document.body.removeChild(textarea);
+    }
     const onClickInvite = (meetingId) => {
-      console.log('click Invite');
-      navigator.clipboard.writeText(`${Client_URL}/invited?meetingId=${meetingId}`)
-        .then(() => {
-          // 클립보드에 복사 성공 시 실행될 코드
-          console.log('Link copied to clipboard');
-          setIsCompleteLinkPopup(true);
-        })
-        .catch(err => {
-          // 클립보드 복사 실패 시 실행될 코드
-          console.error('Failed to copy link to clipboard', err);
-        });
+        const invitedLink = `${window.location.origin}/invited?meetingId=${meetingId}`;
+        copyToClipboard(invitedLink);
+        alert('초대 링크가 복사되었습니다.',invitedLink);
     }
     
     const onClickResult = (meetingId) => {
