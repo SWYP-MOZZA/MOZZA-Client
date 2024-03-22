@@ -44,6 +44,8 @@ useEffect(() => {
     }
 }, [AUTHORIZATION_CODE]);
     return(
+        // <Suspense fallback={<div>Loading...</div>}> 
             <div>로그인중입니다.</div>
+        // </Suspense>
     )
 }
