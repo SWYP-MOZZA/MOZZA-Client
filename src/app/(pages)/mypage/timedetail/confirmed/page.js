@@ -2,7 +2,7 @@
 import ConfirmedBox from '@/app/components/result/confirmedmeetingBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
-import React,{useState,useEffect,Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';
 import axios from 'axios';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
@@ -62,9 +62,7 @@ const MypageConfirmedDetail = () => {
   if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
   
   return (
-    <Suspense fallback={<div>Loading...</div>}> 
-
-    <div>
+        <div>
       <div className='flex items-center justify-center m-[50px]'>
         <ConfirmedBox slotData={meetingInfo} />
       </div>
@@ -91,7 +89,6 @@ const MypageConfirmedDetail = () => {
             </div>
           </div>
     </div>
-    </Suspense>
   );
 };
 

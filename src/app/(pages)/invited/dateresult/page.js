@@ -1,5 +1,5 @@
 "use client";
-import React,{useState,useEffect, Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
 import ResultCalendar from '@/app/components/calendar/result-calender';
@@ -8,6 +8,13 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 const ResultPage = () => {
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+      // 컴포넌트가 마운트될 때 클라이언트 사이드임을 확인
+      setIsClient(true);
+    }, []);
+
     const router = useRouter();
     const params = useSearchParams();
     const meetingId = params.get('meetingId');
@@ -103,12 +110,16 @@ const ResultPage = () => {
         const onClickFilterBtn = () => {
             console.log('필터 버튼 클릭');
           }
+          if (!isClient) {
+            return null; // 서버 사이드 렌더링 시에는 렌더링하지 않음
+          }
           // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
           if (loading) return <div>Loading...</div>;
           if (error) return <div>Error loading meeting data: {error}</div>;
           if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
+
+
     return (
-      <Suspense fallback={<div>Loading...</div>}> 
         <div className='w-[3/4] m-[50px] flex justify-between'>
             <div>
             {!loading &&<ResultCalendar onHoverChange={handleHoverChange} dateResult={meetingInfo}/>}
@@ -129,7 +140,6 @@ const ResultPage = () => {
                         onClick={()=> {router.back();}}>이전</button>
             </div>
         </div>
-      </Suspense>
     )
 }
 export default ResultPage;

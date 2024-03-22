@@ -1,11 +1,10 @@
 'use client' 
-import React , {useState,useEffect,Suspense}from 'react';
+import React , {useState}from 'react';
 import LongBtn from '@/app/components/common/LongBtn';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { AiOutlineDown } from "react-icons/ai";
 import { AiOutlineUp } from "react-icons/ai";
-import axios from 'axios';
-import { SERVER_BASE_URL, Client_URL } from '@/app/constants/BaseUrl';
+import { Client_URL } from '@/app/constants/BaseUrl';
 import LinkShared from '@/app/components/popup/link-shared';
 import {useMeetingShortInfo} from '@/app/hooks/useMeetingShortInfo';
 
@@ -73,8 +72,6 @@ const InvitedPage = () => {
     }
     
   return (
-    <Suspense fallback={<div>Loading...</div>}> 
-
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[80px] pb-[80px] gap-y-6'>
       {isCompleteLinkPopup && 
             <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>}
@@ -116,7 +113,6 @@ const InvitedPage = () => {
         <LongBtn style={'secondary-longBtn'} onClick={()=> onClickResult(displayInfo.meetingId)}>결과 확인하기</LongBtn>
         {isCompleteLinkPopup && <LinkShared setIsCompleteLinkPopup={setIsCompleteLinkPopup} />}
     </div>
-    </Suspense>
   );
 };
 

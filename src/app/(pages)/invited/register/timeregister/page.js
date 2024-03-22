@@ -1,8 +1,7 @@
 // TimeRegister 컴포넌트
 "use client";
-import React, { useState, useEffect, useMemo ,Suspense} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import dynamic from 'next/dynamic';
 import LongBtn from '@/app/components/common/LongBtn';
 import ConfirmedResultBox from '../../../../components/result/confirmed-resultBox';
 import HoverBox from '../../../../components/result/hoverBox';
@@ -11,15 +10,11 @@ import axios from 'axios';
 import MeetConfirmed1 from '@/app/components/popup/meet-confirmed1';
 import MeetConfirmed2 from '@/app/components/popup/meet-confirmed2';
 import MeetConfirmed3 from '@/app/components/popup/meet-confirmed3';
-import { useQuery } from 'react-query';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 import { sendRequest } from '@/app/utils/apiFn';
 import ResultTimeTable from '@/app/components/table/result-timetable';
 import DraggableTimeTable from '@/app/components/table/draggable-timetable';
 import { useSelector } from 'react-redux';
-
-
-// 이제 `token`을 사용할 수 있습니다.
 
 const TimeRegister = () => {
   const router = useRouter();
@@ -199,8 +194,6 @@ const TimeRegister = () => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}> 
-
     <div className='container w-[1/2] h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -256,7 +249,6 @@ const TimeRegister = () => {
             </div>
           </div>}
     </div>
-    </Suspense>
   );
 }
 

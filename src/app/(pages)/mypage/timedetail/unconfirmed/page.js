@@ -5,13 +5,17 @@ import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeM
 import HoverBox from '@/app/components/result/hoverBox';
 import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
-import React,{useState,useEffect,useMemo,Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import { useRouter,useSearchParams} from 'next/navigation';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+
 const MypageConfirmedDetail = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const meetingId = searchParams.get('meetingId');
+  const token = useSelector((state) => state.token.token);
   
   // 호버 상태
   const [hoveredInfo, setHoveredInfo] = useState({ date: null, time: null });
@@ -57,10 +61,11 @@ const MypageConfirmedDetail = () => {
       return sortedData;
     }
     fetchMeetingInfo();
-  }, [meetingInfo]); // 의존성 배열에 meetingInfo 추가
+  }, []); // 의존성 배열에 meetingInfo 추가
 
   //확정할 약속 데이터  
   const [selectedSlot, setSelectedSlot] = useState(null);
+
   const handleSlotCheck = (slotData) => {
     // 이미 선택된 항목을 다시 클릭하면 선택 해제
     if (selectedSlot && selectedSlot.date === slotData.date && selectedSlot.time === slotData.time) {
@@ -68,7 +73,7 @@ const MypageConfirmedDetail = () => {
     } else {
       // 새 항목을 선택
       setSelectedSlot(slotData);
-      console.log(slotData);
+      console.log("seletedSlot :",slotData);
     }
   };
 
@@ -91,34 +96,33 @@ const MypageConfirmedDetail = () => {
     console.log('확정된 모임 완료 버튼 클릭');
   }
   //수정 필요
-  const onClickConfirmedGoBtn = (meetingId) => {
+  const onClickConfirmedGoBtn = () => {
     const requestData = {
-      "meeting id" : meetingInfo.meetingId,
-      "createdAt" : meetingInfo.createdAt,
-      "numberOfSubmit" : meetingInfo.numberOfSubmit,
-      "confirmedDate" : selectedSlot.date,
-      "confirmedTime" : {"startTime" : selectedSlot.time , "endTime" :"10:00" },
-      "confirmedAttendee" : selectedSlot.attendee
-    }
+      "confirmedDate": selectedSlot.date,
+      "confirmedStartTime": selectedSlot.time,
+      "confirmedEndTime": dayjs(`${selectedSlot.date} ${selectedSlot.time}`, "YYYY-MM-DD HH:mm").add(30, 'minute').format("HH:mm")
+
+    };
+    
     console.log('request:', requestData);
-    // try {
-    //   console.log(requestData);
-    //   const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
-    //     data: requestData,
-    //     }, {
-    //       headers: {
-    //         Authorization: `Bearer ${localStorage.getItem('token')}`,
-    //       },
-    //     });
-    //     console.log(reponse.data);
+    try {
+      console.log(requestData);
+      const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm?id=${meetingId}`, {
+        data: requestData,
+        }, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        console.log(reponse.data);
 
-    //     onPopupConfirmedComplete();
+        onPopupConfirmedComplete();
 
-    //     // 확정 후 새로고침
-    //     window.location.reload();
-    //   } catch (error) {
-    //     console.error('error:', error.response ? error.response : error.message);
-    //   }
+        // 확정 후 새로고침
+        
+      } catch (error) {
+        console.error('error:', error.response ? error.response : error.message);
+      }
       onPopupConfirmedComplete();
     }
 
@@ -160,8 +164,6 @@ const MypageConfirmedDetail = () => {
   if (error) return <div>Error loading meeting data: {error}</div>;
   if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
   return (
-    <Suspense fallback={<div>Loading2...</div>}> 
-
     <div>
       { (isConfirmedPopup || isConfirmedPopupComplete) && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -197,7 +199,6 @@ const MypageConfirmedDetail = () => {
           {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
           {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
     </div>
-    </Suspense>
   );
 };
 

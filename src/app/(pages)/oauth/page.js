@@ -1,7 +1,7 @@
 'use client'
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
-import React,{ Suspense,useEffect } from 'react';
+import React,{useEffect } from 'react';
 
 export default function KakaoPage(){    
     const searchParams = useSearchParams()
@@ -20,10 +20,10 @@ export default function KakaoPage(){
         sendLoginInfo();
     },[])
     return(
-        <Suspense fallback={<div>Loading...</div>}> 
+
 
             <div>{AUTHORIZATION_CODE} - 이 코드를 백엔드한테 보내주기 </div>
-        </Suspense>
+
         
     )
 }

@@ -1,10 +1,10 @@
 "use client";
 import ConfirmedBox from '@/app/components/result/confirmedmeetingBox';
-import HoverBox from '@/app/components/result/hoverBox';
 import ConfirmedResultBox from '@/app/components/result/confirmed-resultBox';
-import React,{useState,useEffect,useMemo,Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
+import axios from 'axios';
 
 const MypageDateConfirmedDetail = () => {
       // 쿼리 파라미터
@@ -15,71 +15,7 @@ const MypageDateConfirmedDetail = () => {
         const [error, setError] = useState(null);
 
         const [filteredResultData, setFilteredResultData] = useState([]);
-        const [meetingInfo, setMeetingInfo] = useState({
-          "numberOfSubmit" : 6,
-          "confirmedDate" : "2023-03-12",
-          "confirmedAttendee" : ["박지우","최유정","오승준","윤혜원"],
-          "data": [
-          {
-            "2024-03-12": [
-              {
-                "attendee": ["박지우", "최유정", "오승준"],
-                "ratio": 0.5
-              }
-            ],
-            "2024-03-13": [
-              {
-                "attendee": ["박지우", "최유정", "오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-14": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 1.0
-              }
-            ],
-            "2024-03-15": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-16": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-17": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-18": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-19": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-20": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-          }]
-        });
-        // details 데이터
-        // const [meetingInfo, setMeetingInfo] = useState([]);
-
+        const [meetingInfo, setMeetingInfo] = useState(null);
         useEffect(() => {
           const fetchMeetingInfo = async () => {
             try {
@@ -131,8 +67,6 @@ const MypageDateConfirmedDetail = () => {
         if (error) return <div>Error loading meeting data: {error}</div>;
         if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
       return (
-        <Suspense fallback={<div>Loading...</div>}> 
-
         <div>
           <div className='flex items-center justify-center m-[50px]'>
             <ConfirmedBox slotData={meetingInfo} />
@@ -157,7 +91,6 @@ const MypageDateConfirmedDetail = () => {
                 </div>
               </div>
         </div>
-        </Suspense>
       );
     };
     

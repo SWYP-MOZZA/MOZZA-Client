@@ -28,6 +28,35 @@ function DraggableTimeTable(
     const pageSize = 7; // 한 페이지에 보여줄 날짜 수
 
 
+    // useEffect(() => {
+    //   const serverDates = [...meetingData.date].sort((a, b) => new Date(a) - new Date(b));
+    //   const paginateDates = (dates, pageSize) => {
+    //     const pages = [];
+    //     for (let i = 0; i < dates.length; i += pageSize) {
+    //       pages.push(dates.slice(i, i + pageSize));
+    //     }
+    //     return pages;
+    //   };
+    //   const startTime = parseInt(meetingData.startTime.split(':')[0], 10) * 60 + parseInt(meetingData.startTime.split(':')[1], 10);
+    //   const endTime = parseInt(meetingData.endTime.split(':')[0], 10) * 60 + parseInt(meetingData.endTime.split(':')[1], 10);
+    //   const slots = {};
+    //     serverDates.forEach(day => {
+    //       const slotCount = (endTime - startTime) / 30; // 30분 간격으로 타임슬롯 계산, 2를 곱하는 대신에 30으로 나눔
+    //       slots[day] = Array.from({ length: slotCount }, (_, i) => {
+    //         const timeInMinutes = startTime + i * 30; // 시작 시간에 i * 30분을 더해 각 슬롯의 시간을 계산
+    //         const hour = Math.floor(timeInMinutes / 60);
+    //         const minute = timeInMinutes % 60 === 0 ? '00' : '30';
+    //         return {
+    //           time: `${hour}:${minute}`,
+    //           isActive: false // 초기 상태는 비활성화
+    //         };
+    //       });
+    //     });
+    
+    //   setLocalTimeSlots(slots);
+    //   console.log('타임슬롯 : ', slots);
+    //   setPages(paginateDates(serverDates, pageSize));
+    // }, [meetingData]); // setLocalTimeSlots 제거, setTimeSlots 추가
     useEffect(() => {
       const serverDates = [...meetingData.date].sort((a, b) => new Date(a) - new Date(b));
       const paginateDates = (dates, pageSize) => {
@@ -40,23 +69,24 @@ function DraggableTimeTable(
       const startTime = parseInt(meetingData.startTime.split(':')[0], 10) * 60 + parseInt(meetingData.startTime.split(':')[1], 10);
       const endTime = parseInt(meetingData.endTime.split(':')[0], 10) * 60 + parseInt(meetingData.endTime.split(':')[1], 10);
       const slots = {};
-        serverDates.forEach(day => {
-          const slotCount = (endTime - startTime) / 30; // 30분 간격으로 타임슬롯 계산, 2를 곱하는 대신에 30으로 나눔
-          slots[day] = Array.from({ length: slotCount }, (_, i) => {
-            const timeInMinutes = startTime + i * 30; // 시작 시간에 i * 30분을 더해 각 슬롯의 시간을 계산
-            const hour = Math.floor(timeInMinutes / 60);
-            const minute = timeInMinutes % 60 === 0 ? '00' : '30';
-            return {
-              time: `${hour}:${minute}`,
-              isActive: false // 초기 상태는 비활성화
-            };
-          });
+      serverDates.forEach(day => {
+        const slotCount = (endTime - startTime) / 30; // 30분 간격으로 타임슬롯 계산
+        slots[day] = Array.from({ length: slotCount }, (_, i) => {
+          const timeInMinutes = startTime + i * 30; // 시작 시간에 i * 30분을 더해 각 슬롯의 시간을 계산
+          const hour = Math.floor(timeInMinutes / 60).toString().padStart(2, '0'); // 시간을 두 자리 숫자로 포맷팅
+          const minute = timeInMinutes % 60 === 0 ? '00' : '30'; // 분도 두 자리 숫자로 포맷팅
+          return {
+            time: `${hour}:${minute}`,
+            isActive: false // 초기 상태는 비활성화
+          };
         });
+      });
     
       setLocalTimeSlots(slots);
       console.log('타임슬롯 : ', slots);
       setPages(paginateDates(serverDates, pageSize));
-    }, [meetingData]); // setLocalTimeSlots 제거, setTimeSlots 추가
+    }, [meetingData]); // Dependencies
+    
  
      
     useEffect(() => {

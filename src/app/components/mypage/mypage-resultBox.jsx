@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
 
 
 const MypageResultBox = ({
@@ -21,16 +22,26 @@ const MypageResultBox = ({
         handleDeletePopup();
     }
 
-    const onClickDetailBtn = (meetingId, meeting) => {
-        console.log('detail');
-        if (meeting.confirmedDate === null) {
-          router.push(`/mypage/timedetail/unconfirmed?meetingId=${meetingId}`);
+    const onClickDetailBtn = async (meetingId, meeting) => {
+        const response = await axios.get(`${SERVER_BASE_URL}/meeting/${meetingId}/short`);
+        console.log('모임 분류를 위한 통신:', response.data);
+        if (response.data.Data.startTime === response.data.Data.endTime) {
+            if (!('confirmedDate' in meeting) || meeting.confirmedDate === null) {
+                router.push(`/mypage/datedetail/unconfirmed?meetingId=${meetingId}`);
+            } else {
+                // confirmedDate 키가 존재하고, 그 값이 null이 아니면
+                router.push(`/mypage/datedetail/confirmed?meetingId=${meetingId}`);
+            }
         } else {
-          router.push(`/mypage/timedetail/confirmed?meetingId=${meetingId}`);
-        }
-      }
-      
-    
+            // confirmedDate 키가 없거나 해당 키의 값이 null이면
+            if (!('confirmedDate' in meeting) || meeting.confirmedDate === null) {
+                router.push(`/mypage/timedetail/unconfirmed?meetingId=${meetingId}`);
+            } else {
+                // confirmedDate 키가 존재하고, 그 값이 null이 아니면
+                router.push(`/mypage/timedetail/confirmed?meetingId=${meetingId}`);
+            }
+    }
+}
 
     return (
             <div className='flex flex-col w-[588px] px-8 py-6 border-2 border-green-600 rounded-resultBox bg-white'>

@@ -70,16 +70,16 @@ function ResultTimeTable(
     // 배경색을 결정하는 함수
     // 배경색 적용을 위한 함수 수정
     // 주의: 실제 CSS 배경색 적용을 위해 className 대신 style 객체를 사용
-    const getBackgroundColorStyle = (member) => {
-        const ratio = member * 100;
+    const getBackgroundColorStyle = (attendeeCount) => {
+        const ratio = attendeeCount * 100; // 비율 계산 로직에 따라 수정 필요
+      
+        if (isNaN(ratio) || ratio <= 20) return { backgroundColor: '#ffffff', color: '#424242' }; // bg-white text-gray-700
+        if (ratio <= 40) return { backgroundColor: '#c6f6d5', color: '#ffffff' }; // bg-green-100 text-white
+        if (ratio <= 60) return { backgroundColor: '#9ae6b4', color: '#ffffff' }; // bg-green-300 text-white
+        if (ratio <= 80) return { backgroundColor: '#68d391', color: '#ffffff' }; // bg-green-500 text-white
+        return { backgroundColor: '#48bb78', color: '#ffffff' }; // bg-green-700 text-white
+      };
 
-        if (isNaN(ratio) || ratio <= 20) return 'bg-white text-gray-700';
-        if (ratio <= 40) return 'bg-green-100 text-white';
-        if (ratio <= 60) return 'bg-green-300 text-white';
-        if (ratio <= 80) return 'bg-green-500 text-white';
-        return 'bg-green-700 text-white'; // Covers >80 and 100% cases
-    };
-    
       return (
        <div className='flex flex-col'>
             <div className='flex justify-between items-center'>
@@ -123,12 +123,13 @@ function ResultTimeTable(
                                 });
                                 return (
                                     <Td 
-                                    key={`${date}-${time}`} 
-                                    className={getBackgroundColorStyle(slot.ratio)}
-                                    onMouseEnter={() => handleMouseEnter(date, time)}
-                                    onMouseLeave={handleMouseLeave}>
-                                        {slot ? slot.attendee.length : ''}
-                                    </Td>
+                                key={`${date}-${time}`} 
+                                style={getBackgroundColorStyle(slot ? slot.attendee.length : 0)}
+                                onMouseEnter={() => handleMouseEnter(date, time)}
+                                onMouseLeave={handleMouseLeave}>
+                                    {slot ? slot.attendee.length : ''}
+                                </Td>
+
                                 );
                             })}
                             <Td />

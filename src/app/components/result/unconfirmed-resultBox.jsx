@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 
-const UnconfirmedTimeResultBox = ({key,slotData,onSlotCheck,selectedSlot}) => {
+const UnconfirmedTimeResultBox = ({slotData,onSlotCheck,selectedSlot}) => {
     const [isOpen, setIsOpen] = useState(false);
     const isChecked = selectedSlot && selectedSlot.date === slotData.date && selectedSlot.time === slotData.time;
     const handleCheckChange = () => {

@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState,Suspense} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import MypageResultBox from '@/app/components/mypage/mypage-resultBox';
 import axios from 'axios';
@@ -8,58 +8,18 @@ import LongBtn from '@/app/components/common/LongBtn';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+
 export default function MyPage(){
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const token = useSelector((state) => state.token.token);
 
     const [selected, setSelected] = useState('unconfirmed');
     const [isLatest, setIsLatest] = useState(false);
-    const [myConfirmedMeetingList, setConfirmedMeetingList] = useState([
-      {
-        "meetingId" : 1,
-        "meetingName" : "모임명1",
-        "confirmedDate" : "2024-01-10",
-        "confirmedTime" : {"startTime" : "10:00", "endTime" : "11:30"},
-        "submitUserNumber" : 4,
-        "createdAt" : "2023-12-21T22:30"
-         },
-      {
-        "meetingId" : 2,
-        "meetingName" : "모임명2",
-        "confirmedDate" : "2024-01-20",
-        "confirmedTime" : {"startTime" : "14:00", "endTime" : "14:30"},
-        "submitUserNumber" : 4,
-        "createdAt" : "2024-01-22T04:32"
-        },
-      {
-        "meetingId" : 3,
-        "meetingName" : "모임명3",
-        "confirmedDate" : "2024-02-10",
-        "confirmedTime" : {"startTime" : "14:00", "endTime" : "14:30"},
-        "submitUserNumber" : 4,
-        "createdAt" : "2024-02-01T11:09"
-        },
-      {
-        "meetingId" : 4,
-        "meetingName" : "모임명4",
-        "confirmedDate" : "2024-02-20",
-        "confirmedTime" : null,
-        "submitUserNumber" : 4,
-        "createdAt" : "2024-02-05T02:20"
-        }
-    ]);
-    const [myUnconfirmedMeetingList, setUnconfirmedMeetingList] = useState([
-      {
-        "meetingId" : 31,
-        "meetingName" : "모임명5",
-        "confirmedDate" : null,
-        "confirmedTime" : null,
-        "submitUserNumber" : 4,
-        "createdAt" : "2024-03-01T01:12"
-      }
-    ]);
+    const [myConfirmedMeetingList, setConfirmedMeetingList] = useState([]);
+    const [myUnconfirmedMeetingList, setUnconfirmedMeetingList] = useState([]);
   
     //모임 삭제를 위한 상태
     const [isDeletePopup, setIsDeletePopup] = useState(false);
@@ -84,7 +44,7 @@ export default function MyPage(){
           },
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // 인증 토큰
+              Authorization: `${token}`,
             },
           }
         );
@@ -109,37 +69,37 @@ export default function MyPage(){
       }
 
       };
-      // useEffect(() => {
-      //   // 비동기 작업을 수행하는 별도의 함수 선언
-      //   const fetchData = async () => {
-      //     try {
-      //       // 서버에서 데이터 받아오기
-      //       const response = await axios.get(`${SERVER_BASE_URL}/all-meeting`, {
-      //         headers: {
-      //           Authorization: `Bearer ${localStorage.getItem('token')}`,
-      //         },
-      //       });
-      //       console.log(response.data);
+      useEffect(() => {
+        // 비동기 작업을 수행하는 별도의 함수 선언
+        const fetchData = async () => {
+          try {
+            // 서버에서 데이터 받아오기
+            const response = await axios.get(`${SERVER_BASE_URL}/all-meetings`, {
+              headers: {
+                Authorization: `${token}`,
+              },
+            });
+            console.log(response.data);
             
-      //       // 받아온 데이터를 createdAt 날짜 기준으로 오름차순 정렬
-      //       const sortedConfirmedMeetings = response.data.ConfirmedMeeting.sort((a, b) => 
-      //       new Date(a.createdAt) - new Date(b.createdAt)
-      //       );
-      //       const sortedUnconfirmedMeetings = response.data.Inprogress.sort((a, b) => 
-      //         new Date(a.createdAt) - new Date(b.createdAt)
-      //       );
+            // 받아온 데이터를 createdAt 날짜 기준으로 오름차순 정렬
+            const sortedConfirmedMeetings = response.data.confirmedMeetings.sort((a, b) => 
+            new Date(a.createdAt) - new Date(b.createdAt)
+            );
+            const sortedUnconfirmedMeetings = response.data.inProgress.sort((a, b) => 
+              new Date(a.createdAt) - new Date(b.createdAt)
+            );
 
-      //       // 정렬된 데이터를 상태에 저장
-      //       setConfirmedMeetingList(sortedConfirmedMeetings); 
-      //       setUnconfirmedMeetingList(sortedUnconfirmedMeetings);
-      //     } catch (error) {
-      //       // error.response가 있는지 확인하고, 없다면 error.message를 로깅
-      //       console.error('error:', error.response ? error.response : error.message);
-      //     }
-      //   };
+            // 정렬된 데이터를 상태에 저장
+            setConfirmedMeetingList(sortedConfirmedMeetings); 
+            setUnconfirmedMeetingList(sortedUnconfirmedMeetings);
+          } catch (error) {
+            // error.response가 있는지 확인하고, 없다면 error.message를 로깅
+            console.error('error:', error.response ? error.response : error.message);
+          }
+        };
       
-      //   fetchData(); // 정의한 비동기 함수 호출
-      // }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트 마운트 시 1회 실행
+        fetchData(); // 정의한 비동기 함수 호출
+      }, []); // 의존성 배열을 빈 배열로 설정하여 컴포넌트 마운트 시 1회 실행
       
       //!비로그인시 로그인페이지로 이동 
       const isLogin = useSelector((state)=>state.login.isLogin);
@@ -153,7 +113,6 @@ export default function MyPage(){
     // 데이터 로딩 중일 때 로딩 인디케이터를 보여줍니다.
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error loading meeting data: {error}</div>;
-    if (!myConfirmedMeetingList && !myUnconfirmedMeetingList) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
     return (
       <>
       {isLogin && (

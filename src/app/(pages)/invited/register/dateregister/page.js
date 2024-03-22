@@ -1,5 +1,5 @@
 "use client";
-import React,{ useState,useEffect,useMemo,Suspense } from 'react';
+import React,{ useState,useEffect,useMemo } from 'react';
 import styled from 'styled-components';
 import LongBtn from '@/app/components/common/LongBtn';
 import Container from '@/app/components/common/Container';
@@ -257,8 +257,6 @@ const DateRegister = () => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}> 
-
     <div className='container w-full h-full font-main flex flex-col justify-center items-center pt-[30px] pb-[180px] gap-y-6'>
       {currentPopup !== null && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -320,7 +318,6 @@ const DateRegister = () => {
           </div>}
           
     </div>
-    </Suspense>
   );
 }
 

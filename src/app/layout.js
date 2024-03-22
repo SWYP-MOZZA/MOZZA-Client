@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from './(pages)/MainLayout';
 import { Providers } from './redux/provider';
+import {Suspense} from 'react';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,16 +13,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+ 
     <html lang="en">
-      
+
       <body className={inter.className}>
+      <Suspense fallback="loading">
         <main className="flex min-h-screen flex-col items-center pt-[80px] bg-white">
           <Providers>
           <MainLayout></MainLayout>
             {children}
           </Providers>
-        </main>        
+        </main>  
+        </Suspense>      
       </body>
+
     </html>
+
   );
 }

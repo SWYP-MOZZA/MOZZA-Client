@@ -1,82 +1,26 @@
 "use client";
 import HoverBox from '@/app/components/result/hoverBox';
-import React,{useState,useEffect,useMemo,Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import ResultCalendar from '@/app/components/calendar/result-calender';
 import UnconfirmedResultBox from '@/app/components/result/unconfirmed-resultBox';
 import ConfirmedCompleteMessage from '@/app/components/popup/confirmed-completeMessage';
 import ConfirmedMessage from '@/app/components/popup/confirmed-message';
+import axios from 'axios';
+import { SERVER_BASE_URL } from '@/app/constants/BaseUrl';
+import { useSelector } from 'react-redux';
+
 const MypageDateUnconfirmedDetail = () => {
       // 쿼리 파라미터
         const router = useRouter();
         const searchParams = useSearchParams()
         const meetingId = searchParams.get('meetingId');
+        const token = useSelector((state) => state.token.token);
 
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState(null);
         const [filteredResultData, setFilteredResultData] = useState([]);
-        const [meetingInfo, setMeetingInfo] = useState({
-          "numberOfSubmit" : 6,
-          "data": [
-          {
-            "2024-03-12": [
-              {
-                "attendee": ["박지우", "최유정", "오승준"],
-                "ratio": 0.5
-              }
-            ],
-            "2024-03-13": [
-              {
-                "attendee": ["박지우", "최유정", "오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-14": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 1.0
-              }
-            ],
-            "2024-03-15": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-16": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-17": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-18": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-19": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-            "2024-03-20": [
-              {
-                "attendee": ["박지우", "최유정", "오승준","오승준","오승준","오승준"],
-                "ratio": 0.9
-              }
-            ],
-          }]
-        });
-        // details 데이터
-        // const [meetingInfo, setMeetingInfo] = useState([]);
+        const [meetingInfo, setMeetingInfo] = useState(null);
           
         // 호버한 쎌 데이터
         const [hoveredInfo, setHoveredInfo] = useState({
@@ -206,24 +150,24 @@ const MypageDateUnconfirmedDetail = () => {
             "confirmedAttendee" : selectedSlot.attendee
           }
           console.log('request:', requestData);
-          // try {
-          //   console.log(requestData);
-          //   const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
-          //     data: requestData,
-          //     }, {
-          //       headers: {
-          //         Authorization: `Bearer ${localStorage.getItem('token')}`,
-          //       },
-          //     });
-          //     console.log(reponse.data);
+          try {
+            console.log(requestData);
+            const reponse = axios.put(`${SERVER_BASE_URL}/meeting/${meetingId}/confirm`, {
+              data: requestData,
+              }, {
+                headers: {
+                  Authorization: token,
+                },
+              });
+              console.log(reponse.data);
       
-          //     onPopupConfirmedComplete();
+              onPopupConfirmedComplete();
       
-          //     // 확정 후 새로고침
-          //     window.location.reload();
-          //   } catch (error) {
-          //     console.error('error:', error.response ? error.response : error.message);
-          //   }
+              // 확정 후 새로고침
+              window.location.reload();
+            } catch (error) {
+              console.error('error:', error.response ? error.response : error.message);
+            }
             onPopupConfirmedComplete();
           }
 
@@ -231,10 +175,7 @@ const MypageDateUnconfirmedDetail = () => {
           if (loading) return <div>Loading...</div>;
           if (error) return <div>Error loading meeting data: {error}</div>;
           if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
-      return (
-        <Suspense fallback={<div>Loading...</div>}> 
-
-        <div>
+      return (        <div>
           { (isConfirmedPopup || isConfirmedPopupComplete) && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
         )}
@@ -272,8 +213,7 @@ const MypageDateUnconfirmedDetail = () => {
               {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
           {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
         </div>
-        </Suspense>
-      );
+              );
     };
     
     

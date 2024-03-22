@@ -1,5 +1,5 @@
 "use client";
-import React,{useState,useEffect,Suspense} from 'react';
+import React,{useState,useEffect} from 'react';
 import ConfiremdResultBox from '@/app/components/result/confirmed-resultBox';
 import HoverBox from '@/app/components/result/hoverBox';
 import ResultTimeTable from '@/app/components/table/result-timetable';
@@ -97,8 +97,6 @@ const ResultPage = () => {
   if (error) return <div>{error ? error.toString() : 'No errors'}</div>;
   if (!meetingInfo) return <div>Meeting information is not available.</div>; // 데이터가 없을 경우를 처리
   return (
-    <Suspense fallback={<div>Loading...</div>}> 
-
       <div className='m-[50px] w-[3/4] flex justify-between'>
           <div>
                 {!loading && <ResultTimeTable onHoverChange={handleHoverChange}  resultData={meetingInfo}/>}
@@ -119,7 +117,6 @@ const ResultPage = () => {
                         onClick={()=> {router.back();}}>이전</button>
             </div>
           </div>
-    </Suspense>
   );
 };
 
