@@ -249,6 +249,7 @@ export default function MyPage(){
             {isDeletePopup === true && <MeetDelete onClickDelete={deleteMeeting} onClickNo={handleDeleteNo} />}
             </div>
       )}
+      
       </>
     );
 
