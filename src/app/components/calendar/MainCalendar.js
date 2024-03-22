@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import { format, isWithinInterval, parseISO, startOfDay, endOfDay } from 'date-fns';
