@@ -1,27 +1,37 @@
+.check {
+    display: none;
+}
 
-  .check{
-    display:none;
-  }
-  label::before{
-    content: ' ';
-    display:block;
-    width:32px;
-    height:32px;
-    float:left;
-    margin-right:8px;
-    border:1.5px solid #9E9E9E;
-    border-radius: 4px;
-    background-color: white;
-
-    
-  }
-  .check:checked+label::before{
+@media (min-width: 350px) {
+    label::before {
+        content: ' ';
+        display: block;
+        width: 16px;
+        height: 16px;
+        float: left;
+        margin-right: 4px;
+        border: 1.5px solid #9e9e9e;
+        border-radius: 4px;
+        background-color: white;
+    }
+}
+@media (min-width: 768px) {
+    label::before {
+        content: ' ';
+        display: block;
+        width: 32px;
+        height: 32px;
+        float: left;
+        margin-right: 8px;
+        border: 1.5px solid #9e9e9e;
+        border-radius: 4px;
+        background-color: white;
+    }
+}
+.check:checked + label::before {
     content: '\2713';
     text-align: center;
-    color:green;
-    border:1.5px solid green;
+    color: green;
+    border: 1.5px solid green;
     font-weight: 900;
-
-  }
-
-  
+}

@@ -16,7 +16,7 @@ const MainCalendar = ({
     const [date, setDate] = useState(new Date());
     const [selectedDates, setSelectedDates] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
-    const dispatch=useDispatch();
+    const dispatch =useDispatch();
 
  
     const onSelectDate = (day) => {

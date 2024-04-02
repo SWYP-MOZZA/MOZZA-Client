@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
 }
 
 body {
-  /* color: rgb(var(--foreground-rgb));
+    /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
@@ -25,57 +25,63 @@ body {
     )
     rgb(var(--background-start-rgb)); */
 
-    @apply bg-white font-main
+    @apply bg-white font-main;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+    .text-balance {
+        text-wrap: balance;
+    }
 }
 
 @font-face {
-  font-family: "Spoqa Han Sans Neo";
-  font-weight: 200;
-  src: url("/font/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo-Medium.ttf") format("truetype");
+    font-family: 'Spoqa Han Sans Neo';
+    font-weight: 200;
+    src: url('/font/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo_TTF_original/SpoqaHanSansNeo-Medium.ttf')
+        format('truetype');
 }
 
-  .kakao-longBtn {
-    @apply w-[588px] h-16 px-16 bg-yellow-400 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-yellow-400 text-black
-  }
-  .primary-longBtn {
-    @apply w-[588px] h-16 px-16 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white
-  }
-  .primary-shortBtn{
-    @apply w-[161px] h-12 px-8 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white
-  }
-  .secondary-longBtn {
-    @apply w-[588px] h-16 px-16 bg-green-100 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-600 text-black
-  }
-  .secondary-shortBtn{
-    @apply w-[161px] h-12 px-8 bg-green-100 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-600 text-black
-  }
-  .btnText{
-    @apply text-2xl font-medium font-main text-subtitle2
-  }
+.kakao-longBtn {
+    @apply md:w-[588px] sm:w-[294px] h-16 px-16 bg-yellow-400 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-yellow-400 text-black;
+}
+.primary-longBtn {
+    @apply md:w-[588px] sm:w-[294px]  h-16 px-16 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white;
+}
+.primary-shortBtn {
+    @apply md:w-[161px] sm:w-[80px] h-12 px-8 bg-green-600 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-700 text-white;
+}
+.secondary-longBtn {
+    @apply md:w-[588px] sm:w-[294px] h-16 px-16 bg-green-100 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-600 text-black;
+}
+.secondary-shortBtn {
+    @apply md:w-[161px] sm:w-[80px] h-12 px-8 bg-green-100 rounded-[32px] justify-center items-center gap-2.5 inline-flex hover:border-2 border-green-600 text-black;
+}
+.btnText {
+    @apply text-2xl font-medium font-main text-subtitle2;
+}
 /* Disabled styles */
 .primary-longBtn[disabled],
 .primary-shortBtn[disabled],
 .secondary-longBtn[disabled],
 .secondary-shortBtn[disabled] {
-  @apply bg-gray-300 border-gray-500 text-gray-500;
+    @apply bg-gray-300 border-gray-500 text-gray-500;
 }
 .container-basic {
-  @apply w-[588px] bg-white font-main;
+    @apply md:w-[588px] sm:w-[294px] bg-white font-main;
 }
-.container-gray{
-  @apply w-[588px] bg-gray-100 rounded-3xl font-main font-medium;
+.container-gray {
+    @apply md:w-[588px] sm:w-[294px] bg-gray-100 rounded-3xl font-main font-medium;
 }
-.container-stroked{
-  @apply w-[588px] bg-white rounded-3xl border-2 border-green-600 font-main;
+.container-stroked {
+    @apply md:w-[588px] sm:w-[294px] bg-white rounded-3xl border-2 border-green-600 font-main;
 }
 
 @keyframes slide {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(10px); }
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(10px);
+    }
 }
