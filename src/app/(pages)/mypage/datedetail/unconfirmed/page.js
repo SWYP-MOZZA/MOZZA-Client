@@ -22,44 +22,6 @@ const MypageDateUnconfirmedDetail = () => {
         const [filteredResultData, setFilteredResultData] = useState([]);
         const [meetingInfo, setMeetingInfo] = useState(null);
           
-        // 호버한 쎌 데이터
-        const [hoveredInfo, setHoveredInfo] = useState({
-            date:null
-        });
-         // 날짜와 시간대 정보를 처리할 함수
-        const handleHoverChange = (date) => {
-            setHoveredInfo({ date });
-            console.log(date);
-        };
-         // hoveredInfo를 기반으로 해당하는 데이터 찾기
-         const findDataForHoveredInfo = () => {
-          if (!hoveredInfo || !hoveredInfo.date) {
-              return null;
-          }
-          const formattedDate = hoveredInfo.date;
-      
-          // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
-          // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
-          const dayDataArray = meetingInfo.data[0][formattedDate];
-          if (!dayDataArray) {
-              return null;
-          }
-      
-          // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
-          return {
-              date: formattedDate,
-              data: dayDataArray,
-          };
-      };
-        // hoveredInfo를 기반으로 해당하는 데이터 찾기
-        const slotData = findDataForHoveredInfo();
-
-        useEffect(() => {
-            console.log('slotData : ', slotData);
-            console.log('hoveredInfo.date : ', hoveredInfo.date);
-        }
-        ,[slotData,hoveredInfo.date]);
-
         useEffect(() => {
           const fetchMeetingInfo = async () => {
             try {
@@ -104,6 +66,46 @@ const MypageDateUnconfirmedDetail = () => {
         
           fetchMeetingInfo();
         }, [meetingId]);
+
+        // 호버한 쎌 데이터
+        const [hoveredInfo, setHoveredInfo] = useState({
+            date:null
+        });
+         // 날짜와 시간대 정보를 처리할 함수
+        const handleHoverChange = (date) => {
+            setHoveredInfo({ date });
+            console.log(date);
+        };
+         // hoveredInfo를 기반으로 해당하는 데이터 찾기
+         const findDataForHoveredInfo = () => {
+          if (!hoveredInfo || !hoveredInfo.date) {
+              return null;
+          }
+          const formattedDate = hoveredInfo.date;
+      
+          // meetingInfo.data[0]를 통해 첫 번째 (그리고 유일한) 객체에 접근하고,
+          // 해당 객체에서 formattedDate 키를 사용하여 데이터에 접근합니다.
+          const dayDataArray = meetingInfo.data[0][formattedDate];
+          if (!dayDataArray) {
+              return null;
+          }
+      
+          // 찾은 데이터와 날짜를 포함하는 객체를 반환합니다.
+          return {
+              date: formattedDate,
+              data: dayDataArray,
+          };
+      };
+        // hoveredInfo를 기반으로 해당하는 데이터 찾기
+        const slotData = findDataForHoveredInfo();
+
+        useEffect(() => {
+            console.log('slotData : ', slotData);
+            console.log('hoveredInfo.date : ', hoveredInfo.date);
+        }
+        ,[slotData,hoveredInfo.date]);
+
+        
 
         const onClickFilterBtn = () => {
             console.log('필터 버튼 클릭');
@@ -158,8 +160,7 @@ const MypageDateUnconfirmedDetail = () => {
       
               onPopupConfirmedComplete();
       
-              // 확정 후 새로고침
-              window.location.reload();
+             
             } catch (error) {
               console.error('error:', error.response ? error.response : error.message);
             }
@@ -205,7 +206,7 @@ const MypageDateUnconfirmedDetail = () => {
                 
             </div>
               </div>
-              {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={onClickConfirmedGoBtn}/>}
+              {isConfirmedPopup === true && <ConfirmedMessage selectedSlot={selectedSlot} onClickConfirmedDeleteBtn={onClickConfirmedDeleteBtn} onClickConfirmedGoBtn={()=>onClickConfirmedGoBtn(meetingId)}/>}
           {isConfirmedPopupComplete === true && <ConfirmedCompleteMessage setIsConfirmedPopupComplete={setIsConfirmedPopupComplete}/>}
         </div>
               );

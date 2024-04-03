@@ -7,8 +7,9 @@ const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=8728eb
 export default function Test(){
 
     const test=async() =>{
-      const response = await axios.get(`${SERVER_BASE_URL}/meeting/48/short`);
-      console.log('모임 분류를 위한 통신:', response.data);
+      const response = await axios.get(`${SERVER_BASE_URL}/meeting/48/details`);
+        console.log('모임 정보:', response.data);
+          
     }
 
       useEffect(()=>{

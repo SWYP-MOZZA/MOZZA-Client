@@ -118,7 +118,6 @@ const MypageConfirmedDetail = () => {
 
         onPopupConfirmedComplete();
 
-        // 확정 후 새로고침
         
       } catch (error) {
         console.error('error:', error.response ? error.response : error.message);

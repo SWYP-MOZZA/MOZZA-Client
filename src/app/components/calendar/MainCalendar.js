@@ -157,6 +157,23 @@ const resetSelectedDates = () => {
 
 export default MainCalendar;
 
+// const CalendarWrapper = styled.div`
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     max-width: 100%;
+//     background: white;
+//     font-family: 'Spoqa Han Sans Neo', Helvetica, sans-serif;
+//     line-height: 1.125em;
+//     padding:24px 40px;
+//     border-radius: 24px;
+//     box-shadow: 2px 4px 16px 0px rgba(0, 0, 0, 0.10);
+//     margin: 32px 50px;
+//     font-size: 20px;
+//     font-weight: 500;
+//     color: #4a4a4a;
+// `;
+
 const CalendarWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -165,35 +182,82 @@ const CalendarWrapper = styled.div`
     background: white;
     font-family: 'Spoqa Han Sans Neo', Helvetica, sans-serif;
     line-height: 1.125em;
-    padding:24px 40px;
+    padding: 24px;
     border-radius: 24px;
     box-shadow: 2px 4px 16px 0px rgba(0, 0, 0, 0.10);
-    margin: 32px 50px;
-    font-size: 20px;
+    margin: 32px auto; /* 가운데 정렬을 위해 변경 */
+    font-size: 16px; /* 모바일 기기에 맞는 기본 글꼴 크기 조정 */
     font-weight: 500;
     color: #4a4a4a;
+
+    @media (min-width: 768px) {
+        padding: 24px 40px;
+        margin: 32px 50px;
+        font-size: 20px;
+    }
 `;
 
+// const Th = styled.th`
+//     padding: 10px 0;
+//     text-align: center;
+// `;
 const Th = styled.th`
-    padding: 10px 0;
+    padding: 8px 0; /* 모바일 환경에 맞게 조정 */
     text-align: center;
+    @media (min-width: 768px) {
+        padding: 10px 0;
+    }
 `;
+// const Tr = styled.tr`
+//     display: flex;
+//     justify-content: space-between;
+//     padding: 0 20px;
+// `;
+
 const Tr = styled.tr`
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 10px; /* 모바일 환경에 맞게 조정 */
+    @media (min-width: 768px) {
+        padding: 0 20px;
+    }
 `;
 
-const Td = styled.td`
-  position: relative;
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 50%; /* 원형 표시를 위해 */
+// const Td = styled.td`
+//   position: relative;
+//   width: 40px;
+//   height: 40px;
+//   line-height: 40px;
+//   text-align: center;
+//   cursor: pointer;
+//   border-radius: 50%; /* 원형 표시를 위해 */
   
-  /* 호버 시 원형 배경색 적용 */
+//   /* 호버 시 원형 배경색 적용 */
+//   &:hover {
+//     background-color: rgba(0, 128, 0, 0.1); /* green-100 같은 효과 */
+//   }
+
+//   /* 선택된 날짜에 대한 스타일 */
+//   &.selected {
+//     background-color: #00BC67; /* TailwindCSS의 green-500 */
+//     color: white;
+//   }
+// `;
+
+const Td = styled.td`
+    width: 30px; /* 모바일 환경에 맞게 조정 */
+    height: 30px; /* 모바일 환경에 맞게 조정 */
+    line-height: 30px; /* 모바일 환경에 맞게 조정 */
+    @media (min-width: 768px) {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+    }
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%; /* 원형 표시를 위해 */
+
+    //   /* 호버 시 원형 배경색 적용 */
   &:hover {
     background-color: rgba(0, 128, 0, 0.1); /* green-100 같은 효과 */
   }
@@ -204,14 +268,22 @@ const Td = styled.td`
     color: white;
   }
 `;
-
 // onSelectDate, onMouseDown, onMouseEnter, onMouseUp 함수 내에서
 // className에 'selected' 클래스를 조건부로 추가
 
 
+// const ResetButton = styled.button`
+//     width: 100px;
+//     margin-top: 10px;
+//     border-bottom: 1px solid #000;
+//     color: #000;
+// `;
 const ResetButton = styled.button`
-    width: 100px;
+    width: 80px; /* 모바일 환경에 맞게 조정 */
     margin-top: 10px;
     border-bottom: 1px solid #000;
     color: #000;
+    @media (min-width: 768px) {
+        width: 100px;
+    }
 `;

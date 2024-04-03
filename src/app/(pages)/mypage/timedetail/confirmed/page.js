@@ -64,7 +64,7 @@ const MypageConfirmedDetail = () => {
   return (
         <div>
       <div className='flex items-center justify-center m-[50px]'>
-        <ConfirmedBox slotData={meetingInfo} />
+        {!loading && <ConfirmedBox slotData={meetingInfo} />}
       </div>
       <div className='w-[3/4] flex justify-between'>
           <div>

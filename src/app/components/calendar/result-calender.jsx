@@ -160,32 +160,44 @@ export default ResultCalendar;
 const CalendarWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    padding : 24px 40px;
+    padding: 24px; /* 모바일 환경에 적합하도록 패딩 조정 */
     align-items: center;
     max-width: 100%;
     background: white;
     font-family: 'Spoqa Han Sans Neo', Helvetica, sans-serif;
     line-height: 1.125em;
-    padding:24px 40px;
     border-radius: 24px;
     box-shadow: 2px 4px 16px 0px rgba(0, 0, 0, 0.10);
-    margin: 32px 50px;
-    font-size: 20px;
+    margin: 32px auto; /* 모바일 환경에서 좌우 마진을 자동으로 설정하여 가운데 정렬 */
+    font-size: 16px; /* 글꼴 크기를 줄여서 모바일 화면에 맞게 조정 */
     font-weight: 500;
     color: #4a4a4a;
+
+    @media (min-width: 768px) {
+        padding: 24px 40px;
+        margin: 32px 50px;
+        font-size: 20px;
+    }
 `;
 
 const Th = styled.th`
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 36px; /* 모바일 화면에 맞게 너비 조정 */
+  height: 36px; /* 모바일 화면에 맞게 높이 조정 */
   display: flex;
-  line-height: 40px;
+  line-height: 36px; /* 높이에 맞게 line-height 조정 */
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 16px; /* 모바일 화면에 맞게 글꼴 크기 조정 */
   font-weight: 500;
+
+  @media (min-width: 768px) {
+      width: 48px;
+      height: 48px;
+      line-height: 40px;
+      font-size: 20px;
+  }
 `;
 const Tr = styled.tr`
     display: flex;
@@ -195,18 +207,24 @@ const Tr = styled.tr`
 
 const Td = styled.td`
   position: relative;
-  width: 48px;
-  height: 48px;
-  font-size: 20px;
+  width: 36px; /* 모바일 화면에 맞게 너비 조정 */
+  height: 36px; /* 모바일 화면에 맞게 높이 조정 */
+  font-size: 16px; /* 모바일 화면에 맞게 글꼴 크기 조정 */
   font-weight: 500;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  margin: 12px;
+  margin: 8px; /* 모바일 화면에 맞게 마진 조정 */
   border-radius: 0; /* 사각형 모양 유지 */
-  overflow: hidden; /* 가상 요소가 Td 바깥으로 나가지 않도록 함 */
-  
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+      width: 48px;
+      height: 48px;
+      margin: 12px;
+      font-size: 20px;
+  }
   ${(props) =>
     props.ratio === 100 &&
     `&::after {
